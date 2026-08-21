@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>💰 Price Tracker</title>
+<meta name="description" content="Paste a link. Get pinged on Telegram when the price drops.">
+<style>
+  :root {
+    --text: #2C2C2B; --secondary: #7D7A75; --canvas: #FFFFFF;
+    --surface: #F9F8F7; --surface2: #F0EFED; --border: #E6E5E3;
+    --blue: #2783DE; --blue-soft: #E5F2FC;
+    --green: #46A171; --green-soft: #E8F1EC;
+    --orange: #D5803B; --orange-soft: #FBEBDE;
+    --red: #E56458; --red-soft: #FCE9E7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #FFFFFF; --secondary: rgba(255,255,255,0.65); --canvas: #191919;
+      --surface: #202020; --surface2: #383836; --border: rgba(255,255,255,0.20);
+      --blue: #5E9FE8; --blue-soft: rgba(94,159,232,0.12);
+      --green: #72BC8F; --green-soft: rgba(114,188,143,0.12);
+      --orange: #DE9255; --orange-soft: rgba(222,146,85,0.12);
+      --red: #E97366; --red-soft: rgba(233,115,102,0.12);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--canvas); color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 40px 0 8px; }
+  h1 { font-size: 28px; margin: 0; letter-spacing: -0.02em; }
+  .sub { color: var(--secondary); margin: 6px 0 0; }
+  .actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  button {
+    font: inherit; font-weight: 600; border-radius: 8px; cursor: pointer;
+    min-height: 44px; padding: 8px 16px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text);
+  }
+  button.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  button.danger { color: var(--red); }
+  button:hover { filter: brightness(0.97); }
+  button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .banner {
+    margin: 24px 0 0; padding: 16px 20px; border-radius: 12px;
+    background: var(--blue-soft); border: 1px solid var(--blue);
+  }
+  .banner strong { display: block; margin-bottom: 6px; }
+  .banner p { margin: 4px 0; font-size: 14.5px; }
+  .banner code { background: var(--surface2); padding: 1px 6px; border-radius: 4px; font-size: 13.5px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; margin-top: 16px;
+  }
+  .addform { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--secondary); font-weight: 500; }
+  label.grow { flex: 1 1 300px; }
+  input {
+    font: inherit; font-size: 16px; color: var(--text); background: var(--canvas);
+    border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; min-height: 44px;
+  }
+  .hint { color: var(--secondary); font-size: 13.5px; margin: 10px 0 0; }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; margin-top: 16px; }
+  .pname { font-weight: 650; font-size: 15.5px; line-height: 1.35; display: block; color: var(--text); text-decoration: none;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pname:hover { color: var(--blue); }
+  .pricerow { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; }
+  .price { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
+  .trend { font-size: 13px; font-weight: 650; padding: 2px 8px; border-radius: 6px; }
+  .trend.down { color: var(--green); background: var(--green-soft); }
+  .trend.up { color: var(--red); background: var(--red-soft); }
+  .trend.flat { color: var(--secondary); background: var(--surface2); }
+  .meta { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .badge { font-size: 12.5px; font-weight: 650; padding: 3px 9px; border-radius: 6px; }
+  .badge.tracking { color: var(--green); background: var(--green-soft); }
+  .badge.pending { color: var(--orange); background: var(--orange-soft); }
+  .badge.error { color: var(--red); background: var(--red-soft); }
+  .badge.sample { color: var(--blue); background: var(--blue-soft); }
+  .checked { font-size: 12.5px; color: var(--secondary); }
+  .spark { margin-top: 12px; width: 100%; height: 36px; }
+  .targetrow { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; color: var(--secondary); }
+  .targetrow input { width: 110px; min-height: 38px; padding: 6px 10px; font-size: 14.5px; }
+  .cardfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 8px; }
+  details { font-size: 13.5px; color: var(--secondary); }
+  summary { cursor: pointer; padding: 6px 0; font-weight: 600; }
+  details input { width: 100%; margin-top: 8px; font-size: 14px; min-height: 38px; }
+  details button { margin-top: 8px; min-height: 38px; font-size: 14px; }
+  .empty { text-align: center; color: var(--secondary); padding: 48px 0; }
+  #toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+    background: #2C2C2B; color: #fff; padding: 10px 18px; border-radius: 8px;
+    font-size: 14.5px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,.2); z-index: 10;
+    max-width: 90vw;
+  }
+  #settings input { width: 100%; margin-top: 4px; }
+  #settings .row { margin-bottom: 12px; }
+  footer { color: var(--secondary); font-size: 13px; padding: 40px 0 32px; }
+  @media (max-width: 560px) {
+    .addform { flex-direction: column; align-items: stretch; }
+    .addform label.grow { flex: 0 1 auto; }
+    .addform label input { width: 100%; }
+    header { padding: 28px 0 4px; }
+  }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <h1>💰 Price Tracker</h1>
+  <p class="sub">Paste a link. Get pinged on Telegram when the price drops.</p>
+  <div class="actions">
+    <button class="primary" id="runBtn">▶ Run check now</button>
+    <button id="settingsBtn">⚙ Settings</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="banner" id="setupBanner" hidden>
+    <strong>One-time connection needed</strong>
+    <p>This page saves products straight into your GitHub repo. Open <b>⚙ Settings</b> and paste a
+    <b>fine-grained personal access token</b> (repo access: <i>only this repo</i> ·
+    permissions: <code>Contents: Read &amp; write</code> + <code>Actions: Read &amp; write</code>).
+    Create one at <code>github.com/settings/personal-access-tokens/new</code>.</p>
+    <p>Showing sample data below until you connect.</p>
+  </div>
+
+  <div class="card" id="settings" hidden>
+    <div class="row"><label>GitHub token<input type="password" id="inToken" placeholder="github_pat_…" autocomplete="off"></label></div>
+    <div class="row"><label>Owner<input id="inOwner" placeholder="e.g. zurplox"></label></div>
+    <div class="row"><label>Repository<input id="inRepo" placeholder="e.g. price-tracker"></label></div>
+    <div class="row"><label>Branch<input id="inBranch" placeholder="main"></label></div>
+    <button class="primary" id="saveSettings">Save &amp; connect</button>
+  </div>
+
+  <div class="card">
+    <div class="addform">
+      <label class="grow">Product link
+        <input id="inUrl" type="url" placeholder="https://shopee.sg/… or any shop page" autocomplete="off">
+      </label>
+      <label>Alert below (optional)
+        <input id="inTarget" inputmode="decimal" placeholder="e.g. 30" style="width:150px">
+      </label>
+      <button class="primary" id="addBtn">＋ Add product</button>
+    </div>
+    <p class="hint">The next check finds the price automatically — no setup per product. Hit “Run check now” to start tracking immediately.</p>
+  </div>
+
+  <section id="grid"></section>
+  <p class="empty" id="emptyState" hidden>No products yet — paste your first link above 🛍️</p>
+
+  <footer>Runs free on GitHub Actions · History saved in your repo · Alerts via Telegram</footer>
+</main>
+
+<div id="toast" hidden></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const grid = $("#grid");
+
+/* ---------- settings / connection ---------- */
+const conf = {
+  get token()  { return localStorage.getItem("pt_token")  || ""; },
+  get owner()  { return localStorage.getItem("pt_owner")  || guessOwner(); },
+  get repo()   { return localStorage.getItem("pt_repo")   || guessRepo(); },
+  get branch() { return localStorage.getItem("pt_branch") || "main"; },
+};
+function guessOwner() { const m = location.hostname.match(/^([^.]+)\.github\.io$/); return m ? m[1] : ""; }
+function guessRepo()  { const seg = location.pathname.split("/").filter(Boolean); return seg[0] || ""; }
+
+function toast(msg, ms = 3500) {
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(t._h); t._h = setTimeout(() => t.hidden = true, ms);
+}
+
+async function gh(path, opts = {}) {
+  const res = await fetch(`https://api.github.com/repos/${conf.owner}/${conf.repo}${path}`, {
+    ...opts,
+    headers: {
+      "Authorization": `Bearer ${conf.token}`,
+      "Accept": "application/vnd.github+json",
+      "Content-Type": "application/json",
+      ...(opts.headers || {}),
+    },
+  });
+  if (!res.ok) {
+    if (res.status === 401) throw new Error("Token rejected — check Settings ⚙");
+    if (res.status === 404) throw new Error("Repo or file not found — check Settings ⚙");
+    throw new Error("GitHub error " + res.status);
+  }
+  return res.status === 204 ? null : res.json();
+}
+const b64decode = s => decodeURIComponent(escape(atob(s.replace(/\n/g, ""))));
+const b64encode = s => btoa(unescape(encodeURIComponent(s)));
+
+/* ---------- data ---------- */
+let products = [], prices = {}, productsSha = null, pricesSha = null, demo = false;
+
+async function loadAll() {
+  if (!conf.token) { loadDemo(); return; }
+  grid.innerHTML = "<p class='empty'>Loading…</p>";
+  try {
+    const p = await gh("/contents/products.json?ref=" + conf.branch);
+    productsSha = p.sha;
+    products = JSON.parse(b64decode(p.content)).products || [];
+    try {
+      const h = await gh("/contents/prices.json?ref=" + conf.branch);
+      pricesSha = h.sha;
+      prices = JSON.parse(b64decode(h.content));
+    } catch { prices = {}; }
+    demo = false;
+    render();
+  } catch (e) {
+    grid.innerHTML = "";
+    toast(e.message);
+    $("#settings").hidden = false;
+  }
+}
+
+async function saveProducts(message) {
+  const body = JSON.stringify({ products }, null, 2);
+  const r = await gh("/contents/products.json", {
+    method: "PUT",
+    body: JSON.stringify({ message, content: b64encode(body), sha: productsSha, branch: conf.branch }),
+  });
+  productsSha = r.content.sha;
+}
+
+async function runCheck(silent) {
+  if (!conf.token) { toast("Connect GitHub in Settings first ⚙"); return; }
+  try {
+    await gh(`/actions/workflows/tracker.yml/dispatches`, {
+      method: "POST", body: JSON.stringify({ ref: conf.branch }),
+    });
+    if (!silent) toast("✅ Check started — prices refresh in ~2–3 min");
+    clearTimeout(window._reload);
+    window._reload = setTimeout(() => { toast("Refreshing prices…"); loadAll(); }, 150000);
+  } catch (e) { toast(e.message); }
+}
+
+/* ---------- actions ---------- */
+function makeId(url) {
+  const m = url.match(/i\.(\d+)\.(\d+)/);
+  if (/shopee\./.test(url) && m) return `shopee-${m[1]}-${m[2]}`;
+  try {
+    const u = new URL(url); let h = 0;
+    for (const c of url) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+    return u.hostname.replace(/\W+/g, "") + "-" + h.toString(36);
+  } catch { return "item-" + Date.now(); }
+}
+function nameFromUrl(url) {
+  try {
+    const seg = new URL(url).pathname.split("/").filter(Boolean).pop() || "";
+    const clean = seg.replace(/-?i\.\d+\.\d+.*$/, "").replace(/\.\w+$/, "").replace(/[-_+]+/g, " ").trim();
+    return clean ? clean.replace(/\b\w/g, c => c.toUpperCase()).slice(0, 80) : "Product";
+  } catch { return "Product"; }
+}
+
+async function addProduct() {
+  const url = $("#inUrl").value.trim();
+  const targetRaw = $("#inTarget").value.trim();
+  if (!/^https?:\/\/.+\..+/.test(url)) { toast("That doesn't look like a link 🤔"); return; }
+  const target = targetRaw ? parseFloat(targetRaw.replace(/[^\d.]/g, "")) : null;
+  if (targetRaw && !isFinite(target)) { toast("Target price should be a number"); return; }
+  if (demo) { toast("Connect GitHub first ⚙"); return; }
+  if (products.some(p => p.url === url)) { toast("Already tracking that link"); return; }
+
+  products.push({
+    id: makeId(url), name: nameFromUrl(url), url,
+    target: isFinite(target) ? target : null,
+    selector: null, paused: false, status: "pending",
+    method: null, last_price: null, last_checked: null,
+  });
+  try {
+    await saveProducts("Add " + url.slice(0, 60));
+    $("#inUrl").value = ""; $("#inTarget").value = "";
+    render();
+    toast("✅ Added — running a check now");
+    runCheck(true);
+  } catch (e) { products.pop(); toast(e.message); }
+}
+
+async function deleteProduct(id) {
+  if (demo) { toast("Connect GitHub first ⚙"); return; }
+  const p = products.find(x => x.id === id);
+  if (!confirm(`Stop tracking "${p.name}"?`)) return;
+  products = products.filter(x => x.id !== id);
+  try { await saveProducts("Remove " + p.name.slice(0, 50)); render(); toast("Removed"); }
+  catch (e) { toast(e.message); loadAll(); }
+}
+
+async function saveField(id, field, value) {
+  if (demo) { toast("Connect GitHub first ⚙"); return; }
+  const p = products.find(x => x.id === id);
+  p[field] = value;
+  try { await saveProducts("Update " + p.name.slice(0, 50)); toast("Saved ✓"); }
+  catch (e) { toast(e.message); }
+}
+
+/* ---------- rendering ---------- */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function money(v, url) {
+  if (v == null) return "—";
+  const cur = /\.(sg|com\.sg)(\/|$)/.test(url) ? "S$" : (/\.my(\/|$)/.test(url) ? "RM" : "$");
+  return cur + Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function timeAgo(iso) {
+  if (!iso) return "never";
+  const mins = Math.max(1, Math.round((Date.now() - new Date(iso)) / 60000));
+  if (mins < 60) return mins + "m ago";
+  const h = Math.round(mins / 60); if (h < 24) return h + "h ago";
+  return Math.round(h / 24) + "d ago";
+}
+function sparkline(points) {
+  if (!points || points.length < 2) return `<div class="checked" style="margin-top:12px">Collecting data…</div>`;
+  const vals = points.slice(-40).map(p => p.p);
+  const min = Math.min(...vals), max = Math.max(...vals), span = max - min || 1;
+  const w = 260, h = 36;
+  const step = w / (vals.length - 1);
+  const pts = vals.map((v, i) => `${(i * step).toFixed(1)},${(h - 4 - ((v - min) / span) * (h - 8)).toFixed(1)}`).join(" ");
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <polyline points="${pts}" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+function trendBadge(hist) {
+  if (!hist || hist.length < 2) return "";
+  const a = hist[hist.length - 2].p, b = hist[hist.length - 1].p;
+  const pct = ((b - a) / a) * 100;
+  if (Math.abs(pct) < 0.01) return `<span class="trend flat">— no change</span>`;
+  return pct < 0
+    ? `<span class="trend down">▼ ${Math.abs(pct).toFixed(1)}%</span>`
+    : `<span class="trend up">▲ ${pct.toFixed(1)}%</span>`;
+}
+function statusBadge(p, isDemo) {
+  if (isDemo) return `<span class="badge sample">SAMPLE</span>`;
+  const s = p.status || "pending";
+  if (s === "tracking") return `<span class="badge tracking">● Tracking${p.method ? " · " + esc(p.method.replace("auto ", "")) : ""}</span>`;
+  if (s === "pending") return `<span class="badge pending">● Pending first check</span>`;
+  if (p.paused) return `<span class="badge">⏸ Paused</span>`;
+  return `<span class="badge error" title="${esc(s)}">⚠ ${esc(s.length > 44 ? s.slice(0, 44) + "…" : s)}</span>`;
+}
+
+function render() {
+  $("#setupBanner").hidden = !!conf.token;
+  $("#emptyState").hidden = products.length > 0;
+  grid.innerHTML = products.map(p => {
+    const hist = prices[p.id] || [];
+    return `<div class="card">
+      <a class="pname" href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.name)}</a>
+      <div class="pricerow">
+        <span class="price">${money(p.last_price, p.url)}</span>
+        ${trendBadge(hist)}
+      </div>
+      <div class="meta">${statusBadge(p, demo)}<span class="checked">checked ${timeAgo(p.last_checked)}</span></div>
+      ${sparkline(hist)}
+      <div class="targetrow">Alert below
+        <input inputmode="decimal" value="${p.target ?? ""}" placeholder="none"
+          onchange="saveField('${p.id}','target', this.value ? parseFloat(this.value.replace(/[^\\d.]/g,'')) : null)">
+      </div>
+      <div class="cardfoot">
+        <details><summary>Advanced</summary>
+          <input placeholder="CSS selector (only if auto-detect fails)" value="${esc(p.selector || "")}"
+            id="sel-${p.id}">
+          <button onclick="saveField('${p.id}','selector', document.getElementById('sel-${p.id}').value || null)">Save selector</button>
+        </details>
+        <button class="danger" onclick="deleteProduct('${p.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ---------- demo data ---------- */
+function loadDemo() {
+  demo = true;
+  const t = Date.now();
+  products = [{
+    id: "demo", name: "Sample — Vention 35W Super Mini PowerBank 10000mAh",
+    url: "https://shopee.sg", target: 30, selector: null, paused: false,
+    status: "tracking", method: "auto (shopee api)", last_price: 32.9,
+    last_checked: new Date(t - 42 * 60000).toISOString(),
+  }];
+  prices = { demo: [
+    { t: new Date(t - 9 * 864e5).toISOString(), p: 39.9 },
+    { t: new Date(t - 6 * 864e5).toISOString(), p: 36.5 },
+    { t: new Date(t - 3 * 864e5).toISOString(), p: 37.9 },
+    { t: new Date(t - 864e5).toISOString(), p: 34.9 },
+    { t: new Date(t - 42 * 60000).toISOString(), p: 32.9 },
+  ]};
+  render();
+}
+
+/* ---------- wire up ---------- */
+$("#addBtn").onclick = addProduct;
+$("#inUrl").addEventListener("keydown", e => { if (e.key === "Enter") addProduct(); });
+$("#runBtn").onclick = () => runCheck(false);
+$("#settingsBtn").onclick = () => {
+  const s = $("#settings"); s.hidden = !s.hidden;
+  if (!s.hidden) {
+    $("#inToken").value = conf.token; $("#inOwner").value = conf.owner;
+    $("#inRepo").value = conf.repo; $("#inBranch").value = conf.branch;
+  }
+};
+$("#saveSettings").onclick = () => {
+  localStorage.setItem("pt_token", $("#inToken").value.trim());
+  localStorage.setItem("pt_owner", $("#inOwner").value.trim());
+  localStorage.setItem("pt_repo", $("#inRepo").value.trim());
+  localStorage.setItem("pt_branch", $("#inBranch").value.trim() || "main");
+  $("#settings").hidden = true;
+  toast("Saved — connecting…");
+  loadAll();
+};
+
+loadAll();
+</script>
+</body>
+</html>

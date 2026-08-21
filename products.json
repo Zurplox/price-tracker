@@ -1,0 +1,28 @@
+{
+  "products": [
+    {
+      "id": "shopee-95236751-42608812819",
+      "name": "Vention 35W Super Mini PowerBank 10000mAh (Built-in Cable, PD)",
+      "url": "https://shopee.sg/-CCC-Certification-Vention-35w-Super-mini-PowerBank-10000mAh-Built-In-Cable-PD-Super-Fast-Charging-Digital-Display-For-Phone-i.95236751.42608812819",
+      "target": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
+    },
+    {
+      "id": "lazada-301076868",
+      "name": "Magiclean Toilet Bleach - 3 Pack (Value Pack)",
+      "url": "https://www.lazada.sg/products/pdp-i301076868-s527078858.html",
+      "target": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
+    }
+  ]
+}
