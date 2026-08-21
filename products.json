@@ -7,10 +7,10 @@
       "target": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
+      "status": "needs attention — couldn't find a price (try adding a selector in Advanced)",
       "method": null,
       "last_price": null,
-      "last_checked": null
+      "last_checked": "2026-08-21T16:01:18+00:00"
     },
     {
       "id": "lazada-301076868",
@@ -19,10 +19,10 @@
       "target": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
+      "status": "needs attention — couldn't find a price (try adding a selector in Advanced)",
       "method": null,
       "last_price": null,
-      "last_checked": null
+      "last_checked": "2026-08-21T16:02:22+00:00"
     }
   ]
 }
