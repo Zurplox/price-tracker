@@ -390,5 +390,39 @@
         "price": 1899.0
       }
     ]
+  },
+  "https://www.agoda.com/robertson-quay-hotel/hotel/singapore-sg.html?countryId=114&finalPriceView=2&isShowMobileAppPrice=false&cid=1833981&numberOfBedrooms=&familyMode=false&adults=2&children=0&rooms=1&maxRooms=0&checkIn=2026-12-11&isCalendarCallout=false&childAges=&numberOfGuest=0&missingChildAges=false&travellerType=1&showReviewSubmissionEntry=false&currencyCode=SGD&isFreeOccSearch=false&los=4&searchrequestid=2b364e1a-2466-41b0-9e46-01d7d65e2f4e&ds=Jn6rU94JkP7mRAu9": {
+    "scanned_at": "2026-08-22T06:59:46+00:00",
+    "via": "plain fetch+browser",
+    "candidates": [
+      {
+        "label": "Overview Rooms Trip recommendations Facilities Reviews Location Polici",
+        "price": 78.0
+      },
+      {
+        "label": "VIEW THIS DEAL",
+        "price": 78.0
+      },
+      {
+        "label": "Original price: USD44. Current price: USD36 USD 36",
+        "price": 44.0
+      },
+      {
+        "label": "Original price: USD36. Current price: USD34 USD 34",
+        "price": 36.0
+      },
+      {
+        "label": "Original price: USD11. Current price: USD10 USD 10",
+        "price": 11.0
+      },
+      {
+        "label": "Original price: USD35. Current price: USD32 USD 32",
+        "price": 35.0
+      },
+      {
+        "label": "Original price: USD1. Current price: USD0 USD 0",
+        "price": 1.0
+      }
+    ]
   }
 }
