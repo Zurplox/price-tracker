@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       scan_url:
-        description: "Product / hotel / flight URL to scan"
-        required: true
+        description: "URL to scan — leave empty to scan ALL tracked links in one run"
+        required: false
         type: string
 
 permissions:

@@ -53,7 +53,7 @@ Note: GitHub Pages sites are technically public — without your token the page 
 - **Tweak targets**: type in the "Alert below" field on any card — saves automatically.
 - **"Run check now"**: forces an immediate check.
 - **💸 Multi-option pages (hotels, flights, fare bundles)**: tick **Lowest price on page** when adding — the tracker records the *cheapest* option on the page and keeps working even when specific rooms/rates sell out. You can also toggle it later in a card's **Advanced** section.
-- **🎯 Watch one specific option**: open a card → **🔍 Scan all prices** → wait ~3 min → the card lists every price found (with labels like room types or fare bundles) → pick one → **Track selected price**. The tracker follows that exact option run after run — and honestly reports if it sells out, instead of silently tracking something else. Want two options? Add the same link twice and pick differently in each card.
+- **🎯 Watch one specific option**: press **🔍 Scan all** in the header (scans every tracked link in one run, ~5–10 min) — or a card's **🔍 Scan this page** for a single link. When the list appears, open it, pick the exact price (room type, fare bundle…), and hit **Track selected price**. The tracker follows that exact option run after run — and honestly reports if it sells out, instead of silently tracking something else. Want two options? Add the same link twice and pick differently in each card.
 
 ## Notes
 

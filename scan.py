@@ -1,8 +1,11 @@
 """
-🔍 Price scanner — fetches ONE url through the same layered fetch as the tracker
+🔍 Price scanner — fetches links through the same layered fetch as the tracker
 and writes every price it finds (with labels) into scans.json, so the dashboard
-can show them as a tickable list. Runs via the "Scan prices" GitHub Actions
-workflow (manual dispatch with a scan_url input).
+can show them as tickable lists.
+
+Runs via the "Scan prices" GitHub Actions workflow:
+  - dispatch WITH a scan_url input  → scans just that link (per-card 🔍 button)
+  - dispatch WITHOUT it             → scans ALL tracked links in one run (Scan all)
 """
 
 import os
@@ -11,13 +14,8 @@ import sys
 import tracker
 
 
-def main():
-    url = os.environ.get("SCAN_URL", "").strip()
-    if not url:
-        print("No SCAN_URL provided")
-        sys.exit(1)
-    print("🔍 Scanning " + url)
-
+def scan_one(url):
+    """Scan a single URL. Returns (candidates, via)."""
     candidates, via = [], None
 
     # Shopee shortcut — include the listing's main price as a candidate
@@ -63,15 +61,40 @@ def main():
         if key not in seen:
             seen.add(key)
             out.append(c)
-    out = out[:50]
+    return out[:50], via
 
+
+def main():
+    url = os.environ.get("SCAN_URL", "").strip()
+
+    if url:
+        targets = [url]
+    else:
+        data = tracker.load_json("products.json", {"products": []})
+        products = data.get("products", data) if isinstance(data, dict) else data
+        targets = list(dict.fromkeys(p["url"] for p in products if not p.get("paused")))
+
+    if not targets:
+        print("Nothing to scan")
+        sys.exit(1)
+
+    print("🔍 Scanning " + str(len(targets)) + " link(s)")
     scans = tracker.load_json("scans.json", {})
-    scans[url] = {"scanned_at": tracker.now_iso(), "via": via or "none", "candidates": out}
-    tracker.save_json("scans.json", scans)
 
-    print("\nFound " + str(len(out)) + " price candidate(s) via " + (via or "nothing"))
-    for c in out[:12]:
-        print("  • " + str(c["price"]) + " — " + c["label"])
+    for t in targets:
+        print("\n--- " + t)
+        try:
+            candidates, via = scan_one(t)
+        except Exception as e:
+            print("  ⚠️ scan failed: " + str(e))
+            candidates, via = [], None
+        scans[t] = {"scanned_at": tracker.now_iso(), "via": via or "none", "candidates": candidates}
+        print("  found " + str(len(candidates)) + " candidate(s)" + (" via " + via if via else ""))
+        for c in candidates[:8]:
+            print("    • " + str(c["price"]) + " — " + c["label"])
+
+    tracker.save_json("scans.json", scans)
+    print("\nDone — scanned " + str(len(targets)) + " link(s).")
 
 
 if __name__ == "__main__":

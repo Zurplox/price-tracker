@@ -118,6 +118,7 @@
   <p class="sub">Paste a link. Get pinged on Telegram when the price drops.</p>
   <div class="actions">
     <button class="primary" id="runBtn">▶ Run check now</button>
+    <button id="scanAllBtn">🔍 Scan all</button>
     <button id="settingsBtn">⚙ Settings</button>
   </div>
 </header>
@@ -421,7 +422,7 @@ function scanSection(p) {
       </details>`
     : (s ? `<p class="hint">Last scan found nothing — the site likely walled it off that run. Try again later.</p>` : "");
   return `<div style="margin-top:12px">${watch}
-    <button style="min-height:38px;font-size:14px" onclick="scanProduct('${p.id}')">🔍 Scan all prices</button>
+    <button style="min-height:38px;font-size:14px" onclick="scanProduct('${p.id}')">🔍 Scan this page</button>
     ${list}</div>`;
 }
 
@@ -476,6 +477,19 @@ function loadDemo() {
 $("#addBtn").onclick = addProduct;
 $("#inUrl").addEventListener("keydown", e => { if (e.key === "Enter") addProduct(); });
 $("#runBtn").onclick = () => runCheck(false);
+$("#scanAllBtn").onclick = async () => {
+  if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
+  try {
+    await gh(`/actions/workflows/scan.yml/dispatches`, {
+      method: "POST",
+      body: JSON.stringify({ ref: conf.branch, inputs: { scan_url: "" } }),
+    });
+    toast("🔍 Scanning everything — check back in ~5–10 min");
+    clearTimeout(window._scanA); clearTimeout(window._scanB);
+    window._scanA = setTimeout(loadAll, 300000);
+    window._scanB = setTimeout(loadAll, 600000);
+  } catch (e) { toast(e.message); }
+};
 $("#settingsBtn").onclick = () => {
   const s = $("#settings"); s.hidden = !s.hidden;
   if (!s.hidden) {
