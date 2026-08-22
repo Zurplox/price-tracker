@@ -64,7 +64,7 @@
       "id": "wwwapplecom-1dbyr0o",
       "name": "Macbook Air",
       "url": "https://www.apple.com/sg/shop/buy-mac/macbook-air",
-      "target": null,
+      "target": 1699,
       "mode": "lowest",
       "selector": null,
       "paused": false,
