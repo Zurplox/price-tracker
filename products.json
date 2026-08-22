@@ -9,8 +9,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225,
-      "last_checked": "2026-08-22T03:01:48+00:00",
+      "last_price": 225.0,
+      "last_checked": "2026-08-22T03:05:04+00:00",
       "fail_count": 0
     },
     {
@@ -21,10 +21,11 @@
       "mode": "lowest",
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "auto (lowest of 106 prices) (scraperapi)",
+      "last_price": 1.0,
+      "last_checked": "2026-08-22T03:05:34+00:00",
+      "fail_count": 0
     }
   ]
 }
