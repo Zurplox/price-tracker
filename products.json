@@ -12,6 +12,19 @@
       "last_price": 225,
       "last_checked": "2026-08-22T03:01:48+00:00",
       "fail_count": 0
+    },
+    {
+      "id": "sgtripcom-a2je0n",
+      "name": "Detail",
+      "url": "https://sg.trip.com/hotels/detail/?cityEnName=Singapore&cityId=73&hotelId=10930412&checkIn=2026-12-11&checkOut=2026-12-15&adult=2&children=0&crn=1&ages=&curr=SGD&barcurr=SGD&hoteluniquekey=H4sIAAAAAAAA_-OazMLFKsFksIFFqpOFo-3K-vusQoxGGnfZDOwsvgo6asb0H_rK1Ojguc79YZVIwhKHAJ5CBhCIaHZoZASz3pQ7zGB8M3E260ZGsGqJaocdjEwnGN8xL2B6d-El8ykWVo52BwmWSyyfmKKrlbJTK5WsTHSUSjJLclKVrJTCHEOUdJRSUouTgRwgKzE3vzSvBMg2MdAztwQKlCRWeKaAtSQn5iSX5iSWpIZUFgC1mukoZRY7lxRlFgSl5maWlKQCVaUl5hSngsSDUouBMslgQSU_oDFFUIHM_DyIdgMUsbDEnNJUiAuAFrqlQu0wrNXBdHJwalFZZnKqQnJGYlF6Kg7XG-oZGSBcbz4grjeujX3EwhQd-4LlLtsnFoZfwJh4EyXB0sTK0MXKMImVjeN7I7MEyy5WHn9PVzNPE11D3ShdwwusbaxSioYGBgZGpqZG5roGiZaJycaWSbomlmYmpqa6RoZm5hamhhqHLjf_azQx0lJg1OKNd3c3MjO1NDezMLK0MGA8xShiYGlgbGJoYG5oaGxhYGFqZGFiZuTBEsTmampq4uQaZcPFHOzuInhd6JPjeTVRBykQTxHG0wLxDGG8wJpEo1ADrZf2kTCRJNbUPN1g94yrYgWMDYyMXYzcAowejBGMFSDeKkZ2LmYDI0MBpg2MjDsY_8MA4ytGkLEARbxjQfACAAA&detailFilters=15%7CRange%7E15%7E0%7C560*80%7C1%7C0%7E80%7E1*29%7C1%7E29%7E1%7C2&hotelType=normal&display=inctotal&isCT=true&locale=en-SG",
+      "target": null,
+      "mode": "lowest",
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
