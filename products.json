@@ -9,8 +9,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225,
-      "last_checked": "2026-08-22T05:48:29+00:00",
+      "last_price": 225.0,
+      "last_checked": "2026-08-22T06:46:37+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
     },
@@ -25,8 +25,8 @@
       "status": "tracking",
       "method": "auto (page element) (scraperapi)",
       "last_price": 257,
-      "last_checked": "2026-08-22T05:48:48+00:00",
-      "fail_count": 1,
+      "last_checked": "2026-08-22T06:47:09+00:00",
+      "fail_count": 2,
       "note": "last check failed — showing earlier price"
     },
     {
@@ -39,11 +39,11 @@
       "paused": false,
       "status": "tracking",
       "method": "🎯 INSTA360 ACE PRO 2 DUAL BATT",
-      "last_price": 639,
-      "last_checked": "2026-08-22T05:49:50+00:00",
-      "fail_count": 1,
+      "last_price": 639.0,
+      "last_checked": "2026-08-22T06:47:12+00:00",
+      "fail_count": 0,
       "watch_label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)",
-      "note": "last check failed — showing earlier price"
+      "_tracked_key": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)"
     },
     {
       "id": "wwwjbhificomau-j3e09i",
@@ -55,8 +55,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data)",
-      "last_price": 839,
-      "last_checked": "2026-08-22T05:49:51+00:00",
+      "last_price": 839.0,
+      "last_checked": "2026-08-22T06:47:13+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
     },
@@ -70,8 +70,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (lowest of 1 prices)",
-      "last_price": 1899,
-      "last_checked": "2026-08-22T05:49:52+00:00",
+      "last_price": 1899.0,
+      "last_checked": "2026-08-22T06:47:13+00:00",
       "fail_count": 0,
       "_tracked_key": "lowest"
     }
