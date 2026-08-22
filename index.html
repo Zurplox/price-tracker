@@ -43,6 +43,9 @@
   button.danger { color: var(--red); }
   button:hover { filter: brightness(0.97); }
   button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  button:disabled { opacity: .55; cursor: default; }
+  #runState { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 14px;
+    border-radius: 8px; background: var(--blue-soft); color: var(--blue); font-size: 14px; font-weight: 600; }
   .banner {
     margin: 24px 0 0; padding: 16px 20px; border-radius: 12px;
     background: var(--blue-soft); border: 1px solid var(--blue);
@@ -121,6 +124,7 @@
     <button id="scanAllBtn">🔍 Scan all</button>
     <button id="settingsBtn">⚙ Settings</button>
   </div>
+  <div id="runState" hidden></div>
 </header>
 
 <main class="wrap">
@@ -228,6 +232,7 @@ async function loadAll() {
     } catch { scans = {}; }
     demo = false;
     render();
+    if (window._busy) clearBusy("✅ Fresh data in!");
   } catch (e) {
     grid.innerHTML = "";
     toast(e.message);
@@ -244,15 +249,34 @@ async function saveProducts(message) {
   productsSha = r.content.sha;
 }
 
+/* ---------- run-in-progress state ---------- */
+function setBusy(msg) {
+  window._busy = true;
+  const r = $("#runState"); r.textContent = msg; r.hidden = false;
+  for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = true;
+  clearTimeout(window._busyMax);
+  window._busyMax = setTimeout(() => clearBusy("⌛ Still running — check the repo's Actions tab"), 12 * 60000);
+}
+function clearBusy(msg) {
+  window._busy = false;
+  for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
+  const r = $("#runState");
+  if (msg) {
+    r.textContent = msg; r.hidden = false;
+    clearTimeout(r._h); r._h = setTimeout(() => r.hidden = true, 6000);
+  } else r.hidden = true;
+}
+
 async function runCheck(silent) {
   if (!conf.token) { toast("Connect GitHub in Settings first ⚙"); return; }
+  if (window._busy) { toast("Already running ⏳ — I'll refresh when it's done"); return; }
   try {
     await gh(`/actions/workflows/tracker.yml/dispatches`, {
       method: "POST", body: JSON.stringify({ ref: conf.branch }),
     });
-    if (!silent) toast("✅ Check started — prices refresh in ~2–3 min");
+    setBusy("⏳ Check running — I'll refresh for you in ~2–3 min…");
     clearTimeout(window._reload);
-    window._reload = setTimeout(() => { toast("Refreshing prices…"); loadAll(); }, 150000);
+    window._reload = setTimeout(() => loadAll(), 150000);
   } catch (e) { toast(e.message); }
 }
 
@@ -429,12 +453,13 @@ function scanSection(p) {
 async function scanProduct(id) {
   const p = products.find(x => x.id === id);
   if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
+  if (window._busy) { toast("A run is already in progress ⏳"); return; }
   try {
     await gh(`/actions/workflows/scan.yml/dispatches`, {
       method: "POST",
       body: JSON.stringify({ ref: conf.branch, inputs: { scan_url: p.url } }),
     });
-    toast("🔍 Scan started — results in ~3 min");
+    setBusy("🔍 Scanning this page — the price list appears in ~3 min…");
     clearTimeout(window._scanA); clearTimeout(window._scanB);
     window._scanA = setTimeout(loadAll, 170000);
     window._scanB = setTimeout(loadAll, 290000);
@@ -479,12 +504,13 @@ $("#inUrl").addEventListener("keydown", e => { if (e.key === "Enter") addProduct
 $("#runBtn").onclick = () => runCheck(false);
 $("#scanAllBtn").onclick = async () => {
   if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
+  if (window._busy) { toast("Already running ⏳ — I'll refresh when it's done"); return; }
   try {
     await gh(`/actions/workflows/scan.yml/dispatches`, {
       method: "POST",
       body: JSON.stringify({ ref: conf.branch, inputs: { scan_url: "" } }),
     });
-    toast("🔍 Scanning everything — check back in ~5–10 min");
+    setBusy("🔍 Scanning all links — price lists appear in ~5–10 min; I'll refresh for you…");
     clearTimeout(window._scanA); clearTimeout(window._scanB);
     window._scanA = setTimeout(loadAll, 300000);
     window._scanB = setTimeout(loadAll, 600000);

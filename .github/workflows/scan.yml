@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write             # write scan results back to this repo
 
+concurrency:
+  group: price-scan           # spammed scans queue up instead of colliding
+  cancel-in-progress: false
+
 jobs:
   scan:
     runs-on: ubuntu-latest
