@@ -25,6 +25,19 @@
       "method": null,
       "last_price": null,
       "last_checked": null
+    },
+    {
+      "id": "bookingflyscootcom-wi3zrs",
+      "name": "SIN",
+      "url": "https://booking.flyscoot.com/book/flight/return/SIN/24%20Aug%202026/SYD/SYD/31%20Aug%202026/SIN?culture=en-sg&adult=1&child=0&infant=0",
+      "target": null,
+      "mode": "lowest",
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
