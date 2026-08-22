@@ -57,7 +57,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data)",
-      "last_price": 839.0,
+      "last_price": 839,
       "last_checked": "2026-08-22T08:33:13+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -72,7 +72,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (lowest of 1 prices)",
-      "last_price": 1899.0,
+      "last_price": 1899,
       "last_checked": "2026-08-22T08:33:13+00:00",
       "fail_count": 0,
       "_tracked_key": "lowest"
