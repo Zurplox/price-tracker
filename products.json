@@ -9,22 +9,22 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225,
-      "last_checked": "2026-08-22T03:30:22+00:00",
+      "last_price": 225.0,
+      "last_checked": "2026-08-22T05:14:27+00:00",
       "fail_count": 0
     },
     {
       "id": "sgtripcom-a2je0n",
-      "name": "Detail",
+      "name": "Mercure Singapore on Stevens, Prices & Deals | Trip.com",
       "url": "https://sg.trip.com/hotels/detail/?cityEnName=Singapore&cityId=73&hotelId=10930412&checkIn=2026-12-11&checkOut=2026-12-15&adult=2&children=0&crn=1&ages=&curr=SGD&barcurr=SGD&hoteluniquekey=H4sIAAAAAAAA_-OazMLFKsFksIFFqpOFo-3K-vusQoxGGnfZDOwsvgo6asb0H_rK1Ojguc79YZVIwhKHAJ5CBhCIaHZoZASz3pQ7zGB8M3E260ZGsGqJaocdjEwnGN8xL2B6d-El8ykWVo52BwmWSyyfmKKrlbJTK5WsTHSUSjJLclKVrJTCHEOUdJRSUouTgRwgKzE3vzSvBMg2MdAztwQKlCRWeKaAtSQn5iSX5iSWpIZUFgC1mukoZRY7lxRlFgSl5maWlKQCVaUl5hSngsSDUouBMslgQSU_oDFFUIHM_DyIdgMUsbDEnNJUiAuAFrqlQu0wrNXBdHJwalFZZnKqQnJGYlF6Kg7XG-oZGSBcbz4grjeujX3EwhQd-4LlLtsnFoZfwJh4EyXB0sTK0MXKMImVjeN7I7MEyy5WHn9PVzNPE11D3ShdwwusbaxSioYGBgZGpqZG5roGiZaJycaWSbomlmYmpqa6RoZm5hamhhqHLjf_azQx0lJg1OKNd3c3MjO1NDezMLK0MGA8xShiYGlgbGJoYG5oaGxhYGFqZGFiZuTBEsTmampq4uQaZcPFHOzuInhd6JPjeTVRBykQTxHG0wLxDGG8wJpEo1ADrZf2kTCRJNbUPN1g94yrYgWMDYyMXYzcAowejBGMFSDeKkZ2LmYDI0MBpg2MjDsY_8MA4ytGkLEARbxjQfACAAA&detailFilters=15%7CRange%7E15%7E0%7C560*80%7C1%7C0%7E80%7E1*29%7C1%7E29%7E1%7C2&hotelType=normal&display=inctotal&isCT=true&locale=en-SG",
       "target": null,
       "mode": "lowest",
       "selector": null,
       "paused": false,
       "status": "tracking",
-      "method": "auto (lowest of 109 prices) (scraperapi)",
-      "last_price": 1,
-      "last_checked": "2026-08-22T03:30:52+00:00",
+      "method": "auto (lowest of 108 prices) (scraperapi)",
+      "last_price": 1.0,
+      "last_checked": "2026-08-22T05:15:02+00:00",
       "fail_count": 0
     },
     {
@@ -35,25 +35,25 @@
       "mode": "lowest",
       "selector": null,
       "paused": false,
-      "status": "needs attention — couldn't find a price (try adding a selector in Advanced)",
+      "status": "needs attention — couldn't find a price (try 🔍 Scan or a selector in Advanced)",
       "method": null,
       "last_price": null,
-      "last_checked": "2026-08-22T03:31:53+00:00",
-      "fail_count": 1
+      "last_checked": "2026-08-22T05:16:03+00:00",
+      "fail_count": 2
     },
     {
       "id": "sgtripcom-116cyy9",
-      "name": "Detail",
+      "name": "Fragrance Hotel - Oasis, Singapore: 2026 Deals | Trip.com",
       "url": "https://sg.trip.com/hotels/detail/?cityEnName=Singapore&cityId=73&hotelId=995027&checkIn=2026-12-11&checkOut=2026-12-15&adult=2&children=0&crn=1&ages=&curr=SGD&barcurr=SGD&hoteluniquekey=H4sIAAAAAAAA_-PqYuFilWAy2MAi1cDC8erIg3esQowGGptZLH4LOj6sElnnfrTMwbP_0FeNGLPZDgE8hQwgsCDJoZFxh1zr68Ad_g4zGC_ftdnICFQKVF_ksIOR6QTjKaYFTM97JlueYmHluKMlwXKJ5RNTdLVSdmqlkpWJjlJJZklOqpKVUnBqUVlmcqpCckZiUXqqko5SSmpxMlAcyErMzS_NKwGyjcz1TCyAAiWJFZ4pSlbmOkrJiTnJpTmJJakhlQVAU8x0lDKLnUuKMguCUnMzS0pSgarSEnOKU0HiQanFQJlksKCSH9CYIqhAZn4eRLshilhYYk5pKsQFQAvdUqF2GNfqYLo-zDEEp5ONDBBONhkQJxvWxj5iYYqOfcGymeUTC8MvYEw8FZVgaWJl6GJlmMTKxnGkkUmCZRcrW6CTUYih4QXWecxSioYGBgZGpqZG5roGiZYWScYmFromlmYmpqa6RobmhgaGhhqnbzf_azQx0lJg1OKNd3c3MjO1NDezMLK0MGA8xShiYGlgbGJoYG5oaGxhYGFqZGFiZuTBEsTm6ORq7OwWZcPFHOzuInhd6JPjeTVRBykQTxHG0wLxDGG8wJpEo1ADrZf2kTCRJNbUPN1g94yrYgWMDYyMXYzcAowejBGMFSDeKkaGDYyMOxj_wwDjK0aQeQCqAZpg4AIAAA&detailFilters=15%7CRange%7E15%7E0%7C560*80%7C1%7C0%7E80%7E1*29%7C1%7E29%7E1%7C2&hotelType=normal&display=inctotal&isCT=true&locale=en-SG",
       "target": null,
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "needs attention — couldn't find a price (try adding a selector in Advanced)",
-      "method": null,
-      "last_price": null,
-      "last_checked": "2026-08-22T03:32:21+00:00",
-      "fail_count": 1
+      "status": "tracking",
+      "method": "auto (page element) (scraperapi)",
+      "last_price": 257.0,
+      "last_checked": "2026-08-22T05:16:39+00:00",
+      "fail_count": 0
     },
     {
       "id": "wwwlazadasg-2hcwlt",
@@ -64,9 +64,9 @@
       "selector": null,
       "paused": false,
       "status": "tracking",
-      "method": "auto (page element) (browser)",
-      "last_price": 4,
-      "last_checked": "2026-08-22T03:32:31+00:00",
+      "method": "🎯 INSTA360 ACE PRO 2 DUAL BATT",
+      "last_price": 639.0,
+      "last_checked": "2026-08-22T05:16:51+00:00",
       "fail_count": 0,
       "watch_label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)"
     },
@@ -80,8 +80,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data)",
-      "last_price": 839,
-      "last_checked": "2026-08-22T03:32:32+00:00",
+      "last_price": 839.0,
+      "last_checked": "2026-08-22T05:16:51+00:00",
       "fail_count": 0
     },
     {
@@ -94,8 +94,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (lowest of 1 prices)",
-      "last_price": 1899,
-      "last_checked": "2026-08-22T03:32:33+00:00",
+      "last_price": 1899.0,
+      "last_checked": "2026-08-22T05:16:52+00:00",
       "fail_count": 0
     }
   ]
