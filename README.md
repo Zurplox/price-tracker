@@ -48,11 +48,11 @@ Note: GitHub Pages sites are technically public — without your token the page 
 
 ## Daily use
 
-- **Add a product**: paste link + optional target price → **Add product**. A check runs immediately; price appears in ~2–3 min.
+- **Add a product**: paste link + optional target price → **Add product**. Add as many as you like — nothing runs until the daily 4am SGT schedule or your next **Run check now** (one press checks everything in one go).
 - **Get alerts**: automatic on Telegram — when a price drops at all, or crosses your target.
 - **Tweak targets**: type in the "Alert below" field on any card — saves automatically.
 - **"Run check now"**: forces an immediate check.
-- **🏨 Hotels & multi-option pages**: tick **Lowest price on page** when adding — the tracker records the *cheapest* option on the page and keeps working even when specific rooms/rates sell out. You can also toggle it later in a card's **Advanced** section.
+- **💸 Multi-option pages (hotels, flights, fare bundles)**: tick **Lowest price on page** when adding — the tracker records the *cheapest* option on the page and keeps working even when specific rooms/rates sell out. You can also toggle it later in a card's **Advanced** section.
 
 ## Notes
 

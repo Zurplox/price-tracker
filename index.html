@@ -142,11 +142,11 @@
         <input id="inTarget" inputmode="decimal" placeholder="e.g. 30" style="width:150px">
       </label>
       <label style="flex-direction:row;align-items:center;gap:8px;min-height:44px">
-        <input type="checkbox" id="inLowest" style="min-height:0;width:18px;height:18px;flex:none"> <span>🏨 Lowest price on page <span style="font-weight:400;color:var(--secondary)">(hotels, multi-option)</span></span>
+        <input type="checkbox" id="inLowest" style="min-height:0;width:18px;height:18px;flex:none"> <span>💸 Lowest price on page <span style="font-weight:400;color:var(--secondary)">(hotels, flights, multi-option)</span></span>
       </label>
       <button class="primary" id="addBtn">＋ Add product</button>
     </div>
-    <p class="hint">The next check finds the price automatically — no setup per product. Hit “Run check now” to start tracking immediately.</p>
+    <p class="hint">Add as many links as you like — nothing runs until the daily schedule or your next “Run check now”.</p>
   </div>
 
   <section id="grid"></section>
@@ -279,8 +279,7 @@ async function addProduct() {
     await saveProducts("Add " + url.slice(0, 60));
     $("#inUrl").value = ""; $("#inTarget").value = ""; $("#inLowest").checked = false;
     render();
-    toast("✅ Added — running a check now");
-    runCheck(true);
+    toast("✅ Added — press ▶ Run check now when you're ready");
   } catch (e) { products.pop(); toast(e.message); }
 }
 
@@ -354,7 +353,7 @@ function render() {
         <span class="price">${money(p.last_price, p.url)}</span>
         ${trendBadge(hist)}
       </div>
-      <div class="meta">${statusBadge(p, demo)}${p.mode === "lowest" ? `<span class="badge pending">🏨 lowest rate</span>` : ""}<span class="checked">checked ${timeAgo(p.last_checked)}${p.fail_count ? " · ⚠️ last check failed" : ""}</span></div>
+      <div class="meta">${statusBadge(p, demo)}${p.mode === "lowest" ? `<span class="badge pending">💸 lowest price</span>` : ""}<span class="checked">checked ${timeAgo(p.last_checked)}${p.fail_count ? " · ⚠️ last check failed" : ""}</span></div>
       ${sparkline(hist)}
       <div class="targetrow">Alert below
         <input inputmode="decimal" value="${p.target ?? ""}" placeholder="none"
@@ -367,7 +366,7 @@ function render() {
           <button onclick="saveField('${p.id}','selector', document.getElementById('sel-${p.id}').value || null)">Save selector</button>
           <label style="flex-direction:row;align-items:center;gap:8px;margin-top:10px;font-weight:500">
             <input type="checkbox" style="min-height:0;width:18px;height:18px" ${p.mode === "lowest" ? "checked" : ""}
-              onchange="saveField('${p.id}','mode', this.checked ? 'lowest' : null)"> 🏨 Lowest price on page
+              onchange="saveField('${p.id}','mode', this.checked ? 'lowest' : null)"> 💸 Lowest price on page
           </label>
         </details>
         <button class="danger" onclick="deleteProduct('${p.id}')">Delete</button>

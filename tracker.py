@@ -10,7 +10,7 @@ Price-fetching layers, in order (first success wins):
   4. ScraperAPI proxy (only if you add the SCRAPER_API_KEY secret)
 
 Per-product "mode": "lowest" tracks the LOWEST price on the page
-(hotels and other multi-option pages) instead of a single price.
+(hotels, flights and other multi-option pages) instead of a single price.
 """
 
 import json
@@ -36,9 +36,10 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
 
-MONEY_RE = re.compile(r"^(?:S\$|RM|US\$|\$)\s?[\d,]+(?:\.\d{1,2})?$")
+MONEY_RE = re.compile(r"^(?:S\$|SGD|RM|MYR|US\$|USD|\$)\s?[\d,]+(?:\.\d{1,2})?$")
 BAD_URL_RE = re.compile(r"verify|punish|_____tmd_____|captcha|robot|denied", re.I)
 STRIKE_RE = re.compile(r"was|old|compare|strike|rrp|original|retail|line-through", re.I)
+NOISE_RE = re.compile(r"fee|tax|charge|deposit|service|handling|points|miles|interest", re.I)
 
 
 def now_iso():
@@ -257,13 +258,14 @@ def extract_lowest(html):
         if price and len(text) < 30:
             found.append(price)
 
-    # Pure money-looking text nodes (S$ 494, $225.00, RM 89)
+    # Pure money-looking text nodes (S$ 494, $225.00, SGD 199)
     for node in soup.find_all(string=MONEY_RE):
         parent = node.parent
         if parent is None or parent.name in ("script", "style", "del", "s", "strike"):
             continue
-        if STRIKE_RE.search(tag_ident(parent)):
-            continue
+        ident = tag_ident(parent)
+        if STRIKE_RE.search(ident) or NOISE_RE.search(ident):
+            continue  # crossed-out prices and fee/tax/charge fragments are not bookable prices
         price = parse_number(node)
         if price:
             found.append(price)
