@@ -39,5 +39,12 @@ jobs:
           git config user.name "price-tracker-bot"
           git config user.email "actions@github.com"
           git add products.json prices.json
-          git diff --cached --quiet || git commit -m "Update prices"
-          git push
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Update prices"
+          # The dashboard can commit (product adds) while a run is in progress —
+          # rebase onto the latest main and retry a few times before giving up.
+          for i in 1 2 3; do
+            git pull --rebase -X theirs origin main && git push && exit 0
+            sleep 5
+          done
+          exit 1

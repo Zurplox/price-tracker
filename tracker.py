@@ -8,6 +8,9 @@ Price-fetching layers, in order (first success wins):
   2. Plain fast fetch + auto price detection
   3. Real browser engine (Playwright) for JS/bot-protected pages
   4. ScraperAPI proxy (only if you add the SCRAPER_API_KEY secret)
+
+Per-product "mode": "lowest" tracks the LOWEST price on the page
+(hotels and other multi-option pages) instead of a single price.
 """
 
 import json
@@ -32,6 +35,10 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
+
+MONEY_RE = re.compile(r"^(?:S\$|RM|US\$|\$)\s?[\d,]+(?:\.\d{1,2})?$")
+BAD_URL_RE = re.compile(r"verify|punish|_____tmd_____|captcha|robot|denied", re.I)
+STRIKE_RE = re.compile(r"was|old|compare|strike|rrp|original|retail|line-through", re.I)
 
 
 def now_iso():
@@ -86,6 +93,11 @@ def fmt(price, url):
     return "?" if price is None else currency_for(url) + format(price, ",.2f")
 
 
+def is_bad_url(url):
+    """True if the URL is a captcha/anti-bot page, not the real product page."""
+    return bool(url) and bool(BAD_URL_RE.search(url))
+
+
 # ---------- fetching ----------
 
 def get_html(url):
@@ -134,7 +146,24 @@ def fetch_via_scraperapi(url):
 
 # ---------- price extraction ----------
 
-def find_price_in_ld(node):
+def tag_ident(tag):
+    return (" ".join(str(c) for c in (tag.get("class") or [])) + " "
+            + str(tag.get("id") or "") + " " + str(tag.get("style") or ""))
+
+
+def is_pricey(tag):
+    """Elements likely to hold a selling price (not crossed-out 'was' prices)."""
+    if tag.name in ("script", "style", "svg", "del", "s", "strike"):
+        return False
+    ident = tag_ident(tag)
+    if "price" not in ident.lower() and not tag.has_attr("data-price") and tag.get("itemprop") != "price":
+        return False
+    if STRIKE_RE.search(ident):
+        return False
+    return True
+
+
+def collect_ld_prices(node, out):
     if isinstance(node, dict):
         offers = node.get("offers")
         if offers:
@@ -145,21 +174,22 @@ def find_price_in_ld(node):
                     for key in ("price", "lowPrice"):
                         p = parse_number(o.get(key))
                         if p:
-                            return p
+                            out.append(p)
         for v in node.values():
-            p = find_price_in_ld(v)
-            if p:
-                return p
+            collect_ld_prices(v, out)
     elif isinstance(node, list):
         for item in node:
-            p = find_price_in_ld(item)
-            if p:
-                return p
-    return None
+            collect_ld_prices(item, out)
+
+
+def find_price_in_ld(node):
+    found = []
+    collect_ld_prices(node, found)
+    return found[0] if found else None
 
 
 def extract_generic(html):
-    """Find a price using structured data most shops embed. Returns (price, method, title)."""
+    """Find a single price via structured data most shops embed. Returns (price, method, title)."""
     soup = BeautifulSoup(html, "lxml")
     title = soup.title.string.strip() if soup.title and soup.title.string else None
 
@@ -182,20 +212,7 @@ def extract_generic(html):
             if price:
                 return price, "auto (meta tag)", title
 
-    # 3) Price-ish page elements — prefer the shortest text (deepest element),
-    #    skip crossed-out "was" prices.
-    def is_pricey(tag):
-        if tag.name in ("script", "style", "svg"):
-            return False
-        ident = " ".join(str(c) for c in (tag.get("class") or [])) + " " + str(tag.get("id") or "")
-        if "price" not in ident.lower() and not tag.has_attr("data-price") and tag.get("itemprop") != "price":
-            return False
-        if re.search(r"was|old|compare|strike|rrp|original|retail", ident, re.I):
-            return False
-        if "line-through" in str(tag.get("style") or ""):
-            return False
-        return True
-
+    # 3) Price-ish page elements — prefer the shortest text (deepest element)
     candidates = []
     for el in soup.find_all(is_pricey):
         value = el.get("content") or el.get("data-price") or el.get_text(" ", strip=True)
@@ -207,6 +224,66 @@ def extract_generic(html):
         return candidates[0][1], "auto (page element)", title
 
     return None, None, title
+
+
+def extract_lowest(html):
+    """Hotels & multi-option pages: collect every plausible bookable price, return the lowest.
+    Skips crossed-out 'was' prices, <del> elements, and filter chips like '<S$ 560'."""
+    soup = BeautifulSoup(html, "lxml")
+    title = soup.title.string.strip() if soup.title and soup.title.string else None
+    found = []
+
+    # Structured data
+    for tag in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(tag.string or tag.get_text() or "")
+        except Exception:
+            continue
+        collect_ld_prices(data, found)
+    for attrs in ({"property": "product:price:amount"}, {"property": "og:price:amount"},
+                  {"itemprop": "price"}):
+        for tag in soup.find_all("meta", attrs=attrs):
+            p = parse_number(tag.get("content"))
+            if p:
+                found.append(p)
+
+    # Price-classed elements
+    for el in soup.find_all(is_pricey):
+        value = el.get("content") or el.get("data-price") or el.get_text(" ", strip=True)
+        text = str(value)
+        if "<" in text or ">" in text:
+            continue  # filter chips like "<S$ 560"
+        price = parse_number(text)
+        if price and len(text) < 30:
+            found.append(price)
+
+    # Pure money-looking text nodes (S$ 494, $225.00, RM 89)
+    for node in soup.find_all(string=MONEY_RE):
+        parent = node.parent
+        if parent is None or parent.name in ("script", "style", "del", "s", "strike"):
+            continue
+        if STRIKE_RE.search(tag_ident(parent)):
+            continue
+        price = parse_number(node)
+        if price:
+            found.append(price)
+
+    found = sorted(set(p for p in found if p >= 1))  # drop junk like occupancy "2"
+    if found:
+        return found[0], "auto (lowest of " + str(len(found)) + " prices)", title
+    return None, None, title
+
+
+def apply_extraction(html, product):
+    """Selector (if set) wins; then mode-aware auto-detection."""
+    if product.get("selector"):
+        el = BeautifulSoup(html, "lxml").select_one(product["selector"])
+        price = parse_number(el.get_text(" ", strip=True)) if el else None
+        if price:
+            return price, "manual selector", None
+    if product.get("mode") == "lowest":
+        return extract_lowest(html)
+    return extract_generic(html)
 
 
 # ---------- shopee shortcut ----------
@@ -229,27 +306,18 @@ def shopee_api_price(shopid, itemid):
 
 # ---------- per-product check ----------
 
-def apply_extraction(html, product):
-    """Run selector (if set) then auto-detection on a fetched page."""
-    if product.get("selector"):
-        el = BeautifulSoup(html, "lxml").select_one(product["selector"])
-        price = parse_number(el.get_text(" ", strip=True)) if el else None
-        if price:
-            return price, "manual selector", None
-    return extract_generic(html)
-
-
 def check_product(p):
-    url = p["url"]
-    html, final_url = None, url
-    shopid, itemid = shopee_ids(url)
+    original_url = p["url"]
+    resolved_url = original_url
+    shopid, itemid = shopee_ids(original_url)
 
-    # Resolve short links (shope.ee / lzd.co etc.)
-    if not shopid and re.match(r"https?://(shope\.ee|s\.shopee|www\.lazada|lzd)", url):
+    # Resolve short links (shope.ee / lzd.co etc.) to the real product URL
+    if not shopid and re.match(r"https?://(shope\.ee|s\.shopee|www\.lazada|lzd)", original_url):
         try:
-            r = requests.get(url, headers=HEADERS, timeout=20, allow_redirects=True)
-            final_url = r.url
-            shopid, itemid = shopee_ids(final_url)
+            r = requests.get(original_url, headers=HEADERS, timeout=20, allow_redirects=True)
+            if not is_bad_url(r.url):
+                resolved_url = r.url
+            shopid, itemid = shopee_ids(resolved_url)
         except Exception:
             pass
 
@@ -262,9 +330,12 @@ def check_product(p):
         except Exception as e:
             print("  (shopee api blocked: " + str(e) + ")")
 
-    # Layer 2 — fast plain fetch
+    # Layer 2 — fast plain fetch (discard the result if it lands on a captcha page)
+    html = None
     try:
-        html, final_url = get_html(final_url)
+        html, landing_url = get_html(resolved_url)
+        if is_bad_url(landing_url):
+            html = None
     except Exception as e:
         print("  (plain fetch failed: " + str(e) + ")")
 
@@ -272,17 +343,17 @@ def check_product(p):
     if html:
         price, method, title = apply_extraction(html, p)
 
-    # Layer 3 — real browser for JS-heavy / protected pages
+    # Layer 3 — real browser (always aimed at the real product URL, never a captcha page)
     if not price:
-        html2, final_url = render_html(final_url)
-        if html2:
+        html2, browser_url = render_html(resolved_url)
+        if html2 and not is_bad_url(browser_url):
             price, method, title = apply_extraction(html2, p)
             if method:
                 method += " (browser)"
 
     # Layer 4 — ScraperAPI proxy (only when SCRAPER_API_KEY secret exists)
     if not price and SCRAPER_API_KEY:
-        html3 = fetch_via_scraperapi(final_url)
+        html3 = fetch_via_scraperapi(resolved_url)
         if html3:
             price, method, title = apply_extraction(html3, p)
             if method:
@@ -332,22 +403,26 @@ def main():
         try:
             price, method, title = check_product(p)
         except Exception as e:
-            p["status"] = "error: " + str(e)
-            p["last_checked"] = now_iso()
+            price = None
             print("  ⚠️ " + str(e))
-            continue
 
         p["last_checked"] = now_iso()
 
         if not price:
-            p["status"] = "needs attention — couldn't find a price (try adding a selector in Advanced)"
-            print("  ⚠️ no price found")
+            # Flaky mega-sites: keep the last good price visible instead of scary errors.
+            p["fail_count"] = int(p.get("fail_count") or 0) + 1
+            if p.get("last_price") is None:
+                p["status"] = "needs attention — couldn't find a price (try adding a selector in Advanced)"
+            else:
+                p["status"] = "tracking"
+                p["note"] = "last check failed — showing earlier price"
             continue
 
         prev = p.get("last_price")
         if title and (not p.get("name") or p["name"].lower().startswith(("http", "product"))):
             p["name"] = title[:80]
-        p.update(status="tracking", method=method, last_price=price)
+        p.update(status="tracking", method=method, last_price=price, fail_count=0)
+        p.pop("note", None)
 
         hist = prices.setdefault(p["id"], [])
         hist.append({"t": p["last_checked"], "p": price})

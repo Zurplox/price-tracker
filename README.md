@@ -52,6 +52,7 @@ Note: GitHub Pages sites are technically public — without your token the page 
 - **Get alerts**: automatic on Telegram — when a price drops at all, or crosses your target.
 - **Tweak targets**: type in the "Alert below" field on any card — saves automatically.
 - **"Run check now"**: forces an immediate check.
+- **🏨 Hotels & multi-option pages**: tick **Lowest price on page** when adding — the tracker records the *cheapest* option on the page and keeps working even when specific rooms/rates sell out. You can also toggle it later in a card's **Advanced** section.
 
 ## Notes
 
