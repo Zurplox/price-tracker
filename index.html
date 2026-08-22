@@ -48,6 +48,8 @@
     border-radius: 8px; background: var(--blue-soft); color: var(--blue); font-size: 14px; font-weight: 600; }
   .statusline { margin-top: 10px; font-size: 13.5px; color: var(--secondary); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .runchip { background: var(--blue-soft); color: var(--blue); font-weight: 650; padding: 3px 10px; border-radius: 6px; font-size: 12.5px; }
+  .vaultrow { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+  .vaultrow input { flex: 1; min-width: 160px; }
   .banner {
     margin: 24px 0 0; padding: 16px 20px; border-radius: 12px;
     background: var(--blue-soft); border: 1px solid var(--blue);
@@ -146,6 +148,7 @@
     <div class="row"><label>Repository<input id="inRepo" placeholder="e.g. price-tracker"></label></div>
     <div class="row"><label>Branch<input id="inBranch" placeholder="main"></label></div>
     <button class="primary" id="saveSettings">Save &amp; connect</button>
+    <button class="danger" id="lockBtn" style="margin-left:10px">🔒 Lock this device</button>
   </div>
 
   <div class="card">
@@ -178,6 +181,7 @@
 <script>
 const $ = s => document.querySelector(s);
 const grid = $("#grid");
+const BANNER_DEFAULT = $("#setupBanner").innerHTML;
 
 /* ---------- settings / connection ---------- */
 const conf = {
@@ -214,11 +218,36 @@ async function gh(path, opts = {}) {
 const b64decode = s => decodeURIComponent(escape(atob(s.replace(/\n/g, ""))));
 const b64encode = s => btoa(unescape(encodeURIComponent(s)));
 
+/* ---------- encrypted token vault ---------- */
+const VAULT = { salt: "8F9d4F+5EdczBNdPYQB2rA==", iv: "msBHnXu8C1376K49", ct: "BMMx/zWaDJmDoIPvlXuwWSjyavNjWdJjkhMhNs+qG+sDrp+pZQJxD3lZkXpKRtbDEALDFPS4GXhugkAAWiyRifK6TPItLhksLNb2v8lARrL51jLVaid/ykE/A/eKtwngxPE3C6TE0+BnDhu8wQ==", iter: 310000 };
+
+function b64bytes(s) { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+
+async function decryptToken(pw) {
+  const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: b64bytes(VAULT.salt), iterations: VAULT.iter, hash: "SHA-256" },
+    km, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64bytes(VAULT.iv) }, key, b64bytes(VAULT.ct));
+  const text = new TextDecoder().decode(plain);
+  if (!text.startsWith("github_pat_") && !text.startsWith("ghp_")) throw new Error("bad vault contents");
+  return text;
+}
+
+async function unlockVault(pw) {
+  if (!pw) { toast("Enter the password first"); return; }
+  try {
+    localStorage.setItem("pt_token", await decryptToken(pw));
+    toast("🔓 Unlocked — this device remembers you now");
+    loadAll();
+  } catch { toast("Wrong password 🔒"); }
+}
+
 /* ---------- data ---------- */
-let products = [], prices = {}, scans = {}, productsSha = null, pricesSha = null, demo = false;
+let products = [], prices = {}, scans = {}, productsSha = null, pricesSha = null, demo = false, readonly = false;
 
 async function loadAll() {
-  if (!conf.token) { loadDemo(); return; }
+  if (!conf.token) { loadPublic(); return; }
   grid.innerHTML = "<p class='empty'>Loading…</p>";
   try {
     const p = await gh("/contents/products.json?ref=" + conf.branch);
@@ -233,15 +262,30 @@ async function loadAll() {
       const sc = await gh("/contents/scans.json?ref=" + conf.branch);
       scans = JSON.parse(b64decode(sc.content));
     } catch { scans = {}; }
-    demo = false;
+    demo = false; readonly = false;
     render();
     if (window._busy) clearBusy("✅ Fresh data in!");
     refreshRunStatus();
   } catch (e) {
-    grid.innerHTML = "";
     toast(e.message);
     $("#settings").hidden = false;
+    loadPublic();   // token failed → still show public data read-only if possible
   }
+}
+
+async function loadPublic() {
+  // No token on this device: read the repo's public data read-only (viewing needs no token).
+  try {
+    const base = "https://raw.githubusercontent.com/" + conf.owner + "/" + conf.repo + "/" + conf.branch;
+    const pr = await fetch(base + "/products.json");
+    if (!pr.ok) throw new Error("not public");
+    products = (await pr.json()).products || [];
+    try { prices = await (await fetch(base + "/prices.json")).json(); } catch { prices = {}; }
+    try { scans = await (await fetch(base + "/scans.json")).json(); } catch { scans = {}; }
+    demo = false; readonly = true;
+    render();
+    refreshRunStatus();
+  } catch { loadDemo(); }
 }
 
 async function saveProducts(message) {
@@ -323,7 +367,7 @@ async function addProduct() {
   if (!/^https?:\/\/.+\..+/.test(url)) { toast("That doesn't look like a link 🤔"); return; }
   const target = targetRaw ? parseFloat(targetRaw.replace(/[^\d.]/g, "")) : null;
   if (targetRaw && !isFinite(target)) { toast("Target price should be a number"); return; }
-  if (demo) { toast("Connect GitHub first ⚙"); return; }
+  if (demo || readonly) { toast("Connect GitHub first ⚙ — viewing works everywhere, actions need the token"); return; }
   const dupCount = products.filter(x => x.url === url).length;
   if (dupCount && !confirm("Already tracking this link — add another copy to watch a different price on it?")) return;
   const uid = makeId(url) + (dupCount ? "-" + (dupCount + 1) : "");
@@ -344,7 +388,7 @@ async function addProduct() {
 }
 
 async function deleteProduct(id) {
-  if (demo) { toast("Connect GitHub first ⚙"); return; }
+  if (demo || readonly) { toast("Connect GitHub first ⚙"); return; }
   const p = products.find(x => x.id === id);
   if (!confirm(`Stop tracking "${p.name}"?`)) return;
   products = products.filter(x => x.id !== id);
@@ -353,7 +397,7 @@ async function deleteProduct(id) {
 }
 
 async function saveField(id, field, value) {
-  if (demo) { toast("Connect GitHub first ⚙"); return; }
+  if (demo || readonly) { toast("Connect GitHub first ⚙"); return; }
   const p = products.find(x => x.id === id);
   p[field] = value;
   try { await saveProducts("Update " + p.name.slice(0, 50)); toast("Saved ✓"); }
@@ -407,7 +451,20 @@ function statusBadge(p, isDemo) {
 }
 
 function render() {
-  $("#setupBanner").hidden = !!conf.token;
+  const banner = $("#setupBanner");
+  if (conf.token) banner.hidden = true;
+  else {
+    banner.hidden = false;
+    banner.innerHTML = (readonly
+      ? `<strong>👀 Read-only view</strong><p>Live data from your repo — no sign-in needed for viewing.</p>`
+      : BANNER_DEFAULT) + `
+      <div class="vaultrow">
+        <input id="vaultPw" type="password" placeholder="Password" autocomplete="off"
+          onkeydown="if(event.key==='Enter')unlockVault(this.value)">
+        <button class="primary" onclick="unlockVault($('#vaultPw').value)">🔓 Unlock actions</button>
+        <div class="checked" style="width:100%">Ask the owner for the password to add products, scan, or run checks — this device remembers the unlock afterwards.</div>
+      </div>`;
+  }
   $("#emptyState").hidden = products.length > 0;
   grid.innerHTML = products.map(p => {
     const hist = prices[p.id] || [];
@@ -444,7 +501,7 @@ function render() {
 
 /* ---------- price scanning ---------- */
 function scanSection(p) {
-  if (demo) return "";
+  if (demo || readonly) return "";
   const s = scans[p.url];
   const watch = p.watch_label
     ? `<span class="watchchip">🎯 ${esc(p.watch_label.length > 42 ? p.watch_label.slice(0, 42) + "…" : p.watch_label)}
@@ -494,7 +551,7 @@ function trackSelected(id) {
 
 /* ---------- demo data ---------- */
 function loadDemo() {
-  demo = true;
+  demo = true; readonly = false;
   const t = Date.now();
   products = [{
     id: "demo", name: "Sample — Vention 35W Super Mini PowerBank 10000mAh",
@@ -521,8 +578,13 @@ function lastUpdatedText() {
   return times.length ? "🕐 Last updated " + fmtWhen(times[times.length - 1]) : "";
 }
 async function refreshRunStatus() {
-  if (!conf.token || demo) return;
   const line = $("#statusLine");
+  if (!conf.token || demo) {
+    const last = readonly ? lastUpdatedText() : "";
+    line.innerHTML = last ? `<span>${last}</span>` : "";
+    line.hidden = !last;
+    return;
+  }
   try {
     const r = await gh("/actions/runs?per_page=6");
     const runs = r.workflow_runs || [];
@@ -600,6 +662,13 @@ $("#saveSettings").onclick = () => {
   localStorage.setItem("pt_branch", $("#inBranch").value.trim() || "main");
   $("#settings").hidden = true;
   toast("Saved — connecting…");
+  loadAll();
+};
+$("#lockBtn").onclick = () => {
+  localStorage.removeItem("pt_token");
+  $("#inToken").value = "";
+  $("#settings").hidden = true;
+  toast("🔒 Locked — this device is read-only now");
   loadAll();
 };
 
