@@ -87,6 +87,19 @@
       "method": null,
       "last_price": null,
       "last_checked": null
+    },
+    {
+      "id": "wwwagodacom-1dhgl3",
+      "name": "V hotel (Agoda)",
+      "url": "https://www.agoda.com/v-hotel-bencoolen/hotel/singapore-sg.html?countryId=114&finalPriceView=2&isShowMobileAppPrice=false&cid=1917614&numberOfBedrooms=&familyMode=false&adults=2&children=0&rooms=1&maxRooms=0&checkIn=2026-12-11&isCalendarCallout=false&childAges=&numberOfGuest=0&missingChildAges=false&travellerType=1&showReviewSubmissionEntry=false&currencyCode=SGD&isFreeOccSearch=false&los=4&searchrequestid=371bc46e-f98e-4544-a30a-75afbc1eb0d1",
+      "target": null,
+      "mode": "lowest",
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
