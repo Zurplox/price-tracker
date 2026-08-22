@@ -103,6 +103,12 @@ def is_bad_url(url):
     return bool(url) and bool(BAD_URL_RE.search(url))
 
 
+def tracked_key(p):
+    """What exactly is being tracked — auto, lowest mode, a selector, or a user-picked
+    label. When this changes, the price history restarts fresh (day 1 semantics)."""
+    return p.get("watch_label") or p.get("selector") or p.get("mode") or "auto"
+
+
 # ---------- fetching ----------
 
 def get_html(url):
@@ -553,6 +559,11 @@ def main():
             method = "🎯 " + p["watch_label"][:28]
         p.update(status="tracking", method=method, last_price=price, fail_count=0)
         p.pop("note", None)
+
+        key = tracked_key(p)
+        if p.get("_tracked_key") != key:
+            prices[p["id"]] = []   # watching something new → history restarts (day 1)
+            p["_tracked_key"] = key
 
         hist = prices.setdefault(p["id"], [])
         hist.append({"t": p["last_checked"], "p": price})

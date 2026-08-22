@@ -46,6 +46,8 @@
   button:disabled { opacity: .55; cursor: default; }
   #runState { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 14px;
     border-radius: 8px; background: var(--blue-soft); color: var(--blue); font-size: 14px; font-weight: 600; }
+  .statusline { margin-top: 10px; font-size: 13.5px; color: var(--secondary); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .runchip { background: var(--blue-soft); color: var(--blue); font-weight: 650; padding: 3px 10px; border-radius: 6px; font-size: 12.5px; }
   .banner {
     margin: 24px 0 0; padding: 16px 20px; border-radius: 12px;
     background: var(--blue-soft); border: 1px solid var(--blue);
@@ -125,6 +127,7 @@
     <button id="settingsBtn">⚙ Settings</button>
   </div>
   <div id="runState" hidden></div>
+  <div id="statusLine" class="statusline" hidden></div>
 </header>
 
 <main class="wrap">
@@ -233,6 +236,7 @@ async function loadAll() {
     demo = false;
     render();
     if (window._busy) clearBusy("✅ Fresh data in!");
+    refreshRunStatus();
   } catch (e) {
     grid.innerHTML = "";
     toast(e.message);
@@ -473,8 +477,9 @@ function trackSelected(id) {
   if (!sel) { toast("Pick a price first ☝️"); return; }
   const c = s.candidates[Number(sel.value)];
   saveField(id, "watch_label", c.label).then(() => {
+    prices[id] = [];   // new pick = fresh history — day 1 starts on the next check
     render();
-    toast("🎯 Now watching: " + c.label.slice(0, 40));
+    toast("🎯 Now watching: " + c.label.slice(0, 40) + " — history restarts fresh");
   });
 }
 
@@ -498,10 +503,44 @@ function loadDemo() {
   render();
 }
 
+/* ---------- run status (truthful, works from any device) ---------- */
+function fmtWhen(ts) {
+  return new Date(ts).toLocaleString(undefined, { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+}
+function lastUpdatedText() {
+  const times = products.map(p => p.last_checked).filter(Boolean).sort();
+  return times.length ? "🕐 Last updated " + fmtWhen(times[times.length - 1]) : "";
+}
+async function refreshRunStatus() {
+  if (!conf.token || demo) return;
+  const line = $("#statusLine");
+  try {
+    const r = await gh("/actions/runs?per_page=5");
+    const runs = r.workflow_runs || [];
+    const active = runs.filter(x => x.status === "in_progress" || x.status === "queued");
+    let html = "";
+    if (active.length) {
+      html += `<span class="runchip">🔵 ${active.length > 1 ? "Runs" : "A run"} in progress — updates when it finishes</span>`;
+      for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = true;
+      window._busyRemote = true;
+    } else if (window._busyRemote) {
+      window._busyRemote = false;
+      for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
+      loadAll();   // a run just finished somewhere → pull fresh data
+      return;      // loadAll re-calls refreshRunStatus
+    }
+    const last = lastUpdatedText();
+    if (last) html += `<span>${last}</span>`;
+    line.innerHTML = html;
+    line.hidden = !html;
+  } catch { /* status line is best-effort */ }
+}
+
 /* ---------- wire up ---------- */
 $("#addBtn").onclick = addProduct;
 $("#inUrl").addEventListener("keydown", e => { if (e.key === "Enter") addProduct(); });
 $("#runBtn").onclick = () => runCheck(false);
+setInterval(refreshRunStatus, 60000);
 $("#scanAllBtn").onclick = async () => {
   if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
   if (window._busy) { toast("Already running ⏳ — I'll refresh when it's done"); return; }
