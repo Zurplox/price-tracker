@@ -9,7 +9,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225.0,
+      "last_price": 225,
       "last_checked": "2026-08-22T06:46:37+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -39,7 +39,7 @@
       "paused": false,
       "status": "tracking",
       "method": "🎯 INSTA360 ACE PRO 2 DUAL BATT",
-      "last_price": 639.0,
+      "last_price": 639,
       "last_checked": "2026-08-22T06:47:12+00:00",
       "fail_count": 0,
       "watch_label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)",
@@ -55,7 +55,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data)",
-      "last_price": 839.0,
+      "last_price": 839,
       "last_checked": "2026-08-22T06:47:13+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -70,10 +70,23 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (lowest of 1 prices)",
-      "last_price": 1899.0,
+      "last_price": 1899,
       "last_checked": "2026-08-22T06:47:13+00:00",
       "fail_count": 0,
       "_tracked_key": "lowest"
+    },
+    {
+      "id": "wwwagodacom-8ohcg0",
+      "name": "Singapore Sg",
+      "url": "https://www.agoda.com/robertson-quay-hotel/hotel/singapore-sg.html?countryId=114&finalPriceView=2&isShowMobileAppPrice=false&cid=1833981&numberOfBedrooms=&familyMode=false&adults=2&children=0&rooms=1&maxRooms=0&checkIn=2026-12-11&isCalendarCallout=false&childAges=&numberOfGuest=0&missingChildAges=false&travellerType=1&showReviewSubmissionEntry=false&currencyCode=SGD&isFreeOccSearch=false&los=4&searchrequestid=2b364e1a-2466-41b0-9e46-01d7d65e2f4e&ds=Jn6rU94JkP7mRAu9",
+      "target": null,
+      "mode": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
