@@ -1,0 +1,45 @@
+name: 🔍 Scan prices
+
+on:
+  workflow_dispatch:
+    inputs:
+      scan_url:
+        description: "Product / hotel / flight URL to scan"
+        required: true
+        type: string
+
+permissions:
+  contents: write             # write scan results back to this repo
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - run: python -m playwright install --with-deps chromium
+
+      - name: Scan the page
+        env:
+          SCAN_URL: ${{ inputs.scan_url }}
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+        run: python scan.py
+
+      - name: Save scan results
+        run: |
+          git config user.name "price-tracker-bot"
+          git config user.email "actions@github.com"
+          git add scans.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Update scan results"
+          for i in 1 2 3; do
+            git pull --rebase -X theirs origin main && git push && exit 0
+            sleep 5
+          done
+          exit 1

@@ -78,12 +78,19 @@
   .badge.pending { color: var(--orange); background: var(--orange-soft); }
   .badge.error { color: var(--red); background: var(--red-soft); }
   .badge.sample { color: var(--blue); background: var(--blue-soft); }
+  .watchchip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 650;
+    color: var(--blue); background: var(--blue-soft); border-radius: 6px; padding: 3px 9px; margin: 10px 8px 0 0; }
+  .watchchip button { min-height: 0; padding: 0 4px; border: none; background: none; color: inherit; font-weight: 700; }
+  .scanlist { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 4px; }
+  .scanrow { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 6px 0; font-size: 14px; color: var(--text); font-weight: 600; }
+  .scanrow input { min-height: 0; width: 18px; height: 18px; flex: none; margin: 0; }
+  .scanrow .sp { color: var(--secondary); flex: 1; font-weight: 400; }
   .checked { font-size: 12.5px; color: var(--secondary); }
   .spark { margin-top: 12px; width: 100%; height: 36px; }
   .targetrow { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; color: var(--secondary); }
   .targetrow input { width: 110px; min-height: 38px; padding: 6px 10px; font-size: 14.5px; }
-  .cardfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 8px; }
-  details { font-size: 13.5px; color: var(--secondary); }
+  .cardfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 8px; flex-wrap: wrap; }
+  details { font-size: 13.5px; color: var(--secondary); min-width: 220px; max-width: 100%; }
   summary { cursor: pointer; padding: 6px 0; font-weight: 600; }
   details input { width: 100%; margin-top: 8px; font-size: 14px; min-height: 38px; }
   details button { margin-top: 8px; min-height: 38px; font-size: 14px; }
@@ -135,6 +142,9 @@
 
   <div class="card">
     <div class="addform">
+      <label style="flex:1 1 190px">Name (optional)
+        <input id="inName" placeholder="e.g. Fragrance Hotel Dec stay" autocomplete="off">
+      </label>
       <label class="grow">Product link
         <input id="inUrl" type="url" placeholder="https://shopee.sg/… or any shop page" autocomplete="off">
       </label>
@@ -197,7 +207,7 @@ const b64decode = s => decodeURIComponent(escape(atob(s.replace(/\n/g, ""))));
 const b64encode = s => btoa(unescape(encodeURIComponent(s)));
 
 /* ---------- data ---------- */
-let products = [], prices = {}, productsSha = null, pricesSha = null, demo = false;
+let products = [], prices = {}, scans = {}, productsSha = null, pricesSha = null, demo = false;
 
 async function loadAll() {
   if (!conf.token) { loadDemo(); return; }
@@ -211,6 +221,10 @@ async function loadAll() {
       pricesSha = h.sha;
       prices = JSON.parse(b64decode(h.content));
     } catch { prices = {}; }
+    try {
+      const sc = await gh("/contents/scans.json?ref=" + conf.branch);
+      scans = JSON.parse(b64decode(sc.content));
+    } catch { scans = {}; }
     demo = false;
     render();
   } catch (e) {
@@ -253,9 +267,20 @@ function makeId(url) {
 }
 function nameFromUrl(url) {
   try {
-    const seg = new URL(url).pathname.split("/").filter(Boolean).pop() || "";
-    const clean = seg.replace(/-?i\.\d+\.\d+.*$/, "").replace(/\.\w+$/, "").replace(/[-_+]+/g, " ").trim();
-    return clean ? clean.replace(/\b\w/g, c => c.toUpperCase()).slice(0, 80) : "Product";
+    const u = new URL(url);
+    const skip = /^(detail|book|booking|products?|pdp|index|html?|return|checkout|upsell|flights?|hotels?|shop|buy)$/i;
+    const segs = u.pathname.split("/").filter(Boolean)
+      .map(s => { try { return decodeURIComponent(s); } catch { return s; } })
+      .filter(s => !skip.test(s) && !/^i?-?\d[\d-]*$/.test(s) && !/^\d{1,2}\s+\w{3}\s+\d{4}$/i.test(s));
+    // Flight-style URLs: SIN/24 Aug 2026/SYD/... → "SIN ⇄ SYD"
+    const codes = segs.filter(s => /^[A-Z]{3}$/.test(s));
+    if (codes.length >= 2 && codes[0] !== codes[codes.length - 1]) return codes[0] + " ⇄ " + codes[codes.length - 1];
+    const last = (segs.pop() || "").replace(/-?i\.\d+\.\d+.*$/, "").replace(/\.\w+$/, "").replace(/[-_+]+/g, " ").trim();
+    if (last) return last.replace(/\b\w/g, c => c.toUpperCase()).slice(0, 80);
+    // Nothing usable in the path (e.g. trip.com/hotels/detail) → use the site name
+    const parts = u.hostname.replace(/^www\./, "").split(".");
+    const host = (parts.length >= 2 ? parts[parts.length - 2] : parts[0]);
+    return host.charAt(0).toUpperCase() + host.slice(1) + " deal";
   } catch { return "Product"; }
 }
 
@@ -266,10 +291,12 @@ async function addProduct() {
   const target = targetRaw ? parseFloat(targetRaw.replace(/[^\d.]/g, "")) : null;
   if (targetRaw && !isFinite(target)) { toast("Target price should be a number"); return; }
   if (demo) { toast("Connect GitHub first ⚙"); return; }
-  if (products.some(p => p.url === url)) { toast("Already tracking that link"); return; }
+  const dupCount = products.filter(x => x.url === url).length;
+  if (dupCount && !confirm("Already tracking this link — add another copy to watch a different price on it?")) return;
+  const uid = makeId(url) + (dupCount ? "-" + (dupCount + 1) : "");
 
   products.push({
-    id: makeId(url), name: nameFromUrl(url), url,
+    id: uid, name: ($("#inName").value.trim() || nameFromUrl(url)), url,
     target: isFinite(target) ? target : null,
     mode: $("#inLowest").checked ? "lowest" : null,
     selector: null, paused: false, status: "pending",
@@ -277,7 +304,7 @@ async function addProduct() {
   });
   try {
     await saveProducts("Add " + url.slice(0, 60));
-    $("#inUrl").value = ""; $("#inTarget").value = ""; $("#inLowest").checked = false;
+    $("#inUrl").value = ""; $("#inTarget").value = ""; $("#inLowest").checked = false; $("#inName").value = "";
     render();
     toast("✅ Added — press ▶ Run check now when you're ready");
   } catch (e) { products.pop(); toast(e.message); }
@@ -361,6 +388,8 @@ function render() {
       </div>
       <div class="cardfoot">
         <details><summary>Advanced</summary>
+          <input placeholder="Display name" value="${esc(p.name || "")}" id="nm-${p.id}">
+          <button onclick="saveField('${p.id}','name', document.getElementById('nm-${p.id}').value || null)">Save name</button>
           <input placeholder="CSS selector (only if auto-detect fails)" value="${esc(p.selector || "")}"
             id="sel-${p.id}">
           <button onclick="saveField('${p.id}','selector', document.getElementById('sel-${p.id}').value || null)">Save selector</button>
@@ -371,8 +400,56 @@ function render() {
         </details>
         <button class="danger" onclick="deleteProduct('${p.id}')">Delete</button>
       </div>
+      ${scanSection(p)}
     </div>`;
   }).join("");
+}
+
+/* ---------- price scanning ---------- */
+function scanSection(p) {
+  if (demo) return "";
+  const s = scans[p.url];
+  const watch = p.watch_label
+    ? `<span class="watchchip">🎯 ${esc(p.watch_label.length > 42 ? p.watch_label.slice(0, 42) + "…" : p.watch_label)}
+        <button title="Stop watching this option" onclick="saveField('${p.id}','watch_label',null)">✕</button></span>`
+    : "";
+  const list = s && s.candidates && s.candidates.length
+    ? `<details class="scanlist"><summary>Found ${s.candidates.length} prices · scanned ${timeAgo(s.scanned_at)}</summary>
+        ${s.candidates.map((c, i) => `<label class="scanrow"><input type="radio" name="scan-${p.id}" value="${i}">
+          <b>${money(c.price, p.url)}</b> <span class="sp">${esc(c.label)}</span></label>`).join("")}
+        <button class="primary" style="margin-top:8px" onclick="trackSelected('${p.id}')">Track selected price</button>
+      </details>`
+    : (s ? `<p class="hint">Last scan found nothing — the site likely walled it off that run. Try again later.</p>` : "");
+  return `<div style="margin-top:12px">${watch}
+    <button style="min-height:38px;font-size:14px" onclick="scanProduct('${p.id}')">🔍 Scan all prices</button>
+    ${list}</div>`;
+}
+
+async function scanProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
+  try {
+    await gh(`/actions/workflows/scan.yml/dispatches`, {
+      method: "POST",
+      body: JSON.stringify({ ref: conf.branch, inputs: { scan_url: p.url } }),
+    });
+    toast("🔍 Scan started — results in ~3 min");
+    clearTimeout(window._scanA); clearTimeout(window._scanB);
+    window._scanA = setTimeout(loadAll, 170000);
+    window._scanB = setTimeout(loadAll, 290000);
+  } catch (e) { toast(e.message); }
+}
+
+function trackSelected(id) {
+  const p = products.find(x => x.id === id);
+  const s = scans[p.url];
+  const sel = document.querySelector(`input[name="scan-${id}"]:checked`);
+  if (!sel) { toast("Pick a price first ☝️"); return; }
+  const c = s.candidates[Number(sel.value)];
+  saveField(id, "watch_label", c.label).then(() => {
+    render();
+    toast("🎯 Now watching: " + c.label.slice(0, 40));
+  });
 }
 
 /* ---------- demo data ---------- */
