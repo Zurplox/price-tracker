@@ -1,19 +1,6 @@
 {
   "products": [
     {
-      "id": "wwwlazadasg-159kya8",
-      "name": "Pdp I3215570152 S21816683006",
-      "url": "https://www.lazada.sg/products/pdp-i3215570152-s21816683006.html?c=&channelLpJumpArgs=&clickTrackInfo=query%253Aace%252Bpro%252B2%253Bnid%253A3215570152%253Bsrc%253ALazadaMainSrp%253Brn%253A2c9c2355bebf0a04bfe95c356c60cd7a%253Bregion%253Asg%253Bsku%253A3215570152_SGAMZ%253Bprice%253A639%253Bclient%253Adesktop%253Bsupplier_id%253A1146438005%253Bsession_id%253A%253Bbiz_source%253Ah5_hp%253Bslot%253A3%253Butlog_bucket_id%253A470687%253Basc_category_id%253A5880%253Bitem_id%253A3215570152%253Bsku_id%253A21816683006%253Bshop_id%253A1289651%253BtemplateInfo%253A-1_A3_C%2523107878_E%2523164593_J%2523&freeshipping=1&fs_ab=2&fuse_fs=&lang=en&location=Singapore&price=639&priceCompare=skuId%3A21816683006%3Bsource%3Alazada-search-voucher%3Bsn%3A2c9c2355bebf0a04bfe95c356c60cd7a%3BoriginPrice%3A63900%3BdisplayPrice%3A63900%3BisGray%3Afalse%3BsinglePromotionId%3A-1%3BsingleToolCode%3A-1%3BvoucherPricePlugin%3A0%3Btimestamp%3A1787365684444&qSellingPoint=p--ace%20pro%202&ratingscore=4.888888888888889&request_id=2c9c2355bebf0a04bfe95c356c60cd7a&review=9&sale=35&search=1&source=search&spm=a2o42.searchlist.list.3&stock=1",
-      "target": null,
-      "selector": null,
-      "paused": false,
-      "status": "needs attention — couldn't find a price (try adding a selector in Advanced)",
-      "method": null,
-      "last_price": null,
-      "last_checked": "2026-08-22T03:01:06+00:00",
-      "fail_count": 1
-    },
-    {
       "id": "wwwdavidjonescom-20cftu",
       "name": "Carvela Ravello Low Leather Heel 27913275",
       "url": "https://www.davidjones.com/product/carvela-ravello-low-leather-heel-27913275",
@@ -22,7 +9,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225.0,
+      "last_price": 225,
       "last_checked": "2026-08-22T03:01:48+00:00",
       "fail_count": 0
     }
