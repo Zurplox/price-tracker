@@ -109,6 +109,14 @@ def tracked_key(p):
     return p.get("watch_label") or p.get("selector") or p.get("mode") or "auto"
 
 
+def history_reset_needed(p):
+    """Reset history only when the tracked target genuinely CHANGED (a stored key
+    existed and differs now). First run after an upgrade (no key stored yet) adopts
+    silently, so existing history is never wiped."""
+    old = p.get("_tracked_key")
+    return old is not None and old != tracked_key(p)
+
+
 # ---------- fetching ----------
 
 def get_html(url):
@@ -560,10 +568,9 @@ def main():
         p.update(status="tracking", method=method, last_price=price, fail_count=0)
         p.pop("note", None)
 
-        key = tracked_key(p)
-        if p.get("_tracked_key") != key:
-            prices[p["id"]] = []   # watching something new → history restarts (day 1)
-            p["_tracked_key"] = key
+        if history_reset_needed(p):
+            prices[p["id"]] = []   # genuinely watching something new → restart (day 1)
+        p["_tracked_key"] = tracked_key(p)
 
         hist = prices.setdefault(p["id"], [])
         hist.append({"t": p["last_checked"], "p": price})
