@@ -77,6 +77,19 @@
       "method": null,
       "last_price": null,
       "last_checked": null
+    },
+    {
+      "id": "wwwapplecom-1dbyr0o",
+      "name": "Macbook Air",
+      "url": "https://www.apple.com/sg/shop/buy-mac/macbook-air",
+      "target": null,
+      "mode": "lowest",
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
