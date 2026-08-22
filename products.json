@@ -9,7 +9,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225.0,
+      "last_price": 225,
       "last_checked": "2026-08-22T05:48:29+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -55,7 +55,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data)",
-      "last_price": 839.0,
+      "last_price": 839,
       "last_checked": "2026-08-22T05:49:51+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -70,7 +70,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (lowest of 1 prices)",
-      "last_price": 1899.0,
+      "last_price": 1899,
       "last_checked": "2026-08-22T05:49:52+00:00",
       "fail_count": 0,
       "_tracked_key": "lowest"
