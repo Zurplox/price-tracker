@@ -257,6 +257,9 @@ async function saveProducts(message) {
 function setBusy(msg) {
   window._busy = true;
   const r = $("#runState"); r.textContent = msg; r.hidden = false;
+  r.style.cursor = "pointer";
+  r.title = "Click to dismiss";
+  r.onclick = () => clearBusy();   // escape hatch if anything ever gets wedged
   for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = true;
   clearTimeout(window._busyMax);
   window._busyMax = setTimeout(() => clearBusy("⌛ Still running — check the repo's Actions tab"), 12 * 60000);
@@ -279,6 +282,7 @@ async function runCheck(silent) {
       method: "POST", body: JSON.stringify({ ref: conf.branch }),
     });
     setBusy("⏳ Check running — I'll refresh for you in ~2–3 min…");
+    toast("⏳ Check started — watch the status pill up top");
     clearTimeout(window._reload);
     window._reload = setTimeout(() => loadAll(), 150000);
   } catch (e) { toast(e.message); }
@@ -370,8 +374,12 @@ function timeAgo(iso) {
   const h = Math.round(mins / 60); if (h < 24) return h + "h ago";
   return Math.round(h / 24) + "d ago";
 }
-function sparkline(points) {
-  if (!points || points.length < 2) return `<div class="checked" style="margin-top:12px">Collecting data…</div>`;
+function sparkline(points, p) {
+  if (!points || points.length === 0) {
+    const msg = p && p.fail_count ? "No reading yet — retrying on next check" : "Not checked yet — press ▶ Run check now to start";
+    return `<div class="checked" style="margin-top:12px">${msg}</div>`;
+  }
+  if (points.length === 1) return `<div class="checked" style="margin-top:12px">First reading saved — chart grows from the next check</div>`;
   const vals = points.slice(-40).map(p => p.p);
   const min = Math.min(...vals), max = Math.max(...vals), span = max - min || 1;
   const w = 260, h = 36;
@@ -410,7 +418,7 @@ function render() {
         ${trendBadge(hist)}
       </div>
       <div class="meta">${statusBadge(p, demo)}${p.mode === "lowest" ? `<span class="badge pending">💸 lowest price</span>` : ""}<span class="checked">checked ${timeAgo(p.last_checked)}${p.fail_count ? " · ⚠️ last check failed" : ""}</span></div>
-      ${sparkline(hist)}
+      ${sparkline(hist, p)}
       <div class="targetrow">Alert below
         <input inputmode="decimal" value="${p.target ?? ""}" placeholder="none"
           onchange="saveField('${p.id}','target', this.value ? parseFloat(this.value.replace(/[^\\d.]/g,'')) : null)">
@@ -464,6 +472,7 @@ async function scanProduct(id) {
       body: JSON.stringify({ ref: conf.branch, inputs: { scan_url: p.url } }),
     });
     setBusy("🔍 Scanning this page — the price list appears in ~3 min…");
+    toast("🔍 Scan started for this page ⏳");
     clearTimeout(window._scanA); clearTimeout(window._scanB);
     window._scanA = setTimeout(loadAll, 170000);
     window._scanB = setTimeout(loadAll, 290000);
@@ -515,16 +524,28 @@ async function refreshRunStatus() {
   if (!conf.token || demo) return;
   const line = $("#statusLine");
   try {
-    const r = await gh("/actions/runs?per_page=5");
+    const r = await gh("/actions/runs?per_page=6");
     const runs = r.workflow_runs || [];
-    const active = runs.filter(x => x.status === "in_progress" || x.status === "queued");
+    const cutoff = Date.now() - 20 * 60000;   // a "running" run older than 20 min is a zombie
+    const active = [];
+    for (const x of runs) {
+      const isActive = ["in_progress", "queued", "waiting", "pending", "requested"].includes(x.status);
+      if (!isActive) continue;
+      if (new Date(x.run_started_at || x.created_at) > cutoff) active.push(x);
+      else if (!(window._cancelled && window._cancelled.has(x.id))) {  // auto-kill zombies so they can't wedge the dashboard
+        (window._cancelled = window._cancelled || new Set()).add(x.id);
+        gh(`/actions/runs/${x.id}/cancel`, { method: "POST" }).catch(() => {});
+      }
+    }
     let html = "";
     if (active.length) {
       html += `<span class="runchip">🔵 ${active.length > 1 ? "Runs" : "A run"} in progress — updates when it finishes</span>`;
       for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = true;
       window._busyRemote = true;
+      window._busyRemoteSince = window._busyRemoteSince || Date.now();
     } else if (window._busyRemote) {
       window._busyRemote = false;
+      window._busyRemoteSince = null;
       for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
       loadAll();   // a run just finished somewhere → pull fresh data
       return;      // loadAll re-calls refreshRunStatus
@@ -533,7 +554,16 @@ async function refreshRunStatus() {
     if (last) html += `<span>${last}</span>`;
     line.innerHTML = html;
     line.hidden = !html;
-  } catch { /* status line is best-effort */ }
+  } catch {
+    // If the status API won't answer while we think something's running, don't stay wedged
+    if (window._busyRemote && Date.now() - (window._busyRemoteSince || 0) > 15 * 60000) {
+      window._busyRemote = false;
+      window._busyRemoteSince = null;
+      for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
+    }
+    const last = lastUpdatedText();
+    if (last) { line.innerHTML = `<span>${last}</span>`; line.hidden = false; }
+  }
 }
 
 /* ---------- wire up ---------- */
@@ -550,6 +580,7 @@ $("#scanAllBtn").onclick = async () => {
       body: JSON.stringify({ ref: conf.branch, inputs: { scan_url: "" } }),
     });
     setBusy("🔍 Scanning all links — price lists appear in ~5–10 min; I'll refresh for you…");
+    toast("🔍 Full scan started ⏳");
     clearTimeout(window._scanA); clearTimeout(window._scanB);
     window._scanA = setTimeout(loadAll, 300000);
     window._scanB = setTimeout(loadAll, 600000);

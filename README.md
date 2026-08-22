@@ -50,7 +50,7 @@ Note: GitHub Pages sites are technically public — without your token the page 
 
 - **Add a product**: paste link + optional name/target → **Add product**. Names auto-fill from the link (and improve themselves from the page title after a successful check); rename anytime in a card's **Advanced** section. Nothing runs until the daily 4am SGT schedule or your next **Run check now** (one press checks everything in one go).
 - **Get alerts**: automatic on Telegram — when a price drops at all, or crosses your target.
-- **Status line**: the top of the dashboard always shows the last update time — plus a 🔵 chip whenever a check or scan is genuinely running (works from any device, including the 4am auto-run).
+- **Status line**: the top of the dashboard always shows the last update time — plus a 🔵 chip whenever a check or scan is genuinely running (works from any device, including the 4am auto-run). If a run ever hangs on GitHub's side (rare), the dashboard auto-cancels zombie runs older than ~20 minutes and unlocks itself; you can also cancel runs manually from the repo's **Actions** tab.
 - **Tweak targets**: type in the "Alert below" field on any card — saves automatically.
 - **"Run check now"**: forces an immediate check. While a check or scan is in progress, the buttons lock and a status pill tells you when fresh data will land (the page refreshes itself) — repeated presses just queue more runs and waste free minutes, so no need to spam.
 - **💸 Multi-option pages (hotels, flights, fare bundles)**: tick **Lowest price on page** when adding — the tracker records the *cheapest* option on the page and keeps working even when specific rooms/rates sell out. You can also toggle it later in a card's **Advanced** section.
