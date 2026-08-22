@@ -1,7 +1,394 @@
 {
   "https://booking.flyscoot.com/book/flight/return/SIN/24%20Aug%202026/SYD/SYD/31%20Aug%202026/SIN?culture=en-sg&adult=1&child=0&infant=0": {
-    "scanned_at": "2026-08-22T04:29:10+00:00",
+    "scanned_at": "2026-08-22T04:48:30+00:00",
     "via": "browser",
     "candidates": []
+  },
+  "https://www.davidjones.com/product/carvela-ravello-low-leather-heel-27913275": {
+    "scanned_at": "2026-08-22T04:46:47+00:00",
+    "via": "plain fetch+browser+scraperapi",
+    "candidates": [
+      {
+        "label": "Ravello Low Leather Heel",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 36 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 37 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 38 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 39 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 40 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 41 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Carvela Ravello Low Leather Heel",
+        "price": 225.0
+      },
+      {
+        "label": "Carvela Ravello Low Leather Heel Price",
+        "price": 225.0
+      }
+    ]
+  },
+  "https://sg.trip.com/hotels/detail/?cityEnName=Singapore&cityId=73&hotelId=10930412&checkIn=2026-12-11&checkOut=2026-12-15&adult=2&children=0&crn=1&ages=&curr=SGD&barcurr=SGD&hoteluniquekey=H4sIAAAAAAAA_-OazMLFKsFksIFFqpOFo-3K-vusQoxGGnfZDOwsvgo6asb0H_rK1Ojguc79YZVIwhKHAJ5CBhCIaHZoZASz3pQ7zGB8M3E260ZGsGqJaocdjEwnGN8xL2B6d-El8ykWVo52BwmWSyyfmKKrlbJTK5WsTHSUSjJLclKVrJTCHEOUdJRSUouTgRwgKzE3vzSvBMg2MdAztwQKlCRWeKaAtSQn5iSX5iSWpIZUFgC1mukoZRY7lxRlFgSl5maWlKQCVaUl5hSngsSDUouBMslgQSU_oDFFUIHM_DyIdgMUsbDEnNJUiAuAFrqlQu0wrNXBdHJwalFZZnKqQnJGYlF6Kg7XG-oZGSBcbz4grjeujX3EwhQd-4LlLtsnFoZfwJh4EyXB0sTK0MXKMImVjeN7I7MEyy5WHn9PVzNPE11D3ShdwwusbaxSioYGBgZGpqZG5roGiZaJycaWSbomlmYmpqa6RoZm5hamhhqHLjf_azQx0lJg1OKNd3c3MjO1NDezMLK0MGA8xShiYGlgbGJoYG5oaGxhYGFqZGFiZuTBEsTmampq4uQaZcPFHOzuInhd6JPjeTVRBykQTxHG0wLxDGG8wJpEo1ADrZf2kTCRJNbUPN1g94yrYgWMDYyMXYzcAowejBGMFSDeKkZ2LmYDI0MBpg2MjDsY_8MA4ytGkLEARbxjQfACAAA&detailFilters=15%7CRange%7E15%7E0%7C560*80%7C1%7C0%7E80%7E1*29%7C1%7E29%7E1%7C2&hotelType=normal&display=inctotal&isCT=true&locale=en-SG": {
+    "scanned_at": "2026-08-22T04:47:29+00:00",
+    "via": "plain fetch+browser+scraperapi",
+    "candidates": [
+      {
+        "label": "2 3 4 5 6 7 8 9 0 2 3 4 5 6 7 8 9 20 2 22 23 24 25 26 27 28 29 30 3",
+        "price": 1.0
+      },
+      {
+        "label": "1 3 4 5 6 7 8 9 10 11 1 13 14 15 16 17 18 19 0 1 3 4 5 6 7 8 9 30 31",
+        "price": 2.0
+      },
+      {
+        "label": "1 2 4 5 6 7 8 9 10 11 12 1 14 15 16 17 18 19 20 21 22 2 24 25 26 27 28",
+        "price": 3.0
+      },
+      {
+        "label": "1 2 3 5 6 7 8 9 10 11 12 13 1 15 16 17 18 19 20 21 22 23 2 25 26 27 28",
+        "price": 4.0
+      },
+      {
+        "label": "1 2 3 4 6 7 8 9 10 11 12 13 14 1 16 17 18 19 20 21 22 23 24 2 26 27 28",
+        "price": 5.0
+      },
+      {
+        "label": "7 8 9 10 11 12",
+        "price": 6.0
+      },
+      {
+        "label": "6 8 9 10 11 12",
+        "price": 7.0
+      },
+      {
+        "label": "6 7 9 10 11 12",
+        "price": 8.0
+      },
+      {
+        "label": "6 7 8 10 11 12",
+        "price": 9.0
+      },
+      {
+        "label": "6 7 8 9 11 12",
+        "price": 10.0
+      },
+      {
+        "label": "6 7 8 9 10 12",
+        "price": 11.0
+      },
+      {
+        "label": "6 7 8 9 10 11",
+        "price": 12.0
+      },
+      {
+        "label": "14 15 16 17 18 19",
+        "price": 13.0
+      },
+      {
+        "label": "13 15 16 17 18 19",
+        "price": 14.0
+      },
+      {
+        "label": "13 14 16 17 18 19",
+        "price": 15.0
+      },
+      {
+        "label": "13 14 15 17 18 19",
+        "price": 16.0
+      },
+      {
+        "label": "13 14 15 16 18 19",
+        "price": 17.0
+      },
+      {
+        "label": "13 14 15 16 17 19",
+        "price": 18.0
+      },
+      {
+        "label": "13 14 15 16 17 18",
+        "price": 19.0
+      },
+      {
+        "label": "21 22 23 24 25 26",
+        "price": 20.0
+      },
+      {
+        "label": "20 22 23 24 25 26",
+        "price": 21.0
+      },
+      {
+        "label": "20 21 23 24 25 26",
+        "price": 22.0
+      },
+      {
+        "label": "20 21 22 24 25 26",
+        "price": 23.0
+      },
+      {
+        "label": "20 21 22 23 25 26",
+        "price": 24.0
+      },
+      {
+        "label": "20 21 22 23 24 26",
+        "price": 25.0
+      },
+      {
+        "label": "20 21 22 23 24 25",
+        "price": 26.0
+      },
+      {
+        "label": "28 29 30 31",
+        "price": 27.0
+      },
+      {
+        "label": "27 29 30 31",
+        "price": 28.0
+      },
+      {
+        "label": "27 28 30 31",
+        "price": 29.0
+      },
+      {
+        "label": "27 28 29 31",
+        "price": 30.0
+      },
+      {
+        "label": "27 28 29 30",
+        "price": 31.0
+      },
+      {
+        "label": "4 5 6 7 8 9",
+        "price": 3.0
+      },
+      {
+        "label": "3 5 6 7 8 9",
+        "price": 4.0
+      },
+      {
+        "label": "3 4 6 7 8 9",
+        "price": 5.0
+      },
+      {
+        "label": "3 4 5 7 8 9",
+        "price": 6.0
+      },
+      {
+        "label": "3 4 5 6 8 9",
+        "price": 7.0
+      },
+      {
+        "label": "3 4 5 6 7 9",
+        "price": 8.0
+      },
+      {
+        "label": "3 4 5 6 7 8",
+        "price": 9.0
+      },
+      {
+        "label": "11 12 13 14 15 16",
+        "price": 10.0
+      },
+      {
+        "label": "10 12 13 14 15 16",
+        "price": 11.0
+      },
+      {
+        "label": "10 11 13 14 15 16",
+        "price": 12.0
+      },
+      {
+        "label": "10 11 12 14 15 16",
+        "price": 13.0
+      },
+      {
+        "label": "10 11 12 13 15 16",
+        "price": 14.0
+      },
+      {
+        "label": "10 11 12 13 14 16",
+        "price": 15.0
+      },
+      {
+        "label": "10 11 12 13 14 15",
+        "price": 16.0
+      },
+      {
+        "label": "18 19 20 21 22 23",
+        "price": 17.0
+      },
+      {
+        "label": "17 19 20 21 22 23",
+        "price": 18.0
+      },
+      {
+        "label": "17 18 20 21 22 23",
+        "price": 19.0
+      },
+      {
+        "label": "17 18 19 21 22 23",
+        "price": 20.0
+      },
+      {
+        "label": "17 18 19 20 22 23",
+        "price": 21.0
+      }
+    ]
+  },
+  "https://sg.trip.com/hotels/detail/?cityEnName=Singapore&cityId=73&hotelId=995027&checkIn=2026-12-11&checkOut=2026-12-15&adult=2&children=0&crn=1&ages=&curr=SGD&barcurr=SGD&hoteluniquekey=H4sIAAAAAAAA_-PqYuFilWAy2MAi1cDC8erIg3esQowGGptZLH4LOj6sElnnfrTMwbP_0FeNGLPZDgE8hQwgsCDJoZFxh1zr68Ad_g4zGC_ftdnICFQKVF_ksIOR6QTjKaYFTM97JlueYmHluKMlwXKJ5RNTdLVSdmqlkpWJjlJJZklOqpKVUnBqUVlmcqpCckZiUXqqko5SSmpxMlAcyErMzS_NKwGyjcz1TCyAAiWJFZ4pSlbmOkrJiTnJpTmJJakhlQVAU8x0lDKLnUuKMguCUnMzS0pSgarSEnOKU0HiQanFQJlksKCSH9CYIqhAZn4eRLshilhYYk5pKsQFQAvdUqF2GNfqYLo-zDEEp5ONDBBONhkQJxvWxj5iYYqOfcGymeUTC8MvYEw8FZVgaWJl6GJlmMTKxnGkkUmCZRcrW6CTUYih4QXWecxSioYGBgZGpqZG5roGiZYWScYmFromlmYmpqa6RobmhgaGhhqnbzf_azQx0lJg1OKNd3c3MjO1NDezMLK0MGA8xShiYGlgbGJoYG5oaGxhYGFqZGFiZuTBEsTm6ORq7OwWZcPFHOzuInhd6JPjeTVRBykQTxHG0wLxDGG8wJpEo1ADrZf2kTCRJNbUPN1g94yrYgWMDYyMXYzcAowejBGMFSDeKkaGDYyMOxj_wwDjK0aQeQCqAZpg4AIAAA&detailFilters=15%7CRange%7E15%7E0%7C560*80%7C1%7C0%7E80%7E1*29%7C1%7E29%7E1%7C2&hotelType=normal&display=inctotal&isCT=true&locale=en-SG": {
+    "scanned_at": "2026-08-22T04:49:02+00:00",
+    "via": "plain fetch+browser+scraperapi",
+    "candidates": []
+  },
+  "https://www.lazada.sg/products/pdp-i3387371950-s22605467533.html?c=&channelLpJumpArgs=&clickTrackInfo=query%253Ainsta360%252Bace%252Bpro%252B2%253Bnid%253A3387371950%253Bsrc%253ALazadaMainSrp%253Brn%253A186bfa35df641f125a5b7f13a6243ecd%253Bregion%253Asg%253Bsku%253A3387371950_SGAMZ%253Bprice%253A639%253Bclient%253Adesktop%253Bsupplier_id%253A1192016338%253Bsession_id%253A%253Bbiz_source%253Ah5_internal%253Bslot%253A4%253Butlog_bucket_id%253A470687%253Basc_category_id%253A5880%253Bitem_id%253A3387371950%253Bsku_id%253A22605467533%253Bshop_id%253A1772936%253BtemplateInfo%253A-1_A3_C%2523107878_E%2523164593_J%2523&freeshipping=1&fs_ab=2&fuse_fs=&lang=en&location=Singapore&price=639&priceCompare=skuId%3A22605467533%3Bsource%3Alazada-search-voucher%3Bsn%3A186bfa35df641f125a5b7f13a6243ecd%3BoriginPrice%3A63900%3BdisplayPrice%3A63900%3BisGray%3Afalse%3BsinglePromotionId%3A-1%3BsingleToolCode%3AmockedSalePrice%3BvoucherPricePlugin%3A0%3Btimestamp%3A1787369261060&qSellingPoint=b--insta360___p--ace%20pro%202&ratingscore=4.975&request_id=186bfa35df641f125a5b7f13a6243ecd&review=40&sale=131&search=1&source=search&spm=a2o42.searchlist.list.4&stock=1": {
+    "scanned_at": "2026-08-22T04:49:12+00:00",
+    "via": "plain fetch+browser",
+    "candidates": [
+      {
+        "label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)",
+        "price": 639.0
+      },
+      {
+        "label": "Quantity: Almost sold out, buy now! Buy Now Add to Cart",
+        "price": 639.0
+      },
+      {
+        "label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL",
+        "price": 639.0
+      },
+      {
+        "label": "(Bulky) ELECTROLUX ETM3300A-A 600 Series Top freezer refrigerator (334",
+        "price": 677.0
+      },
+      {
+        "label": "SVBONY Action Camera Neck Strapt, Free your hands - Vlogging/Live Stre",
+        "price": 31.99
+      },
+      {
+        "label": "$ -2% $32.64",
+        "price": 31.99
+      },
+      {
+        "label": "$ 31.99 $32.64",
+        "price": 2.0
+      },
+      {
+        "label": "Svbony Upgraded Act20 4K60fps 12m bare Waterproof Action Camera Diving",
+        "price": 209.99
+      },
+      {
+        "label": "$ -18% $255.09",
+        "price": 209.99
+      },
+      {
+        "label": "$ 209.99",
+        "price": 18.0
+      },
+      {
+        "label": "SVBONY SVGo C1 4K Cycling Action Camera Smart Cycling Recorder with GP",
+        "price": 152.99
+      },
+      {
+        "label": "$ -2% $156.11",
+        "price": 152.99
+      },
+      {
+        "label": "$ 152.99",
+        "price": 2.0
+      }
+    ]
+  },
+  "https://www.jbhifi.com.au/products/insta360-go-ultra-action-cam-creator-bundle-black": {
+    "scanned_at": "2026-08-22T04:49:12+00:00",
+    "via": "plain fetch",
+    "candidates": [
+      {
+        "label": "Insta360 Go Ultra Action Cam Creator Bundle (Black)",
+        "price": 839.0
+      },
+      {
+        "label": "INSTA360 Insta360 Go Ultra Action Cam Creator Bundle (Black) Model: IN",
+        "price": 839.0
+      }
+    ]
+  },
+  "https://www.apple.com/sg/shop/buy-mac/macbook-air": {
+    "scanned_at": "2026-08-22T04:49:18+00:00",
+    "via": "plain fetch+browser",
+    "candidates": [
+      {
+        "label": "MacBook Air",
+        "price": 1899.0
+      },
+      {
+        "label": "Quick Links",
+        "price": 1899.0
+      },
+      {
+        "label": "Buy MacBook Air",
+        "price": 1899.0
+      },
+      {
+        "label": "13-inch Footnote 1",
+        "price": 1899.0
+      },
+      {
+        "label": "15-inch Footnote 1",
+        "price": 2199.0
+      },
+      {
+        "label": "10‑core CPU, 8‑core GPU, 16‑core Neural Engine Brings speed and fluidi",
+        "price": 1899.0
+      },
+      {
+        "label": "10‑core CPU, 10‑core GPU, 16‑core Neural Engine Give a boost to intens",
+        "price": 2049.0
+      },
+      {
+        "label": "Add AppleCare+",
+        "price": 309.0
+      },
+      {
+        "label": "Your new MacBook Air awaits. Make it yours. Continue Still deciding? S",
+        "price": 1899.0
+      },
+      {
+        "label": "13-inch Footnote 1 From",
+        "price": 1899.0
+      },
+      {
+        "label": "15-inch Footnote 1 From",
+        "price": 2199.0
+      },
+      {
+        "label": "S$359.00",
+        "price": 309.0
+      },
+      {
+        "label": "S$309.00",
+        "price": 359.0
+      },
+      {
+        "label": "Your new MacBook Air awaits. Make it yours. From Continue Still decidi",
+        "price": 1899.0
+      }
+    ]
   }
 }
