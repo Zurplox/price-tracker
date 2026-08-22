@@ -7,10 +7,11 @@
       "target": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
+      "status": "needs attention — couldn't find a price (try adding a selector in Advanced)",
       "method": null,
       "last_price": null,
-      "last_checked": null
+      "last_checked": "2026-08-22T03:01:06+00:00",
+      "fail_count": 1
     },
     {
       "id": "wwwdavidjonescom-20cftu",
@@ -19,10 +20,11 @@
       "target": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "auto (structured data) (scraperapi)",
+      "last_price": 225.0,
+      "last_checked": "2026-08-22T03:01:48+00:00",
+      "fail_count": 0
     }
   ]
 }
