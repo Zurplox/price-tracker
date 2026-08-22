@@ -99,7 +99,8 @@
       "status": "pending",
       "method": null,
       "last_price": null,
-      "last_checked": null
+      "last_checked": null,
+      "watch_label": "Overview Rooms Trip recommendations Facilities Reviews Location Polici"
     }
   ]
 }
