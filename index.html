@@ -31,10 +31,11 @@
     font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-  header { padding: 40px 0 8px; }
+  header { padding: 40px 0 8px; position: relative; }
   h1 { font-size: 28px; margin: 0; letter-spacing: -0.02em; }
   .sub { color: var(--secondary); margin: 6px 0 0; }
   .credit { color: var(--secondary); font-size: 13px; margin: 4px 0 0; }
+  .fsbtn { position: absolute; top: 40px; right: 0; min-height: 0; padding: 8px; display: inline-flex; align-items: center; justify-content: center; }
   .actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
   button {
     font: inherit; font-weight: 600; border-radius: 8px; cursor: pointer;
@@ -121,6 +122,7 @@
     .actions #runBtn { grid-column: 1 / -1; }
     .card { padding: 16px; }
     .banner { padding: 14px 16px; }
+    .fsbtn { top: 24px; }
     .addform { flex-direction: column; align-items: stretch; }
     .addform label { flex: 0 1 auto !important; }
     .addform label input { width: 100%; }
@@ -132,6 +134,7 @@
   <h1>💰 Price Tracker</h1>
   <p class="sub">Paste a link. Get pinged on Telegram when the price drops.</p>
   <p class="credit">© 2026 App by Harvin</p>
+  <button id="fsBtn" class="fsbtn" title="Fullscreen"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
   <div class="actions">
     <button class="primary" id="runBtn">▶ Run check now</button>
     <button id="scanAllBtn">🔍 Scan all</button>
@@ -680,6 +683,17 @@ $("#lockBtn").onclick = () => {
   toast("🔒 Locked — this device is read-only now");
   loadAll();
 };
+$("#fsBtn").onclick = () => {
+  if (document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => toast("Fullscreen isn't available in this browser"));
+};
+const FS_EXPAND = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+const FS_SHRINK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+document.addEventListener("fullscreenchange", () => {
+  const on = !!document.fullscreenElement;
+  $("#fsBtn").innerHTML = on ? FS_SHRINK : FS_EXPAND;
+  $("#fsBtn").title = on ? "Exit fullscreen" : "Fullscreen";
+});
 
 loadAll();
 </script>
