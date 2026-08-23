@@ -13,7 +13,7 @@
       "last_checked": "2026-08-23T05:37:04+00:00",
       "fail_count": 2,
       "_tracked_key": "Ravello Low Leather Heel - bone - 36 EU",
-      "watch_label": "Ravello Low Leather Heel - bone - 36 EU",
+      "watch_label": null,
       "note": "last check failed — showing earlier price"
     },
     {
@@ -41,7 +41,7 @@
       "paused": false,
       "status": "tracking",
       "method": "🎯 INSTA360 ACE PRO 2 DUAL BATT",
-      "last_price": 639.0,
+      "last_price": 639,
       "last_checked": "2026-08-23T05:37:27+00:00",
       "fail_count": 0,
       "watch_label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)",
@@ -57,7 +57,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data)",
-      "last_price": 839.0,
+      "last_price": 839,
       "last_checked": "2026-08-23T05:37:27+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -72,7 +72,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (lowest of 1 prices)",
-      "last_price": 1899.0,
+      "last_price": 1899,
       "last_checked": "2026-08-23T05:37:28+00:00",
       "fail_count": 0,
       "_tracked_key": "lowest"
@@ -87,7 +87,7 @@
       "paused": false,
       "status": "tracking",
       "method": "🎯 Overview Rooms Trip recommen",
-      "last_price": 114.0,
+      "last_price": 114,
       "last_checked": "2026-08-23T05:37:34+00:00",
       "watch_label": "Overview Rooms Trip recommendations Facilities Reviews Location Polici",
       "fail_count": 0,
