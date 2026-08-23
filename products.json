@@ -9,7 +9,7 @@
       "paused": false,
       "status": "tracking",
       "method": "🎯 Ravello Low Leather Heel - b",
-      "last_price": 225.0,
+      "last_price": 225,
       "last_checked": "2026-08-22T20:32:07+00:00",
       "fail_count": 0,
       "_tracked_key": "Ravello Low Leather Heel - bone - 36 EU",
@@ -40,7 +40,7 @@
       "paused": false,
       "status": "tracking",
       "method": "🎯 INSTA360 ACE PRO 2 DUAL BATT",
-      "last_price": 639.0,
+      "last_price": 639,
       "last_checked": "2026-08-22T20:33:56+00:00",
       "fail_count": 1,
       "watch_label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)",
@@ -57,7 +57,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data)",
-      "last_price": 839.0,
+      "last_price": 839,
       "last_checked": "2026-08-22T20:33:56+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -72,7 +72,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (lowest of 1 prices)",
-      "last_price": 1899.0,
+      "last_price": 1899,
       "last_checked": "2026-08-22T20:33:58+00:00",
       "fail_count": 0,
       "_tracked_key": "lowest"
@@ -87,11 +87,24 @@
       "paused": false,
       "status": "tracking",
       "method": "🎯 Overview Rooms Trip recommen",
-      "last_price": 114.0,
+      "last_price": 114,
       "last_checked": "2026-08-22T20:34:04+00:00",
       "watch_label": "Overview Rooms Trip recommendations Facilities Reviews Location Polici",
       "fail_count": 0,
       "_tracked_key": "Overview Rooms Trip recommendations Facilities Reviews Location Polici"
+    },
+    {
+      "id": "premierticketekcomau-1xu549n",
+      "name": "Tickets",
+      "url": "https://premier.ticketek.com.au/events/WYLLTS27/venues/SSD/performances/ESSD2027815WL/tickets",
+      "target": null,
+      "mode": "lowest",
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
