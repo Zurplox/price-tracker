@@ -10,7 +10,7 @@
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
       "last_price": 225.0,
-      "last_checked": "2026-08-23T14:42:13+00:00",
+      "last_checked": "2026-08-23T20:33:13+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
       "watch_label": null
@@ -26,8 +26,8 @@
       "status": "tracking",
       "method": "auto (page element) (scraperapi)",
       "last_price": 257,
-      "last_checked": "2026-08-23T14:43:17+00:00",
-      "fail_count": 9,
+      "last_checked": "2026-08-23T20:34:15+00:00",
+      "fail_count": 10,
       "note": "last check failed — showing earlier price"
     },
     {
@@ -41,8 +41,8 @@
       "status": "tracking",
       "method": "🎯 INSTA360 ACE PRO 2 DUAL BATT",
       "last_price": 639,
-      "last_checked": "2026-08-23T14:44:20+00:00",
-      "fail_count": 1,
+      "last_checked": "2026-08-23T20:35:19+00:00",
+      "fail_count": 2,
       "watch_label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)",
       "_tracked_key": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 (40)",
       "note": "last check failed — showing earlier price"
@@ -58,7 +58,7 @@
       "status": "tracking",
       "method": "auto (structured data)",
       "last_price": 697.0,
-      "last_checked": "2026-08-23T14:44:20+00:00",
+      "last_checked": "2026-08-23T20:35:20+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
     },
@@ -73,7 +73,7 @@
       "status": "tracking",
       "method": "auto (lowest of 1 prices)",
       "last_price": 1899.0,
-      "last_checked": "2026-08-23T14:44:21+00:00",
+      "last_checked": "2026-08-23T20:35:20+00:00",
       "fail_count": 0,
       "_tracked_key": "lowest"
     },
@@ -88,7 +88,7 @@
       "status": "tracking",
       "method": "🎯 Overview Rooms Trip recommen",
       "last_price": 114.0,
-      "last_checked": "2026-08-23T14:44:26+00:00",
+      "last_checked": "2026-08-23T20:35:25+00:00",
       "watch_label": "Overview Rooms Trip recommendations Facilities Reviews Location Polici",
       "fail_count": 0,
       "_tracked_key": "Overview Rooms Trip recommendations Facilities Reviews Location Polici"
@@ -104,7 +104,7 @@
       "status": "tracking",
       "method": "🎯 Kellogg's Granola - Dark Cho",
       "last_price": 10.5,
-      "last_checked": "2026-08-23T14:44:27+00:00",
+      "last_checked": "2026-08-23T20:35:30+00:00",
       "watch_label": "Kellogg's Granola - Dark Chocolate 350g | Brand: Kellogg's",
       "fail_count": 0,
       "_tracked_key": "Kellogg's Granola - Dark Chocolate 350g | Brand: Kellogg's"
