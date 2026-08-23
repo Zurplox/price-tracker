@@ -402,5 +402,10 @@
         "price": 7.0
       }
     ]
+  },
+  "https://premier.ticketek.com.au/events/WYLLTS27/venues/SSD/performances/ESSD2027815WL/tickets": {
+    "scanned_at": "2026-08-23T02:41:09+00:00",
+    "via": "none",
+    "candidates": []
   }
 }
