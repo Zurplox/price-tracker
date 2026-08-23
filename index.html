@@ -4,128 +4,161 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>💰 Price Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="description" content="Paste a link. Get pinged on Telegram when the price drops.">
 <style>
   :root {
-    --text: #2C2C2B; --secondary: #7D7A75; --canvas: #FFFFFF;
-    --surface: #F9F8F7; --surface2: #F0EFED; --border: #E6E5E3;
-    --blue: #2783DE; --blue-soft: #E5F2FC;
-    --green: #46A171; --green-soft: #E8F1EC;
-    --orange: #D5803B; --orange-soft: #FBEBDE;
-    --red: #E56458; --red-soft: #FCE9E7;
+    --text: #1C1917; --secondary: #7A7269; --canvas: #F6F4EE;
+    --surface: #FFFFFF; --surface2: #EDE9DF; --border: #E3DED1;
+    --blue: #0E6B4A; --blue-soft: #E8F2EC;
+    --green: #3E7C4F; --green-soft: #E9F1E8;
+    --orange: #B5722A; --orange-soft: #F5EADA;
+    --red: #C0453A; --red-soft: #F8E9E6;
+    --gold: #B08A3C;
+    --shadow-card: 0 1px 2px rgba(28,25,23,0.05), 0 12px 32px -14px rgba(28,25,23,0.12);
+    --shadow-hover: 0 2px 4px rgba(28,25,23,0.06), 0 18px 40px -14px rgba(28,25,23,0.16);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --text: #FFFFFF; --secondary: rgba(255,255,255,0.65); --canvas: #191919;
-      --surface: #202020; --surface2: #383836; --border: rgba(255,255,255,0.20);
-      --blue: #5E9FE8; --blue-soft: rgba(94,159,232,0.12);
-      --green: #72BC8F; --green-soft: rgba(114,188,143,0.12);
-      --orange: #DE9255; --orange-soft: rgba(222,146,85,0.12);
-      --red: #E97366; --red-soft: rgba(233,115,102,0.12);
+      --text: #F2EEE4; --secondary: rgba(242,238,228,0.62); --canvas: #16130E;
+      --surface: #211C15; --surface2: #2E2820; --border: rgba(242,238,228,0.13);
+      --blue: #63B78E; --blue-soft: rgba(99,183,142,0.13);
+      --green: #84C192; --green-soft: rgba(132,193,146,0.13);
+      --orange: #DDA46A; --orange-soft: rgba(221,164,106,0.13);
+      --red: #E0887C; --red-soft: rgba(224,136,124,0.13);
+      --gold: #D3B070;
+      --shadow-card: 0 1px 2px rgba(0,0,0,0.35), 0 14px 34px -14px rgba(0,0,0,0.55);
+      --shadow-hover: 0 2px 5px rgba(0,0,0,0.4), 0 20px 44px -14px rgba(0,0,0,0.6);
     }
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
   body {
     margin: 0; background: var(--canvas); color: var(--text);
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font: 16px/1.5 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(1200px 520px at 50% -10%, rgba(176,138,60,0.07), transparent 70%);
   }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-  header { padding: 40px 0 8px; position: relative; }
-  h1 { font-size: 28px; margin: 0; letter-spacing: -0.02em; }
-  .sub { color: var(--secondary); margin: 6px 0 0; }
-  .credit { color: var(--secondary); font-size: 13px; margin: 4px 0 0; }
-  .fsbtn { position: absolute; top: 40px; right: 0; min-height: 0; padding: 8px; display: inline-flex; align-items: center; justify-content: center; }
-  .actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 48px 0 8px; position: relative; }
+  h1 { font-family: "Fraunces", Georgia, "Times New Roman", serif; font-size: 34px; font-weight: 700; margin: 0; letter-spacing: -0.015em; }
+  .sub { color: var(--secondary); margin: 8px 0 0; font-size: 15.5px; }
+  .credit { color: var(--secondary); font-size: 12px; margin: 6px 0 0; text-transform: uppercase; letter-spacing: 0.09em; }
+  .fsbtn { position: absolute; top: 48px; right: 0; min-height: 0; padding: 8px; display: inline-flex; align-items: center; justify-content: center; }
+  .actions { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
   button {
-    font: inherit; font-weight: 600; border-radius: 8px; cursor: pointer;
-    min-height: 44px; padding: 8px 16px; border: 1px solid var(--border);
+    font: inherit; font-weight: 600; border-radius: 10px; cursor: pointer;
+    min-height: 44px; padding: 9px 18px; border: 1px solid var(--border);
     background: var(--surface); color: var(--text);
+    box-shadow: 0 1px 2px rgba(28,25,23,0.05);
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
   }
-  button.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  button.primary {
+    background: linear-gradient(180deg, #2B2620, #1C1917); border-color: #1C1917; color: #F6F4EE;
+    box-shadow: 0 1px 2px rgba(28,25,23,0.2), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
   button.danger { color: var(--red); }
-  button:hover { filter: brightness(0.97); }
+  button:hover { filter: brightness(1.02); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(28,25,23,0.09); }
   button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-  button:disabled { opacity: .55; cursor: default; }
-  #runState { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 14px;
-    border-radius: 8px; background: var(--blue-soft); color: var(--blue); font-size: 14px; font-weight: 600; }
-  .statusline { margin-top: 10px; font-size: 13.5px; color: var(--secondary); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .runchip { background: var(--blue-soft); color: var(--blue); font-weight: 650; padding: 3px 10px; border-radius: 6px; font-size: 12.5px; }
-  .vaultrow { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+  button:disabled { opacity: .5; cursor: default; transform: none; box-shadow: none; }
+  #runState { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 9px 16px;
+    border-radius: 999px; background: var(--blue-soft); color: var(--blue); font-size: 13.5px; font-weight: 600;
+    border: 1px solid var(--border); }
+  .statusline { margin-top: 12px; font-size: 13px; color: var(--secondary); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .runchip { background: var(--blue-soft); color: var(--blue); font-weight: 650; padding: 4px 12px; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); }
+  .vaultrow { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
   .vaultrow input { flex: 1; min-width: 160px; }
   .banner {
-    margin: 24px 0 0; padding: 16px 20px; border-radius: 12px;
-    background: var(--blue-soft); border: 1px solid var(--blue);
+    margin: 26px 0 0; padding: 18px 22px; border-radius: 14px;
+    background: var(--blue-soft); border: 1px solid var(--border); border-left: 3px solid var(--blue);
   }
-  .banner strong { display: block; margin-bottom: 6px; }
+  .banner strong { display: block; margin-bottom: 6px; font-family: "Fraunces", Georgia, serif; font-size: 17px; }
   .banner p { margin: 4px 0; font-size: 14.5px; }
-  .banner code { background: var(--surface2); padding: 1px 6px; border-radius: 4px; font-size: 13.5px; }
+  .banner code { background: var(--surface2); padding: 2px 7px; border-radius: 5px; font-size: 13px; }
   .card {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px; margin-top: 16px;
+    border-radius: 16px; padding: 22px; margin-top: 18px;
+    box-shadow: var(--shadow-card);
+    transition: transform .18s ease, box-shadow .18s ease;
   }
-  .addform { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
-  label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--secondary); font-weight: 500; }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  @media (prefers-reduced-motion: reduce) { .card, button { transition: none; } .card:hover, button:hover { transform: none; } }
+  .addform { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end; }
+  label { display: flex; flex-direction: column; gap: 7px; font-size: 14px; color: var(--secondary); font-weight: 500; }
+  .addform > label, #settings label { text-transform: uppercase; letter-spacing: 0.07em; font-size: 11.5px; font-weight: 650; }
+  .addform > label:has(input[type="checkbox"]) { text-transform: none; letter-spacing: normal; font-size: 14px; font-weight: 500; }
   label.grow { flex: 1 1 300px; }
   input {
     font: inherit; font-size: 16px; color: var(--text); background: var(--canvas);
-    border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; min-height: 44px;
+    border: 1px solid var(--border); border-radius: 10px; padding: 10px 13px; min-height: 44px;
+    transition: border-color .15s ease, box-shadow .15s ease;
   }
-  .hint { color: var(--secondary); font-size: 13.5px; margin: 10px 0 0; }
-  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; margin-top: 16px; }
-  .pname { font-weight: 650; font-size: 15.5px; line-height: 1.35; display: block; color: var(--text); text-decoration: none;
+  input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); outline: none; }
+  .hint { color: var(--secondary); font-size: 13px; margin: 12px 0 0; }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(295px, 1fr)); gap: 18px; margin-top: 18px; }
+  .pname { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; line-height: 1.3; color: var(--text); text-decoration: none;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .pname:hover { color: var(--blue); }
-  .pricerow { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; }
-  .price { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
-  .trend { font-size: 13px; font-weight: 650; padding: 2px 8px; border-radius: 6px; }
+  .pricerow { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; }
+  .price { font-family: "Fraunces", Georgia, serif; font-size: 30px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .trend { font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; letter-spacing: 0.02em; }
   .trend.down { color: var(--green); background: var(--green-soft); }
   .trend.up { color: var(--red); background: var(--red-soft); }
   .trend.flat { color: var(--secondary); background: var(--surface2); }
   .meta { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-  .badge { font-size: 12.5px; font-weight: 650; padding: 3px 9px; border-radius: 6px; }
+  .badge { font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.03em; }
   .badge.tracking { color: var(--green); background: var(--green-soft); }
   .badge.pending { color: var(--orange); background: var(--orange-soft); }
   .badge.error { color: var(--red); background: var(--red-soft); }
   .badge.sample { color: var(--blue); background: var(--blue-soft); }
-  .watchchip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 650;
-    color: var(--blue); background: var(--blue-soft); border-radius: 6px; padding: 3px 9px; margin: 10px 8px 0 0; }
-  .watchchip button { min-height: 0; padding: 0 4px; border: none; background: none; color: inherit; font-weight: 700; }
-  .scanlist { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 4px; }
-  .scanrow { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 6px 0; font-size: 14px; color: var(--text); font-weight: 600; }
-  .scanrow input { min-height: 0; width: 18px; height: 18px; flex: none; margin: 0; }
+  .watchchip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 650;
+    color: var(--blue); background: var(--blue-soft); border-radius: 8px; padding: 4px 10px; margin: 10px 8px 0 0; border: 1px solid var(--border); }
+  .watchchip button { min-height: 0; padding: 0 4px; border: none; background: none; color: inherit; font-weight: 700; box-shadow: none; }
+  .scanlist { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 4px; }
+  .scanrow { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 7px 4px; font-size: 14px; color: var(--text); font-weight: 600; border-radius: 8px; }
+  .scanrow:hover { background: var(--surface2); }
+  .scanrow input { min-height: 0; width: 18px; height: 18px; flex: none; margin: 0; accent-color: var(--blue); }
   .scanrow .sp { color: var(--secondary); flex: 1; font-weight: 400; }
   .checked { font-size: 12.5px; color: var(--secondary); }
-  .spark { margin-top: 12px; width: 100%; height: 36px; }
-  .targetrow { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; color: var(--secondary); }
+  .spark { margin-top: 14px; width: 100%; height: 38px; }
+  .targetrow { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 12px; color: var(--secondary); font-weight: 650; text-transform: uppercase; letter-spacing: 0.06em; }
   .targetrow input { width: 110px; min-height: 38px; padding: 6px 10px; font-size: 14.5px; }
-  .cardfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 8px; flex-wrap: wrap; }
+  .cardfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 8px; flex-wrap: wrap; }
   details { font-size: 13.5px; color: var(--secondary); min-width: 220px; max-width: 100%; }
-  summary { cursor: pointer; padding: 6px 0; font-weight: 600; }
+  summary { cursor: pointer; padding: 6px 0; font-weight: 650; }
+  #addWrap > summary { font-size: 15px; color: var(--text); }
+  @media (min-width: 561px) { #addWrap > summary { display: none; } }
   details input { width: 100%; margin-top: 8px; font-size: 14px; min-height: 38px; }
   details button { margin-top: 8px; min-height: 38px; font-size: 14px; }
   .empty { text-align: center; color: var(--secondary); padding: 48px 0; }
   #toast {
     position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
-    background: #2C2C2B; color: #fff; padding: 10px 18px; border-radius: 8px;
-    font-size: 14.5px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,.2); z-index: 10;
+    background: #1C1917; color: #F6F4EE; padding: 11px 20px; border-radius: 999px;
+    font-size: 14px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.25); z-index: 10;
     max-width: 90vw;
   }
   #settings input { width: 100%; margin-top: 4px; }
   #settings .row { margin-bottom: 12px; }
-  footer { color: var(--secondary); font-size: 13px; padding: 40px 0 32px; }
+  footer { color: var(--secondary); font-size: 11.5px; padding: 44px 0 36px; text-transform: uppercase; letter-spacing: 0.09em; }
   @media (max-width: 560px) {
     .wrap { padding: 0 16px; }
-    header { padding: 24px 0 4px; }
-    h1 { font-size: 24px; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    header { padding: 28px 0 4px; }
+    h1 { font-size: 27px; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; }
     .actions #runBtn { grid-column: 1 / -1; }
-    .card { padding: 16px; }
-    .banner { padding: 14px 16px; }
-    .fsbtn { top: 24px; }
+    .card { padding: 18px; }
+    .banner { padding: 15px 17px; }
+    .fsbtn { top: 28px; }
     .addform { flex-direction: column; align-items: stretch; }
     .addform label { flex: 0 1 auto !important; }
     .addform label input { width: 100%; }
+  }
+  @media (prefers-color-scheme: dark) {
+    button.primary { background: linear-gradient(180deg, #F0EADC, #E4DDCB); border-color: #E4DDCB; color: #1C1917; box-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+    #toast { background: #F0EADC; color: #1C1917; }
+    input { background: var(--surface2); }
   }
 </style>
 </head>
@@ -164,6 +197,8 @@
   </div>
 
   <div class="card">
+    <details id="addWrap">
+      <summary>➕ Add a product</summary>
     <div class="addform">
       <label style="flex:1 1 190px">Name (optional)
         <input id="inName" placeholder="e.g. Fragrance Hotel Dec stay" autocomplete="off">
@@ -180,6 +215,7 @@
       <button class="primary" id="addBtn">＋ Add product</button>
     </div>
     <p class="hint">Add as many links as you like — nothing runs until the daily schedule or your next “Run check now”.</p>
+    </details>
   </div>
 
   <section id="grid"></section>
@@ -395,6 +431,7 @@ async function addProduct() {
     await saveProducts("Add " + url.slice(0, 60));
     $("#inUrl").value = ""; $("#inTarget").value = ""; $("#inLowest").checked = false; $("#inName").value = "";
     render();
+    if (window.innerWidth <= 560) $("#addWrap").open = false;   // phones: fold the form away after adding
     toast("✅ Added — press ▶ Run check now when you're ready");
   } catch (e) { products.pop(); toast(e.message); }
 }
@@ -694,6 +731,13 @@ document.addEventListener("fullscreenchange", () => {
   $("#fsBtn").innerHTML = on ? FS_SHRINK : FS_EXPAND;
   $("#fsBtn").title = on ? "Exit fullscreen" : "Fullscreen";
 });
+
+/* collapsible add-form on phones; always open on desktop */
+function syncAddWrap() {
+  if (window.innerWidth > 560) $("#addWrap").open = true;
+}
+syncAddWrap();
+window.addEventListener("resize", syncAddWrap);
 
 loadAll();
 </script>
