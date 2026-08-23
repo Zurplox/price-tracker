@@ -104,7 +104,8 @@
       "status": "pending",
       "method": null,
       "last_price": null,
-      "last_checked": null
+      "last_checked": null,
+      "watch_label": "Kellogg's Granola - Dark Chocolate 350g | Brand: Kellogg's"
     }
   ]
 }
