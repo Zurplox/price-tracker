@@ -92,19 +92,6 @@
       "watch_label": "Overview Rooms Trip recommendations Facilities Reviews Location Polici",
       "fail_count": 0,
       "_tracked_key": "Overview Rooms Trip recommendations Facilities Reviews Location Polici"
-    },
-    {
-      "id": "premierticketekcomau-1xu549n",
-      "name": "Tickets",
-      "url": "https://premier.ticketek.com.au/events/WYLLTS27/venues/SSD/performances/ESSD2027815WL/tickets",
-      "target": null,
-      "mode": "lowest",
-      "selector": null,
-      "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
     }
   ]
 }
