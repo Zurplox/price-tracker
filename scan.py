@@ -54,6 +54,14 @@ def scan_one(url):
             via = (via + "+" if via else "") + "scraperapi"
             candidates.extend(tracker.extract_all(html3))
 
+    # Empty-handed? One last dice roll — ScraperAPI rotates exit IPs per request,
+    # so a retry often slips past a wall that just blocked us seconds ago.
+    if not candidates and tracker.SCRAPER_API_KEY:
+        html4 = tracker.fetch_via_scraperapi(url)
+        if html4:
+            via = (via + "+" if via else "") + "scraperapi retry"
+            candidates.extend(tracker.extract_all(html4))
+
     # Dedupe by (label, price), keep the list readable
     seen, out = set(), []
     for c in candidates:

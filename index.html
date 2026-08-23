@@ -525,7 +525,7 @@ function scanSection(p) {
           <b>${money(c.price, p.url)}</b> <span class="sp">${esc(c.label)}</span></label>`).join("")}
         <button class="primary" style="margin-top:8px" onclick="trackSelected('${p.id}')">Track selected price</button>
       </details>`
-    : (s ? `<p class="hint">Last scan found nothing — the site likely walled it off that run. Try again later.</p>` : "");
+    : (s ? `<p class="hint">Last scan found nothing (scanned ${timeAgo(s.scanned_at)}) — the site likely walled it off that run. Press 🔍 again to retry just this page.</p>` : "");
   return `<div style="margin-top:12px">${watch}
     <button style="min-height:38px;font-size:14px" onclick="scanProduct('${p.id}')">🔍 Scan this page</button>
     ${list}</div>`;
