@@ -5,9 +5,46 @@
     "candidates": []
   },
   "https://www.davidjones.com/product/carvela-ravello-low-leather-heel-27913275": {
-    "scanned_at": "2026-08-23T13:59:50+00:00",
-    "via": "plain fetch+browser",
-    "candidates": []
+    "scanned_at": "2026-08-24T00:19:08+00:00",
+    "via": "plain fetch+browser+scraperapi",
+    "candidates": [
+      {
+        "label": "Ravello Low Leather Heel",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 36 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 37 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 38 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 39 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 40 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Ravello Low Leather Heel - bone - 41 EU",
+        "price": 225.0
+      },
+      {
+        "label": "Carvela Ravello Low Leather Heel",
+        "price": 225.0
+      },
+      {
+        "label": "Carvela Ravello Low Leather Heel Price",
+        "price": 225.0
+      }
+    ]
   },
   "https://sg.trip.com/hotels/detail/?cityEnName=Singapore&cityId=73&hotelId=10930412&checkIn=2026-12-11&checkOut=2026-12-15&adult=2&children=0&crn=1&ages=&curr=SGD&barcurr=SGD&hoteluniquekey=H4sIAAAAAAAA_-OazMLFKsFksIFFqpOFo-3K-vusQoxGGnfZDOwsvgo6asb0H_rK1Ojguc79YZVIwhKHAJ5CBhCIaHZoZASz3pQ7zGB8M3E260ZGsGqJaocdjEwnGN8xL2B6d-El8ykWVo52BwmWSyyfmKKrlbJTK5WsTHSUSjJLclKVrJTCHEOUdJRSUouTgRwgKzE3vzSvBMg2MdAztwQKlCRWeKaAtSQn5iSX5iSWpIZUFgC1mukoZRY7lxRlFgSl5maWlKQCVaUl5hSngsSDUouBMslgQSU_oDFFUIHM_DyIdgMUsbDEnNJUiAuAFrqlQu0wrNXBdHJwalFZZnKqQnJGYlF6Kg7XG-oZGSBcbz4grjeujX3EwhQd-4LlLtsnFoZfwJh4EyXB0sTK0MXKMImVjeN7I7MEyy5WHn9PVzNPE11D3ShdwwusbaxSioYGBgZGpqZG5roGiZaJycaWSbomlmYmpqa6RoZm5hamhhqHLjf_azQx0lJg1OKNd3c3MjO1NDezMLK0MGA8xShiYGlgbGJoYG5oaGxhYGFqZGFiZuTBEsTmampq4uQaZcPFHOzuInhd6JPjeTVRBykQTxHG0wLxDGG8wJpEo1ADrZf2kTCRJNbUPN1g94yrYgWMDYyMXYzcAowejBGMFSDeKkZ2LmYDI0MBpg2MjDsY_8MA4ytGkLEARbxjQfACAAA&detailFilters=15%7CRange%7E15%7E0%7C560*80%7C1%7C0%7E80%7E1*29%7C1%7E29%7E1%7C2&hotelType=normal&display=inctotal&isCT=true&locale=en-SG": {
     "scanned_at": "2026-08-22T04:47:29+00:00",
@@ -216,17 +253,26 @@
     ]
   },
   "https://sg.trip.com/hotels/detail/?cityEnName=Singapore&cityId=73&hotelId=995027&checkIn=2026-12-11&checkOut=2026-12-15&adult=2&children=0&crn=1&ages=&curr=SGD&barcurr=SGD&hoteluniquekey=H4sIAAAAAAAA_-PqYuFilWAy2MAi1cDC8erIg3esQowGGptZLH4LOj6sElnnfrTMwbP_0FeNGLPZDgE8hQwgsCDJoZFxh1zr68Ad_g4zGC_ftdnICFQKVF_ksIOR6QTjKaYFTM97JlueYmHluKMlwXKJ5RNTdLVSdmqlkpWJjlJJZklOqpKVUnBqUVlmcqpCckZiUXqqko5SSmpxMlAcyErMzS_NKwGyjcz1TCyAAiWJFZ4pSlbmOkrJiTnJpTmJJakhlQVAU8x0lDKLnUuKMguCUnMzS0pSgarSEnOKU0HiQanFQJlksKCSH9CYIqhAZn4eRLshilhYYk5pKsQFQAvdUqF2GNfqYLo-zDEEp5ONDBBONhkQJxvWxj5iYYqOfcGymeUTC8MvYEw8FZVgaWJl6GJlmMTKxnGkkUmCZRcrW6CTUYih4QXWecxSioYGBgZGpqZG5roGiZYWScYmFromlmYmpqa6RobmhgaGhhqnbzf_azQx0lJg1OKNd3c3MjO1NDezMLK0MGA8xShiYGlgbGJoYG5oaGxhYGFqZGFiZuTBEsTm6ORq7OwWZcPFHOzuInhd6JPjeTVRBykQTxHG0wLxDGG8wJpEo1ADrZf2kTCRJNbUPN1g94yrYgWMDYyMXYzcAowejBGMFSDeKkaGDYyMOxj_wwDjK0aQeQCqAZpg4AIAAA&detailFilters=15%7CRange%7E15%7E0%7C560*80%7C1%7C0%7E80%7E1*29%7C1%7E29%7E1%7C2&hotelType=normal&display=inctotal&isCT=true&locale=en-SG": {
-    "scanned_at": "2026-08-23T14:00:28+00:00",
+    "scanned_at": "2026-08-24T00:20:36+00:00",
     "via": "plain fetch+browser+scraperapi",
     "candidates": []
   },
   "https://www.lazada.sg/products/pdp-i3387371950-s22605467533.html?c=&channelLpJumpArgs=&clickTrackInfo=query%253Ainsta360%252Bace%252Bpro%252B2%253Bnid%253A3387371950%253Bsrc%253ALazadaMainSrp%253Brn%253A186bfa35df641f125a5b7f13a6243ecd%253Bregion%253Asg%253Bsku%253A3387371950_SGAMZ%253Bprice%253A639%253Bclient%253Adesktop%253Bsupplier_id%253A1192016338%253Bsession_id%253A%253Bbiz_source%253Ah5_internal%253Bslot%253A4%253Butlog_bucket_id%253A470687%253Basc_category_id%253A5880%253Bitem_id%253A3387371950%253Bsku_id%253A22605467533%253Bshop_id%253A1772936%253BtemplateInfo%253A-1_A3_C%2523107878_E%2523164593_J%2523&freeshipping=1&fs_ab=2&fuse_fs=&lang=en&location=Singapore&price=639&priceCompare=skuId%3A22605467533%3Bsource%3Alazada-search-voucher%3Bsn%3A186bfa35df641f125a5b7f13a6243ecd%3BoriginPrice%3A63900%3BdisplayPrice%3A63900%3BisGray%3Afalse%3BsinglePromotionId%3A-1%3BsingleToolCode%3AmockedSalePrice%3BvoucherPricePlugin%3A0%3Btimestamp%3A1787369261060&qSellingPoint=b--insta360___p--ace%20pro%202&ratingscore=4.975&request_id=186bfa35df641f125a5b7f13a6243ecd&review=40&sale=131&search=1&source=search&spm=a2o42.searchlist.list.4&stock=1": {
-    "scanned_at": "2026-08-23T14:01:31+00:00",
+    "scanned_at": "2026-08-24T00:20:38+00:00",
     "via": "plain fetch",
-    "candidates": []
+    "candidates": [
+      {
+        "label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL",
+        "price": 639.0
+      },
+      {
+        "label": "INSTA360 ACE PRO 2 DUAL BATTERY ACTION CAMERA CINSBBGA/DUAL App 5 ( 40",
+        "price": 639.0
+      }
+    ]
   },
   "https://www.jbhifi.com.au/products/insta360-go-ultra-action-cam-creator-bundle-black": {
-    "scanned_at": "2026-08-23T14:01:32+00:00",
+    "scanned_at": "2026-08-24T00:20:39+00:00",
     "via": "plain fetch",
     "candidates": [
       {
@@ -244,7 +290,7 @@
     ]
   },
   "https://www.apple.com/sg/shop/buy-mac/macbook-air": {
-    "scanned_at": "2026-08-23T14:01:38+00:00",
+    "scanned_at": "2026-08-24T00:20:45+00:00",
     "via": "plain fetch+browser",
     "candidates": [
       {
@@ -332,28 +378,28 @@
     ]
   },
   "https://www.agoda.com/v-hotel-bencoolen/hotel/singapore-sg.html?countryId=114&finalPriceView=2&isShowMobileAppPrice=false&cid=1917614&numberOfBedrooms=&familyMode=false&adults=2&children=0&rooms=1&maxRooms=0&checkIn=2026-12-11&isCalendarCallout=false&childAges=&numberOfGuest=0&missingChildAges=false&travellerType=1&showReviewSubmissionEntry=false&currencyCode=SGD&isFreeOccSearch=false&los=4&searchrequestid=371bc46e-f98e-4544-a30a-75afbc1eb0d1": {
-    "scanned_at": "2026-08-23T14:01:44+00:00",
+    "scanned_at": "2026-08-24T00:20:51+00:00",
     "via": "plain fetch+browser",
     "candidates": [
       {
-        "label": "Original price: USD44. Current price: USD35 USD 35",
-        "price": 44.0
+        "label": "Overview Rooms Trip recommendations Facilities Reviews Location Polici",
+        "price": 114.0
       },
       {
-        "label": "Original price: USD20. Current price: USD19 USD 19",
-        "price": 20.0
+        "label": "SEE YOUR PRICE",
+        "price": 114.0
+      },
+      {
+        "label": "Original price: USD44. Current price: USD36 USD 36",
+        "price": 44.0
       },
       {
         "label": "Original price: USD11. Current price: USD10 USD 10",
         "price": 11.0
       },
       {
-        "label": "Original price: USD35. Current price: USD31 USD 31",
+        "label": "Original price: USD35. Current price: USD32 USD 32",
         "price": 35.0
-      },
-      {
-        "label": "Original price: USD60. Current price: USD59 USD 59",
-        "price": 60.0
       },
       {
         "label": "Original price: USD1. Current price: USD0 USD 0",
@@ -367,7 +413,7 @@
     "candidates": []
   },
   "https://www.fairprice.com.sg/product/kellogg-s-granola-dark-chocolate-350g-13223814": {
-    "scanned_at": "2026-08-23T14:01:51+00:00",
+    "scanned_at": "2026-08-24T00:20:58+00:00",
     "via": "plain fetch+browser",
     "candidates": [
       {
