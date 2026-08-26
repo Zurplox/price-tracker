@@ -36,6 +36,19 @@
       "method": null,
       "last_price": null,
       "last_checked": null
+    },
+    {
+      "id": "wwwfairpricecomsg-ytnmvc",
+      "name": "Kellogg S Granola Dark Chocolate 350g 13223814",
+      "url": "https://www.fairprice.com.sg/product/kellogg-s-granola-dark-chocolate-350g-13223814",
+      "target": null,
+      "mode": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
