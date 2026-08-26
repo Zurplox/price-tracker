@@ -62,6 +62,19 @@
       "method": null,
       "last_price": null,
       "last_checked": null
+    },
+    {
+      "id": "-1wtqjz9",
+      "name": "SIN ⇄ KNO · 09/18 → 09/21",
+      "url": "flight:SIN-KNO/2026-09-18/2026-09-21",
+      "target": null,
+      "mode": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
