@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>💰 Price Tracker</title>
+<meta name="description" content="Paste a link. Get pinged on Telegram when the price drops.">
+<style>
+  :root {
+    --text: #1D1D1F; --secondary: #6E6E73; --canvas: #F5F5F7;
+    --surface: #FFFFFF; --surface2: #F0F0F2; --border: rgba(0,0,0,0.08);
+    --blue: #0071E3; --blue-soft: rgba(0,113,227,0.08);
+    --green: #248A3D; --green-soft: rgba(52,199,89,0.12);
+    --orange: #B25000; --orange-soft: rgba(255,149,0,0.12);
+    --red: #D70015; --red-soft: rgba(255,59,48,0.12);
+    --shadow-card: 0 4px 24px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-hover: 0 14px 44px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.04);
+    --bar-bg: rgba(245,245,247,0.72);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #F5F5F7; --secondary: #98989D; --canvas: #000000;
+      --surface: #1C1C1E; --surface2: #2C2C2E; --border: rgba(255,255,255,0.10);
+      --blue: #0A84FF; --blue-soft: rgba(10,132,255,0.16);
+      --green: #30D158; --green-soft: rgba(48,209,88,0.15);
+      --orange: #FF9F0A; --orange-soft: rgba(255,159,10,0.15);
+      --red: #FF453A; --red-soft: rgba(255,69,58,0.15);
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.4);
+      --shadow-hover: 0 14px 44px rgba(0,0,0,0.6);
+      --bar-bg: rgba(0,0,0,0.6);
+    }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0; background: var(--canvas); color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "Segoe UI", Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 54px 0 10px; position: relative; }
+  h1 { font-size: 44px; margin: 0; letter-spacing: -0.028em; font-weight: 700; line-height: 1.05; }
+  h1::before { content: "$"; display: inline-flex; width: 36px; height: 36px; margin-right: 12px;
+    align-items: center; justify-content: center; border-radius: 10px; font-size: 19px; font-weight: 800;
+    letter-spacing: 0; background: linear-gradient(135deg, #0A84FF, #0055D4); color: #fff;
+    vertical-align: 3px; box-shadow: 0 4px 14px rgba(10,132,255,0.30); }
+  .sub { color: var(--secondary); margin: 10px 0 0; font-size: 17px; letter-spacing: -0.01em; padding-right: 44px; }
+  .credit { color: var(--secondary); font-size: 12px; margin: 8px 0 0; }
+  .fsbtn { position: absolute; top: 54px; right: 0; min-height: 0; padding: 8px; display: inline-flex; align-items: center; justify-content: center; }
+  .actions { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; }
+  button {
+    font: inherit; font-weight: 600; border-radius: 999px; cursor: pointer;
+    min-height: 44px; padding: 10px 20px; border: none;
+    background: var(--surface2); color: var(--text);
+    transition: transform .18s cubic-bezier(.34,1.4,.64,1), filter .15s ease;
+  }
+  button.primary { background: var(--blue); color: #fff; }
+  button.danger { color: var(--red); }
+  button:hover { filter: brightness(1.04); transform: scale(1.02); }
+  button:active { transform: scale(0.98); }
+  button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  button:disabled { opacity: .45; cursor: default; transform: none; }
+  #runState { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; padding: 9px 18px;
+    border-radius: 999px; background: var(--blue-soft); color: var(--blue); font-size: 14px; font-weight: 600; }
+  .statusline { margin-top: 12px; font-size: 13px; color: var(--secondary); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .runchip { background: var(--blue-soft); color: var(--blue); font-weight: 650; padding: 4px 12px; border-radius: 999px; font-size: 12.5px; }
+  .vaultrow { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; align-items: center; }
+  .vaultrow input { flex: 1; min-width: 160px; }
+  .flightform { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-top: 10px; }
+  .flightform label { min-width: 0; }
+  .flightform label.f-code { width: 84px; }
+  .flightform label.f-adults { width: 76px; }
+  .banner {
+    margin: 28px 0 0; padding: 20px 24px; border-radius: 18px;
+    background: var(--blue-soft);
+  }
+  .banner strong { display: block; margin-bottom: 6px; font-size: 16.5px; letter-spacing: -0.01em; }
+  .banner p { margin: 4px 0; font-size: 14.5px; }
+  .banner code { background: rgba(0,0,0,0.05); padding: 2px 7px; border-radius: 6px; font-size: 13px; }
+  .banner input { background: var(--surface); }
+  .card {
+    background: var(--surface);
+    border-radius: 20px; padding: 24px; margin-top: 18px; border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    transition: transform .2s cubic-bezier(.34,1.3,.5,1), box-shadow .2s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+  @media (prefers-reduced-motion: reduce) { .card, button { transition: none; } .card:hover, button:hover { transform: none; } }
+  .addform { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+  label { display: flex; flex-direction: column; gap: 7px; font-size: 13.5px; color: var(--secondary); font-weight: 500; letter-spacing: -0.01em; }
+  label.grow { flex: 1 1 300px; }
+  input {
+    font: inherit; font-size: 16px; color: var(--text); background: var(--surface2);
+    border: 1px solid transparent; border-radius: 12px; padding: 11px 14px; min-height: 46px;
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  input:focus { background: var(--surface); border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-soft); outline: none; }
+  .hint { color: var(--secondary); font-size: 13.5px; margin: 14px 0 0; }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 20px; }
+  .pname { font-weight: 650; font-size: 17px; line-height: 1.3; letter-spacing: -0.015em; color: var(--text); text-decoration: none;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pname:hover { color: var(--blue); }
+  .pricerow { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; }
+  .price { font-size: 32px; font-weight: 700; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; }
+  .trend { font-size: 12.5px; font-weight: 650; padding: 4px 10px; border-radius: 999px; }
+  .trend.down { color: var(--green); background: var(--green-soft); }
+  .trend.up { color: var(--red); background: var(--red-soft); }
+  .trend.flat { color: var(--secondary); background: var(--surface2); }
+  .meta { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .badge { font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 999px; }
+  .badge.tracking { color: var(--green); background: var(--green-soft); }
+  .badge.pending { color: var(--orange); background: var(--orange-soft); }
+  .badge.error { color: var(--red); background: var(--red-soft); }
+  .badge.sample { color: var(--blue); background: var(--blue-soft); }
+  .watchchip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 650;
+    color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 5px 11px; margin: 12px 8px 0 0; }
+  .watchchip button { min-height: 0; padding: 0 4px; border: none; background: none; color: inherit; font-weight: 700; border-radius: 4px; }
+  .scanlist { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 6px; }
+  .scanrow { display: flex; flex-direction: row; align-items: center; gap: 10px; padding: 8px 6px; font-size: 14.5px; color: var(--text); font-weight: 600; border-radius: 10px; }
+  .scanrow:hover { background: var(--surface2); }
+  .scanrow input { min-height: 0; width: 18px; height: 18px; flex: none; margin: 0; accent-color: var(--blue); }
+  .scanrow .sp { color: var(--secondary); flex: 1; font-weight: 400; }
+  .checked { font-size: 13px; color: var(--secondary); }
+  .spark { margin-top: 16px; width: 100%; height: 38px; }
+  .targetrow { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 13.5px; color: var(--secondary); font-weight: 500; }
+  .targetrow input { width: 110px; min-height: 40px; padding: 7px 12px; font-size: 14.5px; border-radius: 10px; }
+  .cardfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; gap: 8px; flex-wrap: wrap; }
+  details { font-size: 14px; color: var(--secondary); min-width: 220px; max-width: 100%; }
+  summary { cursor: pointer; padding: 6px 0; font-weight: 650; color: var(--text); }
+  #addWrap > summary { font-size: 15.5px; }
+  @media (min-width: 561px) { #addWrap > summary { display: none; } }
+  details input { width: 100%; margin-top: 8px; font-size: 14px; min-height: 40px; }
+  details button { margin-top: 8px; min-height: 38px; font-size: 14px; }
+  .empty { text-align: center; color: var(--secondary); padding: 56px 0; font-size: 15px; }
+  #toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+    background: #1D1D1F; color: #fff; padding: 12px 22px; border-radius: 999px;
+    font-size: 14.5px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.3); z-index: 30;
+    max-width: 90vw;
+  }
+  #settings input { width: 100%; margin-top: 4px; }
+  #settings .row { margin-bottom: 14px; }
+  footer { color: var(--secondary); font-size: 12.5px; padding: 48px 0 40px; }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 16px; }
+    header { padding: 34px 0 4px; }
+    h1 { font-size: 34px; }
+    h1::before { width: 30px; height: 30px; border-radius: 8px; font-size: 16px; margin-right: 10px; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+    .actions #runBtn { grid-column: 1 / -1; }
+    .card { padding: 18px; border-radius: 18px; }
+    .banner { padding: 16px 18px; border-radius: 16px; }
+    .fsbtn { top: 34px; }
+    .addform { flex-direction: column; align-items: stretch; }
+    .addform label { flex: 0 1 auto !important; }
+    .addform label input { width: 100%; }
+  }
+  @media (prefers-color-scheme: dark) {
+    .banner code { background: rgba(255,255,255,0.10); }
+    #toast { background: #F5F5F7; color: #1D1D1F; }
+  }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <h1>Price Tracker</h1>
+  <p class="sub">Paste a link. Get pinged on Telegram when the price drops.</p>
+  <p class="credit">© 2026 App by Harvin</p>
+  <button id="fsBtn" class="fsbtn" title="Fullscreen"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <div class="actions">
+    <button class="primary" id="runBtn">▶ Run check now</button>
+    <button id="scanAllBtn">🔍 Scan all</button>
+    <button id="settingsBtn">⚙ Settings</button>
+  </div>
+  <div id="runState" hidden></div>
+  <div id="statusLine" class="statusline" hidden></div>
+</header>
+
+<main class="wrap">
+  <div class="banner" id="setupBanner" hidden>
+    <strong>One-time connection needed</strong>
+    <p>This page saves products straight into your GitHub repo. Open <b>⚙ Settings</b> and paste a
+    <b>fine-grained personal access token</b> (repo access: <i>only this repo</i> ·
+    permissions: <code>Contents: Read &amp; write</code> + <code>Actions: Read &amp; write</code>).
+    Create one at <code>github.com/settings/personal-access-tokens/new</code>.</p>
+    <p>Showing sample data below until you connect.</p>
+  </div>
+
+  <div class="card" id="settings" hidden>
+    <div class="row"><label>GitHub token<input type="password" id="inToken" placeholder="github_pat_…" autocomplete="off"></label></div>
+    <div class="row"><label>Owner<input id="inOwner" placeholder="e.g. zurplox"></label></div>
+    <div class="row"><label>Repository<input id="inRepo" placeholder="e.g. price-tracker"></label></div>
+    <div class="row"><label>Branch<input id="inBranch" placeholder="main"></label></div>
+    <button class="primary" id="saveSettings">Save &amp; connect</button>
+    <button class="danger" id="lockBtn" style="margin-left:10px">🔒 Lock this device</button>
+  </div>
+
+  <div class="card">
+    <details id="addWrap">
+      <summary>➕ Add a product</summary>
+    <div class="addform">
+      <label style="flex:1 1 190px">Name (optional)
+        <input id="inName" placeholder="e.g. Fragrance Hotel Dec stay" autocomplete="off">
+      </label>
+      <label class="grow">Product link
+        <input id="inUrl" type="url" placeholder="https://shopee.sg/… or any shop page" autocomplete="off">
+      </label>
+      <label>Alert below (optional)
+        <input id="inTarget" inputmode="decimal" placeholder="e.g. 30" style="width:150px">
+      </label>
+      <label style="flex-direction:row;align-items:center;gap:8px;min-height:44px">
+        <input type="checkbox" id="inLowest" style="min-height:0;width:18px;height:18px;flex:none"> <span>💸 Lowest price on page <span style="font-weight:400;color:var(--secondary)">(hotels, flights, multi-option)</span></span>
+      </label>
+      <button class="primary" id="addBtn">＋ Add product</button>
+    </div>
+    <p class="hint">Add as many links as you like — nothing runs until the daily schedule or your next “Run check now”.</p>
+    </details>
+    <details id="flightBox" style="margin-top:12px">
+      <summary>✈️ Track a flight <span style="font-weight:400;color:var(--secondary)">(via Google Flights)</span></summary>
+      <div class="flightform">
+        <label class="f-code">From<input id="flFrom" placeholder="SIN" maxlength="3" autocomplete="off" style="text-transform:uppercase"></label>
+        <label class="f-code">To<input id="flTo" placeholder="KNO" maxlength="3" autocomplete="off" style="text-transform:uppercase"></label>
+        <label>Depart<input id="flOut" type="date"></label>
+        <label>Return · optional<input id="flRet" type="date"></label>
+        <label class="f-adults">Adults<input id="flAdults" type="number" min="1" max="9" placeholder="1"></label>
+        <button class="primary" id="flightBtn" type="button">✈️ Track flight</button>
+      </div>
+      <p class="hint">Builds the flight link for you — no template to memorize. Needs the SERPAPI_KEY secret; fares in SGD.</p>
+    </details>
+  </div>
+
+  <section id="grid"></section>
+  <p class="empty" id="emptyState" hidden>No products yet — paste your first link above 🛍️</p>
+
+  <footer>Runs free on GitHub Actions · History saved in your repo · Alerts via Telegram</footer>
+</main>
+
+<div id="toast" hidden></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const grid = $("#grid");
+const BANNER_DEFAULT = $("#setupBanner").innerHTML;
+
+/* ---------- settings / connection ---------- */
+const conf = {
+  get token()  { return localStorage.getItem("pt_token")  || ""; },
+  get owner()  { return localStorage.getItem("pt_owner")  || guessOwner(); },
+  get repo()   { return localStorage.getItem("pt_repo")   || guessRepo(); },
+  get branch() { return localStorage.getItem("pt_branch") || "main"; },
+};
+function guessOwner() { const m = location.hostname.match(/^([^.]+)\.github\.io$/); return m ? m[1] : ""; }
+function guessRepo()  { const seg = location.pathname.split("/").filter(Boolean); return seg[0] || ""; }
+
+function toast(msg, ms = 3500) {
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(t._h); t._h = setTimeout(() => t.hidden = true, ms);
+}
+
+async function gh(path, opts = {}) {
+  const res = await fetch(`https://api.github.com/repos/${conf.owner}/${conf.repo}${path}`, {
+    ...opts,
+    headers: {
+      "Authorization": `Bearer ${conf.token}`,
+      "Accept": "application/vnd.github+json",
+      "Content-Type": "application/json",
+      ...(opts.headers || {}),
+    },
+  });
+  if (!res.ok) {
+    if (res.status === 401) throw new Error("Token rejected — check Settings ⚙");
+    if (res.status === 404) throw new Error("Repo or file not found — check Settings ⚙");
+    throw new Error("GitHub error " + res.status);
+  }
+  return res.status === 204 ? null : res.json();
+}
+const b64decode = s => decodeURIComponent(escape(atob(s.replace(/\n/g, ""))));
+const b64encode = s => btoa(unescape(encodeURIComponent(s)));
+
+/* ---------- encrypted token vault ---------- */
+const VAULT = { salt: "8F9d4F+5EdczBNdPYQB2rA==", iv: "msBHnXu8C1376K49", ct: "BMMx/zWaDJmDoIPvlXuwWSjyavNjWdJjkhMhNs+qG+sDrp+pZQJxD3lZkXpKRtbDEALDFPS4GXhugkAAWiyRifK6TPItLhksLNb2v8lARrL51jLVaid/ykE/A/eKtwngxPE3C6TE0+BnDhu8wQ==", iter: 310000 };
+
+function b64bytes(s) { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+
+async function decryptToken(pw) {
+  const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: b64bytes(VAULT.salt), iterations: VAULT.iter, hash: "SHA-256" },
+    km, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64bytes(VAULT.iv) }, key, b64bytes(VAULT.ct));
+  const text = new TextDecoder().decode(plain);
+  if (!text.startsWith("github_pat_") && !text.startsWith("ghp_")) throw new Error("bad vault contents");
+  return text;
+}
+
+async function unlockVault(pw) {
+  if (!pw) { toast("Enter the password first"); return; }
+  try {
+    localStorage.setItem("pt_token", await decryptToken(pw));
+    toast("🔓 Unlocked — this device remembers you now");
+    loadAll();
+  } catch { toast("Wrong password 🔒"); }
+}
+
+/* ---------- data ---------- */
+let products = [], prices = {}, scans = {}, productsSha = null, pricesSha = null, demo = false, readonly = false;
+
+async function loadAll() {
+  if (!conf.token) { loadPublic(); return; }
+  grid.innerHTML = "<p class='empty'>Loading…</p>";
+  try {
+    const p = await gh("/contents/products.json?ref=" + conf.branch);
+    productsSha = p.sha;
+    products = JSON.parse(b64decode(p.content)).products || [];
+    try {
+      const h = await gh("/contents/prices.json?ref=" + conf.branch);
+      pricesSha = h.sha;
+      prices = JSON.parse(b64decode(h.content));
+    } catch { prices = {}; }
+    try {
+      const sc = await gh("/contents/scans.json?ref=" + conf.branch);
+      scans = JSON.parse(b64decode(sc.content));
+    } catch { scans = {}; }
+    demo = false; readonly = false;
+    render();
+    if (window._busy) clearBusy("✅ Fresh data in!");
+    refreshRunStatus();
+  } catch (e) {
+    toast(e.message);
+    $("#settings").hidden = false;
+    loadPublic();   // token failed → still show public data read-only if possible
+  }
+}
+
+async function loadPublic() {
+  // No token on this device: read the repo's public data read-only (viewing needs no token).
+  try {
+    const base = "https://raw.githubusercontent.com/" + conf.owner + "/" + conf.repo + "/" + conf.branch;
+    const pr = await fetch(base + "/products.json");
+    if (!pr.ok) throw new Error("not public");
+    products = (await pr.json()).products || [];
+    try { prices = await (await fetch(base + "/prices.json")).json(); } catch { prices = {}; }
+    try { scans = await (await fetch(base + "/scans.json")).json(); } catch { scans = {}; }
+    demo = false; readonly = true;
+    render();
+    refreshRunStatus();
+  } catch { loadDemo(); }
+}
+
+async function saveProducts(message) {
+  const body = JSON.stringify({ products }, null, 2);
+  const r = await gh("/contents/products.json", {
+    method: "PUT",
+    body: JSON.stringify({ message, content: b64encode(body), sha: productsSha, branch: conf.branch }),
+  });
+  productsSha = r.content.sha;
+}
+
+/* ---------- run-in-progress state ---------- */
+function setBusy(msg) {
+  window._busy = true;
+  const r = $("#runState"); r.textContent = msg; r.hidden = false;
+  r.style.cursor = "pointer";
+  r.title = "Click to dismiss";
+  r.onclick = () => clearBusy();   // escape hatch if anything ever gets wedged
+  for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = true;
+  clearTimeout(window._busyMax);
+  window._busyMax = setTimeout(() => clearBusy("⌛ Still running — check the repo's Actions tab"), 12 * 60000);
+}
+function clearBusy(msg) {
+  window._busy = false;
+  for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
+  const r = $("#runState");
+  if (msg) {
+    r.textContent = msg; r.hidden = false;
+    clearTimeout(r._h); r._h = setTimeout(() => r.hidden = true, 6000);
+  } else r.hidden = true;
+}
+
+async function runCheck(silent) {
+  if (!conf.token) { toast("Connect GitHub in Settings first ⚙"); return; }
+  if (window._busy) { toast("Already running ⏳ — I'll refresh when it's done"); return; }
+  try {
+    await gh(`/actions/workflows/tracker.yml/dispatches`, {
+      method: "POST", body: JSON.stringify({ ref: conf.branch }),
+    });
+    setBusy("⏳ Check running — I'll refresh for you in ~2–3 min…");
+    toast("⏳ Check started — watch the status pill up top");
+    clearTimeout(window._reload);
+    window._reload = setTimeout(() => loadAll(), 150000);
+  } catch (e) { toast(e.message); }
+}
+
+/* ---------- actions ---------- */
+function makeId(url) {
+  const m = url.match(/i\.(\d+)\.(\d+)/);
+  if (/shopee\./.test(url) && m) return `shopee-${m[1]}-${m[2]}`;
+  try {
+    const u = new URL(url); let h = 0;
+    for (const c of url) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+    return u.hostname.replace(/\W+/g, "") + "-" + h.toString(36);
+  } catch { return "item-" + Date.now(); }
+}
+function nameFromUrl(url) {
+  if (url.startsWith("flight:")) {
+    const m = url.match(/^flight:([A-Za-z]{3})-([A-Za-z]{3})\/(\d{4}-\d{2}-\d{2})(?:\/(\d{4}-\d{2}-\d{2}))?/);
+    if (m) return m[1].toUpperCase() + " ⇄ " + m[2].toUpperCase() + " · " + m[3].slice(5).replace("-", "/") + (m[4] ? " → " + m[4].slice(5).replace("-", "/") : "");
+  }
+  try {
+    const u = new URL(url);
+    const skip = /^(detail|book|booking|products?|pdp|index|html?|return|checkout|upsell|flights?|hotels?|shop|buy)$/i;
+    const segs = u.pathname.split("/").filter(Boolean)
+      .map(s => { try { return decodeURIComponent(s); } catch { return s; } })
+      .filter(s => !skip.test(s) && !/^i?-?\d[\d-]*$/.test(s) && !/^\d{1,2}\s+\w{3}\s+\d{4}$/i.test(s));
+    // Flight-style URLs: SIN/24 Aug 2026/SYD/... → "SIN ⇄ SYD"
+    const codes = segs.filter(s => /^[A-Z]{3}$/.test(s));
+    if (codes.length >= 2 && codes[0] !== codes[codes.length - 1]) return codes[0] + " ⇄ " + codes[codes.length - 1];
+    const last = (segs.pop() || "").replace(/-?i\.\d+\.\d+.*$/, "").replace(/\.\w+$/, "").replace(/[-_+]+/g, " ").trim();
+    if (last) return last.replace(/\b\w/g, c => c.toUpperCase()).slice(0, 80);
+    // Nothing usable in the path (e.g. trip.com/hotels/detail) → use the site name
+    const parts = u.hostname.replace(/^www\./, "").split(".");
+    const host = (parts.length >= 2 ? parts[parts.length - 2] : parts[0]);
+    return host.charAt(0).toUpperCase() + host.slice(1) + " deal";
+  } catch { return "Product"; }
+}
+
+async function addProduct() {
+  const url = $("#inUrl").value.trim();
+  const targetRaw = $("#inTarget").value.trim();
+  if (!/^(https?:\/\/.+\..+|flight:[A-Za-z]{3}-[A-Za-z]{3}\/\d{4}-\d{2}-\d{2})/.test(url)) { toast("That doesn't look like a link 🤔 — for flights use flight:SIN-SYD/2026-08-24/2026-08-31"); return; }
+  const target = targetRaw ? parseFloat(targetRaw.replace(/[^\d.]/g, "")) : null;
+  if (targetRaw && !isFinite(target)) { toast("Target price should be a number"); return; }
+  if (demo || readonly) { toast("Connect GitHub first ⚙ — viewing works everywhere, actions need the token"); return; }
+  const dupCount = products.filter(x => x.url === url).length;
+  if (dupCount && !confirm("Already tracking this link — add another copy to watch a different price on it?")) return;
+  const uid = makeId(url) + (dupCount ? "-" + (dupCount + 1) : "");
+
+  products.push({
+    id: uid, name: ($("#inName").value.trim() || nameFromUrl(url)), url,
+    target: isFinite(target) ? target : null,
+    mode: $("#inLowest").checked ? "lowest" : null,
+    selector: null, paused: false, status: "pending",
+    method: null, last_price: null, last_checked: null,
+  });
+  try {
+    await saveProducts("Add " + url.slice(0, 60));
+    $("#inUrl").value = ""; $("#inTarget").value = ""; $("#inLowest").checked = false; $("#inName").value = "";
+    render();
+    if (window.innerWidth <= 560) $("#addWrap").open = false;   // phones: fold the form away after adding
+    toast("✅ Added — press ▶ Run check now when you're ready");
+  } catch (e) { products.pop(); toast(e.message); }
+}
+
+async function deleteProduct(id) {
+  if (demo || readonly) { toast("Connect GitHub first ⚙"); return; }
+  const p = products.find(x => x.id === id);
+  if (!confirm(`Stop tracking "${p.name}"?`)) return;
+  products = products.filter(x => x.id !== id);
+  try { await saveProducts("Remove " + p.name.slice(0, 50)); render(); toast("Removed"); }
+  catch (e) { toast(e.message); loadAll(); }
+}
+
+async function saveField(id, field, value) {
+  if (demo || readonly) { toast("Connect GitHub first ⚙"); return; }
+  const p = products.find(x => x.id === id);
+  p[field] = value;
+  try { await saveProducts("Update " + p.name.slice(0, 50)); toast("Saved ✓"); }
+  catch (e) { toast(e.message); }
+}
+
+/* ---------- rendering ---------- */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function displayUrl(p) {
+  const m = p.url && p.url.match(/^flight:([A-Za-z]{3})-([A-Za-z]{3})\/(\d{4}-\d{2}-\d{2})(?:\/(\d{4}-\d{2}-\d{2}))?/);
+  if (!m) return p.url;
+  let q = "Flights from " + m[1].toUpperCase() + " to " + m[2].toUpperCase() + " on " + m[3];
+  if (m[4]) q += " through " + m[4];
+  return "https://www.google.com/travel/flights?q=" + encodeURIComponent(q);
+}
+function money(v, url) {
+  if (v == null) return "—";
+  const cur = url && url.startsWith("flight:") ? "S$" : (/\.(sg|com\.sg)(\/|$)/.test(url) ? "S$" : (/\.my(\/|$)/.test(url) ? "RM" : "$"));
+  return cur + Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function timeAgo(iso) {
+  if (!iso) return "never";
+  const mins = Math.max(1, Math.round((Date.now() - new Date(iso)) / 60000));
+  if (mins < 60) return mins + "m ago";
+  const h = Math.round(mins / 60); if (h < 24) return h + "h ago";
+  return Math.round(h / 24) + "d ago";
+}
+function sparkline(points, p) {
+  if (!points || points.length === 0) {
+    const msg = p && p.fail_count ? "No reading yet — retrying on next check" : "Not checked yet — press ▶ Run check now to start";
+    return `<div class="checked" style="margin-top:12px">${msg}</div>`;
+  }
+  if (points.length === 1) return `<div class="checked" style="margin-top:12px">First reading saved — chart grows from the next check</div>`;
+  const vals = points.slice(-40).map(p => p.p);
+  const min = Math.min(...vals), max = Math.max(...vals), span = max - min || 1;
+  const w = 260, h = 36;
+  const step = w / (vals.length - 1);
+  const pts = vals.map((v, i) => `${(i * step).toFixed(1)},${(h - 4 - ((v - min) / span) * (h - 8)).toFixed(1)}`).join(" ");
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <polyline points="${pts}" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+function trendBadge(hist) {
+  if (!hist || hist.length < 2) return "";
+  const a = hist[hist.length - 2].p, b = hist[hist.length - 1].p;
+  const pct = ((b - a) / a) * 100;
+  if (Math.abs(pct) < 0.01) return `<span class="trend flat">— no change</span>`;
+  return pct < 0
+    ? `<span class="trend down">▼ ${Math.abs(pct).toFixed(1)}%</span>`
+    : `<span class="trend up">▲ ${pct.toFixed(1)}%</span>`;
+}
+function statusBadge(p, isDemo) {
+  if (isDemo) return `<span class="badge sample">SAMPLE</span>`;
+  const s = p.status || "pending";
+  if (s === "tracking") return `<span class="badge tracking">● Tracking${p.method ? " · " + esc(p.method.replace("auto ", "")) : ""}</span>`;
+  if (s === "pending") return `<span class="badge pending">● Pending first check</span>`;
+  if (p.paused) return `<span class="badge">⏸ Paused</span>`;
+  return `<span class="badge error" title="${esc(s)}">⚠ ${esc(s.length > 44 ? s.slice(0, 44) + "…" : s)}</span>`;
+}
+
+function render() {
+  const banner = $("#setupBanner");
+  if (conf.token) banner.hidden = true;
+  else {
+    banner.hidden = false;
+    banner.innerHTML = (readonly
+      ? `<strong>👀 Read-only view</strong><p>Live data from your repo — no sign-in needed for viewing.</p>`
+      : BANNER_DEFAULT) + `
+      <div class="vaultrow">
+        <input id="vaultPw" type="password" placeholder="Password" autocomplete="off"
+          onkeydown="if(event.key==='Enter')unlockVault(this.value)">
+        <button class="primary" onclick="unlockVault($('#vaultPw').value)">🔓 Unlock actions</button>
+        <div class="checked" style="width:100%">Ask the owner for the password to add products, scan, or run checks — this device remembers the unlock afterwards.</div>
+      </div>`;
+  }
+  $("#emptyState").hidden = products.length > 0;
+  grid.innerHTML = products.map(p => {
+    const hist = prices[p.id] || [];
+    return `<div class="card">
+      <a class="pname" href="${esc(displayUrl(p))}" target="_blank" rel="noopener">${esc(p.name)}</a>
+      <div class="pricerow">
+        <span class="price">${money(p.last_price, p.url)}</span>
+        ${trendBadge(hist)}
+      </div>
+      <div class="meta">${statusBadge(p, demo)}${p.mode === "lowest" ? `<span class="badge pending">💸 lowest price</span>` : ""}<span class="checked">checked ${timeAgo(p.last_checked)}${p.fail_count ? " · ⚠️ last check failed" : ""}</span></div>
+      ${sparkline(hist, p)}
+      <div class="targetrow">Alert below
+        <input inputmode="decimal" value="${p.target ?? ""}" placeholder="none"
+          onchange="saveField('${p.id}','target', this.value ? parseFloat(this.value.replace(/[^\\d.]/g,'')) : null)">
+      </div>
+      <div class="cardfoot">
+        <details><summary>Advanced</summary>
+          <input placeholder="Display name" value="${esc(p.name || "")}" id="nm-${p.id}">
+          <button onclick="saveField('${p.id}','name', document.getElementById('nm-${p.id}').value || null)">Save name</button>
+          <input placeholder="CSS selector (only if auto-detect fails)" value="${esc(p.selector || "")}"
+            id="sel-${p.id}">
+          <button onclick="saveField('${p.id}','selector', document.getElementById('sel-${p.id}').value || null)">Save selector</button>
+          <label style="flex-direction:row;align-items:center;gap:8px;margin-top:10px;font-weight:500">
+            <input type="checkbox" style="min-height:0;width:18px;height:18px" ${p.mode === "lowest" ? "checked" : ""}
+              onchange="saveField('${p.id}','mode', this.checked ? 'lowest' : null)"> 💸 Lowest price on page
+          </label>
+        </details>
+        <button class="danger" onclick="deleteProduct('${p.id}')">Delete</button>
+      </div>
+      ${scanSection(p)}
+    </div>`;
+  }).join("");
+}
+
+/* ---------- price scanning ---------- */
+function scanSection(p) {
+  if (demo || readonly || (p.url && p.url.startsWith("flight:"))) return "";
+  const s = scans[p.url];
+  const watch = p.watch_label
+    ? `<span class="watchchip">🎯 ${esc(p.watch_label.length > 42 ? p.watch_label.slice(0, 42) + "…" : p.watch_label)}
+        <button title="Stop watching this option" onclick="saveField('${p.id}','watch_label',null)">✕</button></span>`
+    : "";
+  const list = s && s.candidates && s.candidates.length
+    ? `<details class="scanlist"><summary>Found ${s.candidates.length} prices · scanned ${timeAgo(s.scanned_at)}</summary>
+        ${s.candidates.map((c, i) => `<label class="scanrow"><input type="radio" name="scan-${p.id}" value="${i}">
+          <b>${money(c.price, p.url)}</b> <span class="sp">${esc(c.label)}</span></label>`).join("")}
+        <button class="primary" style="margin-top:8px" onclick="trackSelected('${p.id}')">Track selected price</button>
+      </details>`
+    : (s ? `<p class="hint">Last scan found nothing (scanned ${timeAgo(s.scanned_at)}) — the site likely walled it off that run. Press 🔍 again to retry just this page.</p>` : "");
+  return `<div style="margin-top:12px">${watch}
+    <button style="min-height:38px;font-size:14px" onclick="scanProduct('${p.id}')">🔍 Scan this page</button>
+    ${list}</div>`;
+}
+
+async function scanProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!conf.token) { toast("Connect GitHub first ���"); return; }
+  if (window._busy) { toast("A run is already in progress ⏳"); return; }
+  try {
+    await gh(`/actions/workflows/scan.yml/dispatches`, {
+      method: "POST",
+      body: JSON.stringify({ ref: conf.branch, inputs: { scan_url: p.url } }),
+    });
+    setBusy("🔍 Scanning this page — the price list appears in ~3 min…");
+    toast("🔍 Scan started for this page ⏳");
+    clearTimeout(window._scanA); clearTimeout(window._scanB);
+    window._scanA = setTimeout(loadAll, 170000);
+    window._scanB = setTimeout(loadAll, 290000);
+  } catch (e) { toast(e.message); }
+}
+
+function trackSelected(id) {
+  const p = products.find(x => x.id === id);
+  const s = scans[p.url];
+  const sel = document.querySelector(`input[name="scan-${id}"]:checked`);
+  if (!sel) { toast("Pick a price first ☝️"); return; }
+  const c = s.candidates[Number(sel.value)];
+  saveField(id, "watch_label", c.label).then(() => {
+    prices[id] = [];   // new pick = fresh history — day 1 starts on the next check
+    render();
+    toast("🎯 Now watching: " + c.label.slice(0, 40) + " — history restarts fresh");
+  });
+}
+
+/* ---------- demo data ---------- */
+function loadDemo() {
+  demo = true; readonly = false;
+  const t = Date.now();
+  products = [{
+    id: "demo", name: "Sample — Vention 35W Super Mini PowerBank 10000mAh",
+    url: "https://shopee.sg", target: 30, selector: null, paused: false,
+    status: "tracking", method: "auto (shopee api)", last_price: 32.9,
+    last_checked: new Date(t - 42 * 60000).toISOString(),
+  }];
+  prices = { demo: [
+    { t: new Date(t - 9 * 864e5).toISOString(), p: 39.9 },
+    { t: new Date(t - 6 * 864e5).toISOString(), p: 36.5 },
+    { t: new Date(t - 3 * 864e5).toISOString(), p: 37.9 },
+    { t: new Date(t - 864e5).toISOString(), p: 34.9 },
+    { t: new Date(t - 42 * 60000).toISOString(), p: 32.9 },
+  ]};
+  render();
+}
+
+/* ---------- run status (truthful, works from any device) ---------- */
+function fmtWhen(ts) {
+  return new Date(ts).toLocaleString(undefined, { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+}
+function lastUpdatedText() {
+  const times = products.map(p => p.last_checked).filter(Boolean).sort();
+  return times.length ? "🕐 Last updated " + fmtWhen(times[times.length - 1]) : "";
+}
+async function refreshRunStatus() {
+  const line = $("#statusLine");
+  if (!conf.token || demo) {
+    const last = readonly ? lastUpdatedText() : "";
+    line.innerHTML = last ? `<span>${last}</span>` : "";
+    line.hidden = !last;
+    return;
+  }
+  try {
+    const r = await gh("/actions/runs?per_page=6");
+    const runs = r.workflow_runs || [];
+    const cutoff = Date.now() - 20 * 60000;   // a "running" run older than 20 min is a zombie
+    const active = [];
+    for (const x of runs) {
+      const isActive = ["in_progress", "queued", "waiting", "pending", "requested"].includes(x.status);
+      if (!isActive) continue;
+      if (new Date(x.run_started_at || x.created_at) > cutoff) active.push(x);
+      else if (!(window._cancelled && window._cancelled.has(x.id))) {  // auto-kill zombies so they can't wedge the dashboard
+        (window._cancelled = window._cancelled || new Set()).add(x.id);
+        gh(`/actions/runs/${x.id}/cancel`, { method: "POST" }).catch(() => {});
+      }
+    }
+    let html = "";
+    if (active.length) {
+      html += `<span class="runchip">🔵 ${active.length > 1 ? "Runs" : "A run"} in progress — updates when it finishes</span>`;
+      for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = true;
+      window._busyRemote = true;
+      window._busyRemoteSince = window._busyRemoteSince || Date.now();
+    } else if (window._busyRemote) {
+      window._busyRemote = false;
+      window._busyRemoteSince = null;
+      for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
+      loadAll();   // a run just finished somewhere → pull fresh data
+      return;      // loadAll re-calls refreshRunStatus
+    }
+    const last = lastUpdatedText();
+    if (last) html += `<span>${last}</span>`;
+    line.innerHTML = html;
+    line.hidden = !html;
+  } catch {
+    // If the status API won't answer while we think something's running, don't stay wedged
+    if (window._busyRemote && Date.now() - (window._busyRemoteSince || 0) > 15 * 60000) {
+      window._busyRemote = false;
+      window._busyRemoteSince = null;
+      for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
+    }
+    const last = lastUpdatedText();
+    if (last) { line.innerHTML = `<span>${last}</span>`; line.hidden = false; }
+  }
+}
+
+/* ---------- wire up ---------- */
+$("#addBtn").onclick = addProduct;
+$("#inUrl").addEventListener("keydown", e => { if (e.key === "Enter") addProduct(); });
+$("#runBtn").onclick = () => runCheck(false);
+setInterval(refreshRunStatus, 60000);
+$("#scanAllBtn").onclick = async () => {
+  if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
+  if (window._busy) { toast("Already running ⏳ — I'll refresh when it's done"); return; }
+  try {
+    await gh(`/actions/workflows/scan.yml/dispatches`, {
+      method: "POST",
+      body: JSON.stringify({ ref: conf.branch, inputs: { scan_url: "" } }),
+    });
+    setBusy("🔍 Scanning all links — price lists appear in ~5–10 min; I'll refresh for you…");
+    toast("🔍 Full scan started ⏳");
+    clearTimeout(window._scanA); clearTimeout(window._scanB);
+    window._scanA = setTimeout(loadAll, 300000);
+    window._scanB = setTimeout(loadAll, 600000);
+  } catch (e) { toast(e.message); }
+};
+$("#settingsBtn").onclick = () => {
+  const s = $("#settings"); s.hidden = !s.hidden;
+  if (!s.hidden) {
+    $("#inToken").value = conf.token; $("#inOwner").value = conf.owner;
+    $("#inRepo").value = conf.repo; $("#inBranch").value = conf.branch;
+  }
+};
+$("#saveSettings").onclick = () => {
+  localStorage.setItem("pt_token", $("#inToken").value.trim());
+  localStorage.setItem("pt_owner", $("#inOwner").value.trim());
+  localStorage.setItem("pt_repo", $("#inRepo").value.trim());
+  localStorage.setItem("pt_branch", $("#inBranch").value.trim() || "main");
+  $("#settings").hidden = true;
+  toast("Saved — connecting…");
+  loadAll();
+};
+$("#lockBtn").onclick = () => {
+  localStorage.removeItem("pt_token");
+  $("#inToken").value = "";
+  $("#settings").hidden = true;
+  toast("🔒 Locked — this device is read-only now");
+  loadAll();
+};
+$("#fsBtn").onclick = () => {
+  if (document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => toast("Fullscreen isn't available in this browser"));
+};
+const FS_EXPAND = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+const FS_SHRINK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+document.addEventListener("fullscreenchange", () => {
+  const on = !!document.fullscreenElement;
+  $("#fsBtn").innerHTML = on ? FS_SHRINK : FS_EXPAND;
+  $("#fsBtn").title = on ? "Exit fullscreen" : "Fullscreen";
+});
+
+/* collapsible add-form on phones; always open on desktop */
+function syncAddWrap() {
+  if (window.innerWidth > 560) $("#addWrap").open = true;
+}
+syncAddWrap();
+window.addEventListener("resize", syncAddWrap);
+
+/* ---------- flight builder ---------- */
+function addFlight() {
+  const from = $("#flFrom").value.trim().toUpperCase();
+  const to = $("#flTo").value.trim().toUpperCase();
+  const out = $("#flOut").value;
+  const ret = $("#flRet").value;
+  const adults = $("#flAdults").value.trim();
+  if (!/^[A-Z]{3}$/.test(from) || !/^[A-Z]{3}$/.test(to)) { toast("Airport codes are 3 letters — e.g. SIN, KNO ✈️"); return; }
+  if (from === to) { toast("From and To can't be the same 🤔"); return; }
+  if (!out) { toast("Pick a departure date 📅"); return; }
+  if (ret && ret < out) { toast("Return date is before departure 🤔"); return; }
+  if (adults && !/^[1-9]$/.test(adults)) { toast("Adults: 1–9"); return; }
+  let spec = "flight:" + from + "-" + to + "/" + out;
+  if (ret) spec += "/" + ret;
+  if (adults && adults !== "1") spec += "/" + adults;
+  $("#inUrl").value = spec;
+  if (!$("#inName").value.trim())
+    $("#inName").value = from + " ⇄ " + to + " · " + out.slice(5).replace("-", "/") + (ret ? " → " + ret.slice(5).replace("-", "/") : "");
+  addProduct();
+}
+$("#flightBtn").onclick = addFlight;
+
+loadAll();
+</script>
+</body>
+</html>
