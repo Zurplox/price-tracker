@@ -659,29 +659,42 @@ async function refreshRunStatus() {
   try {
     const r = await gh("/actions/runs?per_page=6");
     const runs = r.workflow_runs || [];
-    const cutoff = Date.now() - 20 * 60000;   // a "running" run older than 20 min is a zombie
+    const now = Date.now();
     const active = [];
     for (const x of runs) {
-      const isActive = ["in_progress", "queued", "waiting", "pending", "requested"].includes(x.status);
-      if (!isActive) continue;
-      if (new Date(x.run_started_at || x.created_at) > cutoff) active.push(x);
-      else if (!(window._cancelled && window._cancelled.has(x.id))) {  // auto-kill zombies so they can't wedge the dashboard
-        (window._cancelled = window._cancelled || new Set()).add(x.id);
-        gh(`/actions/runs/${x.id}/cancel`, { method: "POST" }).catch(() => {});
+      if (!["in_progress", "queued", "waiting", "pending", "requested"].includes(x.status)) continue;
+      const started = new Date(x.run_started_at || x.created_at).getTime();
+      const ageMin = Math.max(0, Math.round((now - started) / 60000));
+      active.push({ id: x.id, ageMin, scan: /scan/i.test(x.name || "") });
+    }
+    // Normal runs: ~3–5 min (checks), up to ~40 min (mass scans over walled cards).
+    // Older = stuck → auto-cancel, retried every 3 min until GitHub honours it.
+    const stuck = active.filter(a => a.ageMin > (a.scan ? 45 : 15));
+    window._cancelAttempts = window._cancelAttempts || {};
+    for (const a of stuck) {
+      if (now - (window._cancelAttempts[a.id] || 0) > 180000) {
+        window._cancelAttempts[a.id] = now;
+        gh(`/actions/runs/${a.id}/cancel`, { method: "POST" }).catch(() => {});
       }
     }
+    const blocking = active.filter(a => !stuck.some(s => s.id === a.id));
+    const actionsUrl = "https://github.com/" + conf.owner + "/" + conf.repo + "/actions";
     let html = "";
-    if (active.length) {
-      html += `<span class="runchip">🔵 ${active.length > 1 ? "Runs" : "A run"} in progress — updates when it finishes</span>`;
+    if (blocking.length) {
+      const oldest = Math.max(...blocking.map(a => a.ageMin));
+      html += `<a class="runchip" style="text-decoration:none" target="_blank" href="${actionsUrl}">🔵 ${blocking.length > 1 ? blocking.length + " runs" : "A run"} in progress · ${oldest < 1 ? "just started" : oldest + "m in"} — updates when it finishes</a>`;
       for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = true;
       window._busyRemote = true;
-      window._busyRemoteSince = window._busyRemoteSince || Date.now();
-    } else if (window._busyRemote) {
-      window._busyRemote = false;
-      window._busyRemoteSince = null;
+      window._busyRemoteSince = window._busyRemoteSince || now;
+    } else {
+      if (stuck.length) html += `<a class="runchip" style="text-decoration:none" target="_blank" href="${actionsUrl}">⏳ Cancelling a stuck run — buttons unlocked, go ahead</a>`;
+      if (window._busyRemote) {
+        window._busyRemote = false;
+        window._busyRemoteSince = null;
+        loadAll();   // runs cleared → pull fresh data
+        return;      // loadAll re-calls refreshRunStatus
+      }
       for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
-      loadAll();   // a run just finished somewhere → pull fresh data
-      return;      // loadAll re-calls refreshRunStatus
     }
     const last = lastUpdatedText();
     if (last) html += `<span>${last}</span>`;
