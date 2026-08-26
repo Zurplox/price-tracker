@@ -7,10 +7,12 @@
       "target": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "🛍 google shopping backup",
+      "last_price": 11.8,
+      "last_checked": "2026-08-26T14:47:20+00:00",
+      "fail_count": 0,
+      "_tracked_key": "auto"
     },
     {
       "id": "lazada-301076868",
@@ -19,10 +21,12 @@
       "target": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "auto (page element) (browser)",
+      "last_price": 9.34,
+      "last_checked": "2026-08-26T14:47:29+00:00",
+      "fail_count": 0,
+      "_tracked_key": "auto"
     },
     {
       "id": "wwwlazadasg-hgr3ub",
@@ -32,10 +36,12 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "auto (page element) (browser)",
+      "last_price": 967.0,
+      "last_checked": "2026-08-26T14:47:37+00:00",
+      "fail_count": 0,
+      "_tracked_key": "auto"
     },
     {
       "id": "wwwfairpricecomsg-ytnmvc",
@@ -45,10 +51,12 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "🛍 google shopping backup",
+      "last_price": 7.43,
+      "last_checked": "2026-08-26T14:48:15+00:00",
+      "fail_count": 0,
+      "_tracked_key": "auto"
     },
     {
       "id": "wwwdavidjonescom-20cftu",
@@ -58,10 +66,12 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "auto (structured data) (scraperapi)",
+      "last_price": 225.0,
+      "last_checked": "2026-08-26T14:48:59+00:00",
+      "fail_count": 0,
+      "_tracked_key": "auto"
     },
     {
       "id": "-1wtqjz9",
@@ -71,10 +81,12 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "✈️ google flights",
+      "last_price": 218.0,
+      "last_checked": "2026-08-26T14:49:01+00:00",
+      "fail_count": 0,
+      "_tracked_key": "auto"
     }
   ]
 }
