@@ -65,22 +65,6 @@
       "_link_only": true
     },
     {
-      "id": "-1wtqjz9",
-      "name": "SIN ⇄ KNO · 09/18 → 09/21",
-      "url": "flight:SIN-KNO/2026-09-18/2026-09-21",
-      "target": null,
-      "mode": null,
-      "selector": null,
-      "paused": false,
-      "status": "tracking",
-      "method": "✈️ google flights",
-      "last_price": 229,
-      "last_checked": "2026-08-28T13:39:46+00:00",
-      "fail_count": 0,
-      "_tracked_key": "auto",
-      "_link_only": true
-    },
-    {
       "id": "-1ecn6ov",
       "name": "SIN ⇄ SGN · 09/11 → 09/15",
       "url": "flight:SIN-SGN/2026-09-11/2026-09-15",
