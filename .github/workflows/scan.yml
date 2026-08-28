@@ -7,12 +7,12 @@ on:
         description: "URL to scan — leave empty to scan ALL tracked links in one run"
         required: false
         type: string
-      compare_url:
-        description: "URL to price-compare via Google Shopping (takes priority over scan_url)"
+      market_url:
+        description: "URL to market-check: your link's price + other sellers (takes priority over scan_url)"
         required: false
         type: string
-      compare_name:
-        description: "Search term for the price comparison"
+      market_name:
+        description: "Search term for the market check (defaults to the product name)"
         required: false
         type: string
 
@@ -37,11 +37,11 @@ jobs:
 
       - run: python -m playwright install --with-deps chromium
 
-      - name: Scan or compare
+      - name: Scan or market-check
         env:
           SCAN_URL: ${{ inputs.scan_url }}
-          COMPARE_URL: ${{ inputs.compare_url }}
-          COMPARE_NAME: ${{ inputs.compare_name }}
+          MARKET_URL: ${{ inputs.market_url }}
+          MARKET_NAME: ${{ inputs.market_name }}
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
         run: python scan.py

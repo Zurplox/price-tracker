@@ -175,33 +175,47 @@ def serpapi_flight_price(spec):
     return lowest_flight_price(r.json())
 
 
-def pick_shopping_price(results, domain):
-    """Choose a price from Google Shopping results — prefer the same store as the
-    tracked link (matched by domain appearing in the result's link/source), otherwise
-    the cheapest priced result. Returns None when nothing is priced."""
-    def price_of(it):
-        p = it.get("extracted_price")
-        return p if isinstance(p, (int, float)) else None
-    same = [it for it in results
-            if domain and domain in ((it.get("link") or "") + " " + (it.get("source") or ""))]
-    pool = [price_of(it) for it in (same or results)]
-    pool = [p for p in pool if p]
-    return float(min(pool)) if pool else None
+def serpapi_shopping_offers(name, url, limit=10):
+    """Market snapshot via Google Shopping — returns a LIST of other sellers' offers,
+    each with its own link so you can verify it yourself.
 
-
-def serpapi_shopping_price(name, url):
-    """Last-resort price via Google Shopping (engine=google_shopping), matching the
-    same store where possible. Only fires when every fetch layer has failed, so the
-    free SerpApi quota is preserved for emergencies. Needs the SERPAPI_KEY secret."""
+    DIAGNOSTIC ONLY. Nothing here is ever returned to check_product and nothing here
+    can enter price history. A shopping result is almost always a DIFFERENT seller:
+    the Vention powerbank proved it, reading S$11.80 from a random store while the
+    tracked Shopee link said $24.99. Tracking a link only means something if the
+    number comes FROM that link.
+    """
     if not SERPAPI_KEY:
-        return None
+        print("  (no SERPAPI_KEY secret - cannot fetch market offers)")
+        return []
     m = re.search(r"https?://(?:www\.)?([^/]+)", url)
-    domain = m.group(1) if m else ""
+    domain = (m.group(1) if m else "").lower()
+    stem = domain.split(".")[0] if domain else ""
     r = requests.get("https://serpapi.com/search", timeout=60, params={
         "engine": "google_shopping", "api_key": SERPAPI_KEY,
         "q": name, "gl": "sg", "hl": "en"})
     r.raise_for_status()
-    return pick_shopping_price(r.json().get("shopping_results", []), domain)
+    out = []
+    for it in r.json().get("shopping_results", []):
+        price = it.get("extracted_price")
+        if not isinstance(price, (int, float)) or price <= 0:
+            continue
+        link = it.get("product_link") or it.get("link") or ""
+        store = (it.get("source") or "seller").strip()
+        out.append({
+            "store": store[:40],
+            "title": (it.get("title") or "").strip()[:90],
+            "price": float(price),
+            "link": link,
+            "same_store": bool(stem and stem in (link + " " + store).lower()),
+        })
+    seen, deduped = set(), []
+    for o in sorted(out, key=lambda o: o["price"]):   # cheapest first
+        key = (o["store"], o["price"])
+        if key not in seen:
+            seen.add(key)
+            deduped.append(o)
+    return deduped[:limit]
 
 
 def _norm_name(s):
@@ -680,19 +694,16 @@ def check_product(p):
             if method:
                 method += " (scraperapi)"
 
-    # Layer 5 — SerpApi Google Shopping backup, OPT-IN per card (Advanced toggle).
-    # Off by default: a shopping result may be a DIFFERENT seller's price (the FairPrice
-    # granola lesson — $8.54 from another store vs $10.50 on the site), which would
-    # corrupt the price history. Fires only when the card opts in AND all layers failed.
-    if not price and p.get("backup") and SERPAPI_KEY:
-        name = p.get("name") or ""
-        if name and not name.lower().startswith(("http", "product", "flight:", "hotel:")):
-            try:
-                p5 = serpapi_shopping_price(name, resolved_url)
-                if p5:
-                    price, method, title = p5, "🛍 google shopping backup", None
-            except Exception as e:
-                print("  (serpapi shopping failed: " + str(e) + ")")
+    # There is deliberately NO Google Shopping fallback layer here.
+    #
+    # A shopping result is another seller's listing, so using it as "the price of this
+    # link" is simply wrong. The Vention powerbank showed the damage: the card recorded
+    # S$11.80 from Google Shopping while the tracked Shopee page said $24.99.
+    #
+    # If every layer above failed we return None and the card says so honestly
+    # ("last check failed - showing earlier price"). Other sellers' prices are available
+    # on demand via the dashboard's market check, which writes to scans.json under a
+    # "market:" key that the tracker never reads.
 
     return price, method, title
 
@@ -720,6 +731,39 @@ def send_telegram(message):
         print("⚠️ Telegram send failed: " + str(e))
 
 
+# ---------- one-time cleanup: drop prices that did not come from the link ----------
+
+FOREIGN_METHOD_MARKERS = ("google shopping", "shopping backup")
+
+
+def purge_foreign_prices(products, prices):
+    """Earlier builds could record another seller's Google Shopping price as the tracked
+    price. Those readings are not this link's price, so they are cleared exactly once:
+    the card drops back to "no price yet" and re-derives everything from its own link.
+
+    Idempotent - each product is stamped with _link_only so this never runs twice.
+    """
+    cleaned = []
+    for p in products:
+        if p.get("_link_only"):
+            continue
+        p["_link_only"] = True
+        p.pop("backup", None)          # the old opt-in flag no longer does anything
+        method = str(p.get("method") or "").lower()
+        if any(mark in method for mark in FOREIGN_METHOD_MARKERS):
+            p["last_price"] = None
+            p["method"] = None
+            p["status"] = "reset - the old price came from another store; re-checking from your link"
+            p.pop("_tracked_key", None)
+            pid = p.get("id")
+            if pid:
+                prices[pid] = []
+            cleaned.append(p.get("name") or p["url"])
+    if cleaned:
+        print("\U0001F9F9 Cleared non-link prices for: " + ", ".join(cleaned))
+    return cleaned
+
+
 # ---------- main ----------
 
 def main():
@@ -727,6 +771,8 @@ def main():
     products = data.get("products", data) if isinstance(data, dict) else data
     prices = load_json(PRICES_FILE, {})
     alerts = []
+
+    purge_foreign_prices(products, prices)
 
     for p in products:
         if p.get("paused"):

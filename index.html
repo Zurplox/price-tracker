@@ -120,6 +120,13 @@
   .scanrow:hover { background: var(--surface2); }
   .scanrow input { min-height: 0; width: 18px; height: 18px; flex: none; margin: 0; accent-color: var(--blue); }
   .scanrow .sp { color: var(--secondary); flex: 1; font-weight: 400; }
+  .mkrow { display: flex; flex-direction: row; align-items: center; gap: 10px; padding: 9px 6px; font-size: 14.5px; color: var(--text); font-weight: 650; border-radius: 10px; }
+  .mkrow + .mkrow { border-top: 1px solid var(--border); }
+  .mkrow .sp { color: var(--secondary); flex: 1; font-weight: 400; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mkself { background: var(--surface2); font-weight: 800; }
+  .mkself .sp { color: var(--text); }
+  a.mklink { flex: none; display: inline-flex; align-items: center; min-height: 34px; padding: 4px 13px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 650; color: var(--blue); text-decoration: none; }
+  a.mklink:hover { background: var(--surface2); }
   .checked { font-size: 13px; color: var(--secondary); }
   .spark { margin-top: 16px; width: 100%; height: 38px; }
   .targetrow { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 13.5px; color: var(--secondary); font-weight: 500; }
@@ -579,11 +586,7 @@ function render() {
             <input type="checkbox" style="min-height:0;width:18px;height:18px" ${p.mode === "lowest" ? "checked" : ""}
               onchange="saveField('${p.id}','mode', this.checked ? 'lowest' : null)"> 💸 Lowest price on page
           </label>
-          <label style="flex-direction:row;align-items:center;gap:8px;margin-top:8px;font-weight:500">
-            <input type="checkbox" style="min-height:0;width:18px;height:18px" ${p.backup ? "checked" : ""}
-              onchange="saveField('${p.id}','backup', this.checked ? true : null)"> 🛍 Google Shopping backup
-            <span style="font-weight:400;color:var(--secondary)">(opt-in — only if every fetch fails; may be a different seller)</span>
-          </label>
+          <p class="hint" style="margin-top:10px">🔗 This price is taken only from your link. Other sellers never enter history — use 📊 Check market below to see them.</p>
         </details>
         <button class="danger" onclick="deleteProduct('${p.id}')">Delete</button>
       </div>
@@ -596,7 +599,6 @@ function render() {
 function scanSection(p) {
   if (demo || readonly || (p.url && (p.url.startsWith("flight:") || p.url.startsWith("hotel:")))) return "";
   const s = scans[p.url];
-  const cmp = scans["compare:" + p.url];
   const watch = p.watch_label
     ? `<span class="watchchip">🎯 ${esc(p.watch_label.length > 42 ? p.watch_label.slice(0, 42) + "…" : p.watch_label)}
         <button title="Stop watching this option" onclick="saveField('${p.id}','watch_label',null)">✕</button></span>`
@@ -608,32 +610,61 @@ function scanSection(p) {
         <button class="primary" style="margin-top:8px" onclick="trackSelected('${p.id}')">Track selected price</button>
       </details>`
     : (s ? `<p class="hint">Last scan found nothing (scanned ${timeAgo(s.scanned_at)}) — the site likely walled it off that run. Press 🔍 again to retry just this page.</p>` : "");
-  const cmpList = cmp && cmp.candidates && cmp.candidates.length
-    ? `<details class="scanlist"><summary>🛍 ${cmp.candidates.length} store offers · compared ${timeAgo(cmp.scanned_at)}</summary>
-        ${cmp.candidates.map(c => `<label class="scanrow"><b>${money(c.price, p.url)}</b> <span class="sp">${esc(c.label)}</span></label>`).join("")}
-      </details>`
-    : (cmp ? `<p class="hint">Compare found no offers (${timeAgo(cmp.scanned_at)}) — try again later.</p>` : "");
   return `<div style="margin-top:12px">${watch}
     <button style="min-height:38px;font-size:14px" onclick="scanProduct('${p.id}')">🔍 Scan this page</button>
-    <button style="min-height:38px;font-size:14px" onclick="compareProduct('${p.id}')">🛍 Compare prices</button>
-    ${list}${cmpList}</div>`;
+    <button style="min-height:38px;font-size:14px" onclick="marketProduct('${p.id}')" title="Uses SerpApi — shows other sellers, never changes the tracked price">📊 Check market</button>
+    ${list}${marketSection(p)}</div>`;
 }
 
-async function compareProduct(id) {
+/* ---------- market check (opt-in, read-only) ----------
+   Row 1 is always the price scraped from YOUR link — the only number that is tracked.
+   The rest are other sellers from SerpApi Google Shopping, each with its own Open link
+   so you can verify it. Stored under a "market:" key that the tracker never reads. */
+function marketSection(p) {
+  const mk = scans["market:" + p.url];
+  if (!mk) return "";
+  const lp = mk.link || {};
+  const offers = mk.offers || [];
+  const total = offers.length + 1;
+  const rows = [`<div class="mkrow mkself">
+      <b>${lp.price != null ? money(lp.price, p.url) : "—"}</b>
+      <span class="sp">🔗 your link${lp.method ? " · " + esc(lp.method) : ""}${lp.price == null ? " · " + esc(lp.error || "no price found") : ""}</span>
+      <a class="mklink" href="${esc(displayUrl(p))}" target="_blank" rel="noopener">Open ↗</a>
+    </div>`];
+  for (const o of offers) {
+    rows.push(`<div class="mkrow">
+      <b>${money(o.price, p.url)}</b>
+      <span class="sp">${esc(o.store || "seller")}${o.title ? " — " + esc(o.title) : ""}</span>
+      ${o.link ? `<a class="mklink" href="${esc(o.link)}" target="_blank" rel="noopener">Open ↗</a>` : `<span class="sp" style="flex:none">no link</span>`}
+    </div>`);
+  }
+  const note = offers.length
+    ? `Only the top row is tracked. The ${offers.length} below are other sellers — tap Open ↗ to check each one yourself.`
+    : `No other sellers found. If this stays empty, add the SERPAPI_KEY secret in repo Settings → Secrets → Actions.`;
+  return `<details class="scanlist" open><summary>📊 Market · ${total} price${total === 1 ? "" : "s"} · checked ${timeAgo(mk.scanned_at)}</summary>
+      ${rows.join("")}
+      <p class="hint">${note}</p>
+    </details>`;
+}
+
+async function marketProduct(id) {
   const p = products.find(x => x.id === id);
   if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
+  if (p.url.startsWith("flight:") || p.url.startsWith("hotel:")) {
+    toast("Flights & hotels are already API-priced ✈️"); return;
+  }
   if (window._busy) { toast("A run is already in progress ⏳"); return; }
   try {
     await gh(`/actions/workflows/scan.yml/dispatches`, {
       method: "POST",
-      body: JSON.stringify({ ref: conf.branch, inputs: { compare_url: p.url, compare_name: p.name } }),
+      body: JSON.stringify({ ref: conf.branch, inputs: { market_url: p.url, market_name: p.name } }),
     });
-    setBusy("🛍 Comparing prices across stores — offers appear in ~2 min…");
-    toast("🛍 Compare started ⏳");
+    setBusy("📊 Market check — your link's price plus other sellers in ~2–3 min…");
+    toast("📊 Market check started ⏳");
     clearTimeout(window._scanA); clearTimeout(window._scanB);
     window._scanA = setTimeout(loadAll, 150000);
     window._scanB = setTimeout(loadAll, 300000);
-  } catch { toast("Couldn't start the compare 😕 — try again"); }
+  } catch { toast("Couldn't start the market check 😕 — try again"); }
 }
 
 async function scanProduct(id) {

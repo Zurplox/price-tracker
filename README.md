@@ -1,13 +1,13 @@
 # 💰 Price Tracker
 
-Paste a link on your own dashboard page → the tracker finds the price automatically → you get a **Telegram ping** when it drops. Runs free on GitHub Actions every 6 hours. Your computer can be off; you never need to touch code.
+Paste a link on your own dashboard page → the tracker finds the price automatically → you get a **Telegram ping** when it drops. Runs free on GitHub Actions every morning at 4am SGT. Your computer can be off; you never need to touch code.
 
 ## How it works
 
 ```
 You paste a link on your dashboard page
         ↓  (saved into products.json in your repo)
-GitHub Actions wakes up every 6 hours (or when you press "Run check now")
+GitHub Actions wakes up daily at 4am SGT (or when you press "Run check now")
         ↓  (finds the price automatically — even on Shopee, via a real browser)
 Price dropped or hit your target? → Telegram message 📲
         ↓
@@ -63,7 +63,9 @@ Track a route's lowest fare — no more checking Google Flights by hand. This wo
 
 1. Sign up free at [serpapi.com](https://serpapi.com) — the free plan gives **250 searches/month, no card required**. Copy your API key from the dashboard.
 
-**Product backups, your call:** website → browser → ScraperAPI is always the automatic path. Google Shopping is **opt-in per card** (Advanced → 🛍 Google Shopping backup) — because a shopping result can be a *different seller's* price, which would corrupt the history chart. When enabled on a card, it fires only if every fetch layer failed, preferring the same store's listing. Separately, each card has a **🛍 Compare prices** button: one SerpApi search returns offers from many stores, shown as a read-only list on the card (never written to history).
+**Where a tracked price comes from:** always the link you pasted, via website -> real browser -> ScraperAPI, in that order. There is deliberately **no Google Shopping fallback** — a shopping result is a *different seller's* listing, so recording it as "the price of this link" corrupts the history chart. (It once logged S$11.80 against a Shopee page that actually said $24.99.) If every layer fails, the card says so instead of substituting a stranger's price.
+
+**📊 Check market — opt-in, per card:** press it on any non-flight card to see your link's own price on top, then other sellers' offers from Google Shopping, each with an **Open ↗** button so you can check the listing yourself. It costs 1 SerpApi search, runs *only* when you press it, and is strictly read-only: a market price can never become the tracked price or enter the history chart. Flight and hotel cards don't show the button — they're already API-priced.
 2. Repo → **Settings → Secrets and variables → Actions → New repository secret** → name `SERPAPI_KEY`, value = your key.
 3. Add a product using the special flight link format:
    - Round trip: `flight:SIN-SYD/2026-08-24/2026-08-31`
@@ -81,7 +83,7 @@ Each daily check uses 1 search per flight or hotel card (~30/month each) — abo
 
 - Auto-detect works on most shops out of the box. If a card shows **⚠ needs attention**, open its **Advanced** section and paste a CSS selector (right-click the price on the shop page → Inspect → right-click highlighted HTML → Copy → Copy selector).
 - Shopee/Lazada sometimes show a captcha to bots — if a check fails, hitting **Run check now** a bit later usually works.
-- Free tier usage: each run takes ~2–3 minutes of your 2,000 free monthly minutes — 4 runs/day ≈ 300 min/month. Plenty of headroom.
+- Free tier usage: each run takes ~2–3 minutes of your 2,000 free monthly minutes — 1 run/day ≈ 90 min/month. Plenty of headroom.
 - Want hourly checks? Edit `.github/workflows/tracker.yml` and change the cron line.
 
 ## Optional: ScraperAPI backup layer (recommended for Shopee/Lazada)

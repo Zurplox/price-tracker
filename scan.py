@@ -4,8 +4,9 @@ and writes every price it finds (with labels) into scans.json, so the dashboard
 can show them as tickable lists.
 
 Runs via the "Scan prices" GitHub Actions workflow:
-  - dispatch WITH a scan_url input  → scans just that link (per-card 🔍 button)
-  - dispatch WITHOUT it             → scans ALL tracked links in one run (Scan all)
+  - dispatch WITH a scan_url input   -> scans just that link (per-card scan button)
+  - dispatch WITHOUT it              -> scans ALL tracked links in one run (Scan all)
+  - dispatch WITH a market_url input -> link price + other sellers (market check)
 """
 
 import os
@@ -75,57 +76,65 @@ def scan_one(url):
     return out[:50], via
 
 
-def compare_one(url, name):
-    """Multi-source price comparison via SerpApi Google Shopping — one search returns
-    many stores' offers. Diagnostic only: results are shown on the dashboard, never
-    written into price history."""
-    if not tracker.SERPAPI_KEY:
-        print("  (no SERPAPI_KEY secret — cannot compare)")
-        return [], "serpapi shopping"
-    import requests
+def market_one(product, url, name):
+    """Market snapshot for one link.
+
+    Returns the link's OWN price (scraped through the normal tracking cascade, so it is
+    exactly the number tracking would record) PLUS other sellers' offers from SerpApi,
+    each with its own link to open.
+
+    Stored under a "market:" key. The tracker never reads that key, so a market price
+    can never become the tracked price.
+    """
+    link = {"price": None, "method": None, "error": None}
     try:
-        r = requests.get("https://serpapi.com/search", timeout=60, params={
-            "engine": "google_shopping", "api_key": tracker.SERPAPI_KEY,
-            "q": name, "gl": "sg", "hl": "en"})
-        r.raise_for_status()
+        price, method, _title = tracker.check_product(product)
+        link["price"], link["method"] = price, method
+        if price is None:
+            link["error"] = "the site blocked this run - press the market button again to retry"
     except Exception as e:
-        print("  (serpapi compare failed: " + str(e) + ")")
-        return [], "serpapi shopping"
-    out = []
-    for it in r.json().get("shopping_results", []):
-        p = it.get("extracted_price")
-        if not isinstance(p, (int, float)):
-            continue
-        label = ((it.get("source") or "seller") + " — " + (it.get("title") or ""))[:70]
-        out.append({"label": label, "price": float(p)})
-    seen, deduped = set(), []
-    for c in sorted(out, key=lambda c: c["price"]):  # cheapest first
-        key = (c["label"], c["price"])
-        if key not in seen:
-            seen.add(key)
-            deduped.append(c)
-    return deduped[:20], "serpapi shopping"
+        link["error"] = str(e)[:140]
+    print("  link price: " + (tracker.fmt(link["price"], url) if link["price"] else "not found"))
+
+    offers = []
+    if tracker.SERPAPI_KEY:
+        try:
+            offers = tracker.serpapi_shopping_offers(name, url, limit=10)
+        except Exception as e:
+            print("  (serpapi market lookup failed: " + str(e) + ")")
+    else:
+        print("  (no SERPAPI_KEY secret - link price only)")
+    for o in offers[:8]:
+        print("    - " + str(o["price"]) + " " + o["store"])
+
+    return {"scanned_at": tracker.now_iso(), "link": link, "offers": offers,
+            "via": "link + serpapi shopping" if offers else "link only"}
 
 
 def main():
     url = os.environ.get("SCAN_URL", "").strip()
-    cmp_url = os.environ.get("COMPARE_URL", "").strip()
+    market_url = os.environ.get("MARKET_URL", "").strip()
 
-    if cmp_url:
-        # Price-comparison run: one SerpApi search → many stores, stored read-only
-        # under a "compare:" key so it can never feed tracking history.
-        name = os.environ.get("COMPARE_NAME", "").strip()
+    if market_url:
+        # On-demand market check: link price + other sellers, stored read-only under a
+        # "market:" key so it can never feed tracking history.
+        if market_url.startswith(("flight:", "hotel:")):
+            print("(flights and hotels are already API-priced - no market check needed)")
+            return
+        name = os.environ.get("MARKET_NAME", "").strip()
+        data = tracker.load_json("products.json", {"products": []})
+        products = data.get("products", data) if isinstance(data, dict) else data
+        product = next((p for p in products if p.get("url") == market_url), None)
+        if product is None:
+            product = {"url": market_url, "name": name}
         if not name:
-            data = tracker.load_json("products.json", {"products": []})
-            products = data.get("products", data) if isinstance(data, dict) else data
-            name = next((p.get("name") for p in products if p.get("url") == cmp_url), "") or cmp_url
+            name = product.get("name") or market_url
         scans = tracker.load_json("scans.json", {})
-        print("\U0001F6CD Comparing prices for: " + name)
-        candidates, via = compare_one(cmp_url, name)
-        scans["compare:" + cmp_url] = {"scanned_at": tracker.now_iso(), "via": via,
-                                       "candidates": candidates}
+        print("\U0001F4CA Market check for: " + name)
+        result = market_one(product, market_url, name)
+        scans["market:" + market_url] = result
         tracker.save_json("scans.json", scans)
-        print("Done — " + str(len(candidates)) + " store offer(s).")
+        print("Done - 1 link price + " + str(len(result["offers"])) + " other seller(s).")
         return
 
     if url:
