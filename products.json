@@ -39,7 +39,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data)",
-      "last_price": 967.0,
+      "last_price": 967,
       "last_checked": "2026-08-28T06:27:15+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -70,7 +70,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225.0,
+      "last_price": 225,
       "last_checked": "2026-08-28T06:28:44+00:00",
       "fail_count": 1,
       "_tracked_key": "auto",
@@ -86,10 +86,23 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 229.0,
+      "last_price": 229,
       "last_checked": "2026-08-28T06:28:46+00:00",
       "fail_count": 0,
       "_tracked_key": "auto"
+    },
+    {
+      "id": "-ux1ip",
+      "name": "SIN ⇄ PEN · 08/29 → 08/31",
+      "url": "flight:SIN-PEN/2026-08-29/2026-08-31",
+      "target": null,
+      "mode": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
