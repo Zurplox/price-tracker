@@ -103,6 +103,19 @@
       "method": null,
       "last_price": null,
       "last_checked": null
+    },
+    {
+      "id": "-1ecn6ov",
+      "name": "SIN ⇄ SGN · 09/11 → 09/15",
+      "url": "flight:SIN-SGN/2026-09-11/2026-09-15",
+      "target": null,
+      "mode": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
