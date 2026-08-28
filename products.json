@@ -7,13 +7,13 @@
       "target": null,
       "selector": null,
       "paused": false,
-      "status": "tracking",
-      "method": "🛍 google shopping backup",
-      "last_price": 11.8,
-      "last_checked": "2026-08-28T06:27:10+00:00",
-      "fail_count": 2,
-      "_tracked_key": "auto",
-      "note": "last check failed — showing earlier price"
+      "status": "needs attention — couldn't find a price (try 🔍 Scan or a selector in Advanced)",
+      "method": null,
+      "last_price": null,
+      "last_checked": "2026-08-28T13:30:01+00:00",
+      "fail_count": 3,
+      "note": "last check failed — showing earlier price",
+      "_link_only": true
     },
     {
       "id": "lazada-301076868",
@@ -25,9 +25,11 @@
       "status": "tracking",
       "method": "auto (page element)",
       "last_price": 9.15,
-      "last_checked": "2026-08-28T06:27:12+00:00",
-      "fail_count": 0,
-      "_tracked_key": "auto"
+      "last_checked": "2026-08-28T13:31:05+00:00",
+      "fail_count": 1,
+      "_tracked_key": "auto",
+      "_link_only": true,
+      "note": "last check failed — showing earlier price"
     },
     {
       "id": "wwwlazadasg-hgr3ub",
@@ -40,9 +42,11 @@
       "status": "tracking",
       "method": "auto (structured data)",
       "last_price": 967,
-      "last_checked": "2026-08-28T06:27:15+00:00",
-      "fail_count": 0,
-      "_tracked_key": "auto"
+      "last_checked": "2026-08-28T13:32:08+00:00",
+      "fail_count": 1,
+      "_tracked_key": "auto",
+      "_link_only": true,
+      "note": "last check failed — showing earlier price"
     },
     {
       "id": "wwwfairpricecomsg-ytnmvc",
@@ -52,13 +56,13 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "tracking",
-      "method": "🛍 google shopping backup",
-      "last_price": 8.54,
-      "last_checked": "2026-08-28T06:27:43+00:00",
-      "fail_count": 2,
-      "_tracked_key": "auto",
-      "note": "last check failed — showing earlier price"
+      "status": "needs attention — couldn't find a price (try 🔍 Scan or a selector in Advanced)",
+      "method": null,
+      "last_price": null,
+      "last_checked": "2026-08-28T13:32:57+00:00",
+      "fail_count": 3,
+      "note": "last check failed — showing earlier price",
+      "_link_only": true
     },
     {
       "id": "wwwdavidjonescom-20cftu",
@@ -70,11 +74,11 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225,
-      "last_checked": "2026-08-28T06:28:44+00:00",
-      "fail_count": 1,
+      "last_price": 225.0,
+      "last_checked": "2026-08-28T13:33:50+00:00",
+      "fail_count": 0,
       "_tracked_key": "auto",
-      "note": "last check failed — showing earlier price"
+      "_link_only": true
     },
     {
       "id": "-1wtqjz9",
@@ -86,10 +90,11 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 229,
-      "last_checked": "2026-08-28T06:28:46+00:00",
+      "last_price": 229.0,
+      "last_checked": "2026-08-28T13:33:57+00:00",
       "fail_count": 0,
-      "_tracked_key": "auto"
+      "_tracked_key": "auto",
+      "_link_only": true
     },
     {
       "id": "-ux1ip",
@@ -99,10 +104,13 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "✈️ google flights",
+      "last_price": 201.0,
+      "last_checked": "2026-08-28T13:34:00+00:00",
+      "_link_only": true,
+      "fail_count": 0,
+      "_tracked_key": "auto"
     },
     {
       "id": "-1ecn6ov",
@@ -112,10 +120,13 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
-      "method": null,
-      "last_price": null,
-      "last_checked": null
+      "status": "tracking",
+      "method": "✈️ google flights",
+      "last_price": 191.0,
+      "last_checked": "2026-08-28T13:34:02+00:00",
+      "_link_only": true,
+      "fail_count": 0,
+      "_tracked_key": "auto"
     }
   ]
 }
