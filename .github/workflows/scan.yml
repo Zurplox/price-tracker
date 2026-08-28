@@ -7,6 +7,14 @@ on:
         description: "URL to scan — leave empty to scan ALL tracked links in one run"
         required: false
         type: string
+      compare_url:
+        description: "URL to price-compare via Google Shopping (takes priority over scan_url)"
+        required: false
+        type: string
+      compare_name:
+        description: "Search term for the price comparison"
+        required: false
+        type: string
 
 permissions:
   contents: write             # write scan results back to this repo
@@ -29,10 +37,13 @@ jobs:
 
       - run: python -m playwright install --with-deps chromium
 
-      - name: Scan the page
+      - name: Scan or compare
         env:
           SCAN_URL: ${{ inputs.scan_url }}
+          COMPARE_URL: ${{ inputs.compare_url }}
+          COMPARE_NAME: ${{ inputs.compare_name }}
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
         run: python scan.py
 
       - name: Save scan results

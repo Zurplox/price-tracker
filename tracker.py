@@ -88,7 +88,7 @@ def make_id(url):
 
 
 def currency_for(url):
-    if url.startswith("flight:"):
+    if url.startswith(("flight:", "hotel:")):
         return "S$"
     if re.search(r"\.(sg|com\.sg)(/|$)", url):
         return "S$"
@@ -202,6 +202,73 @@ def serpapi_shopping_price(name, url):
         "q": name, "gl": "sg", "hl": "en"})
     r.raise_for_status()
     return pick_shopping_price(r.json().get("shopping_results", []), domain)
+
+
+def _norm_name(s):
+    return re.sub(r"[^a-z0-9 ]", "", (s or "").lower())
+
+
+HOTEL_RE = re.compile(r"^hotel:([^/]+)/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})(?:/(\d+))?$")
+
+
+def parse_hotel_spec(url):
+    """Parse hotel:HOTEL NAME/CHECK-IN/CHECK-OUT[/ADULTS] into a spec dict, or None."""
+    m = HOTEL_RE.match(url.strip())
+    if not m:
+        return None
+    name, cin, cout, adults = m.groups()
+    if cout <= cin:
+        return None
+    return {"name": name.strip(), "in": cin, "out": cout,
+            "adults": int(adults) if adults else 2}
+
+
+def hotel_title(spec):
+    return spec["name"] + " · " + spec["in"][5:].replace("-", "/") + " → " + spec["out"][5:].replace("-", "/")
+
+
+def hotel_link(url):
+    """Human-openable Google Hotels link for a hotel: spec (used in card + alerts)."""
+    spec = parse_hotel_spec(url)
+    if not spec:
+        return url
+    return "https://www.google.com/travel/hotels?q=" + urllib.parse.quote(spec["name"])
+
+
+def pick_hotel_price(properties, name):
+    """Lowest nightly rate of the property whose name best matches the tracked name.
+    None when nothing matches — an honest miss, never a random hotel's price."""
+    want = _norm_name(name)
+    tokens = [t for t in want.split() if len(t) > 2]
+    best = None
+    best_score = 0
+    for prop in properties:
+        pname = _norm_name(prop.get("name"))
+        if not pname or not tokens:
+            continue
+        score = sum(1 for t in tokens if t in pname)
+        if score == 0:
+            continue
+        rate = prop.get("rate_per_night") or {}
+        p = rate.get("lowest_extracted")
+        if not isinstance(p, (int, float)):
+            continue
+        if best is None or score > best_score or (score == best_score and p < best):
+            best, best_score = float(p), score
+    return best
+
+
+def serpapi_hotel_price(spec):
+    """Lowest nightly SGD rate for the tracked hotel via Google Hotels. Needs SERPAPI_KEY."""
+    if not SERPAPI_KEY:
+        print("  (no SERPAPI_KEY secret — add it in repo Settings → Secrets → Actions)")
+        return None
+    r = requests.get("https://serpapi.com/search", timeout=60, params={
+        "engine": "google_hotels", "api_key": SERPAPI_KEY,
+        "q": spec["name"], "check_in_date": spec["in"], "check_out_date": spec["out"],
+        "adults": spec["adults"], "currency": "SGD", "hl": "en", "gl": "sg"})
+    r.raise_for_status()
+    return pick_hotel_price(r.json().get("properties", []), spec["name"])
 
 
 # ---------- fetching ----------
@@ -339,7 +406,7 @@ def extract_generic(html):
                 return price, "auto (meta tag)", title
 
     # 3) Price-ish page elements — prefer elements whose class screams "the actual
-    #    price" (pdp-price, current-price…), so shipping fees like "S$4.00" lose.
+    #    price" (pdp-price, current-price��), so shipping fees like "S$4.00" lose.
     #    Within a group: shortest text, then lowest number.
     candidates = []
     for el in soup.find_all(is_pricey):
@@ -549,6 +616,21 @@ def check_product(p):
             return price, "✈️ google flights", flight_title(spec)
         return None, None, None
 
+    # Hotel spec (hotel:NAME/CHECK-IN/CHECK-OUT[/ADULTS]) — nightly rates from the
+    # SerpApi Google Hotels API: structured JSON, no captcha walls (bye Trip.com pain).
+    if original_url.startswith("hotel:"):
+        spec = parse_hotel_spec(original_url)
+        if not spec:
+            return None, None, None
+        try:
+            price = serpapi_hotel_price(spec)
+        except Exception as e:
+            print("  (serpapi hotels failed: " + str(e) + ")")
+            return None, None, None
+        if price:
+            return price, "🏨 google hotels", hotel_title(spec)
+        return None, None, None
+
     # Resolve short links (shope.ee / lzd.co etc.) to the real product URL
     if not shopid and re.match(r"https?://(shope\.ee|s\.shopee|www\.lazada|lzd)", original_url):
         try:
@@ -598,12 +680,13 @@ def check_product(p):
             if method:
                 method += " (scraperapi)"
 
-    # Layer 5 — SerpApi Google Shopping backup. LAST resort by design: the free tier
-    # is 250 searches/month, so this only fires when all layers above have failed.
-    # (Flight cards use SerpApi directly in their own branch above — that's their path.)
-    if not price and SERPAPI_KEY:
+    # Layer 5 — SerpApi Google Shopping backup, OPT-IN per card (Advanced toggle).
+    # Off by default: a shopping result may be a DIFFERENT seller's price (the FairPrice
+    # granola lesson — $8.54 from another store vs $10.50 on the site), which would
+    # corrupt the price history. Fires only when the card opts in AND all layers failed.
+    if not price and p.get("backup") and SERPAPI_KEY:
         name = p.get("name") or ""
-        if name and not name.lower().startswith(("http", "product", "flight:")):
+        if name and not name.lower().startswith(("http", "product", "flight:", "hotel:")):
             try:
                 p5 = serpapi_shopping_price(name, resolved_url)
                 if p5:
@@ -666,6 +749,8 @@ def main():
             if p.get("last_price") is None:
                 if p["url"].startswith("flight:"):
                     p["status"] = "needs attention — flight check failed (is the SERPAPI_KEY secret added? route may be unavailable)"
+                elif p["url"].startswith("hotel:"):
+                    p["status"] = "needs attention — hotel check failed (SERPAPI_KEY added? hotel name may not match a Google Hotels listing)"
                 elif p.get("watch_label"):
                     p["status"] = "rate gone — watched option not found (rescan and re-pick)"
                 else:
@@ -676,7 +761,7 @@ def main():
             continue
 
         prev = p.get("last_price")
-        if title and (not p.get("name") or p["name"].lower().startswith(("http", "product", "flight:"))
+        if title and (not p.get("name") or p["name"].lower().startswith(("http", "product", "flight:", "hotel:"))
                       or p["name"].lower() in ("detail", "pdp", "deal")
                       or (p["name"].isupper() and len(p["name"]) <= 4)):  # junky auto-names like "SIN"
             p["name"] = title[:80]
@@ -694,7 +779,11 @@ def main():
         prices[p["id"]] = hist[-500:]
 
         target = p.get("target")
-        link = flight_link(p["url"]) if p["url"].startswith("flight:") else p["url"]
+        link = p["url"]
+        if p["url"].startswith("flight:"):
+            link = flight_link(p["url"])
+        elif p["url"].startswith("hotel:"):
+            link = hotel_link(p["url"])
         if target and price <= target and (prev is None or prev > target):
             alerts.append("🎯 *TARGET HIT — " + md_escape(p["name"]) + "*\n"
                           "Now *" + fmt(price, p["url"]) + "* (target " + fmt(target, p["url"]) + ")\n"

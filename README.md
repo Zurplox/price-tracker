@@ -63,17 +63,19 @@ Track a route's lowest fare — no more checking Google Flights by hand. This wo
 
 1. Sign up free at [serpapi.com](https://serpapi.com) — the free plan gives **250 searches/month, no card required**. Copy your API key from the dashboard.
 
-**Bonus backup layer:** the same key also powers a last-resort fallback for product cards — if *every* fetch layer fails on a page, the tracker searches Google Shopping for the same store's listing and uses that price (the card's method shows `🛍 google shopping backup`). It fires only on total failure, so your quota stays nearly untouched for what matters: flights.
+**Product backups, your call:** website → browser → ScraperAPI is always the automatic path. Google Shopping is **opt-in per card** (Advanced → 🛍 Google Shopping backup) — because a shopping result can be a *different seller's* price, which would corrupt the history chart. When enabled on a card, it fires only if every fetch layer failed, preferring the same store's listing. Separately, each card has a **🛍 Compare prices** button: one SerpApi search returns offers from many stores, shown as a read-only list on the card (never written to history).
 2. Repo → **Settings → Secrets and variables → Actions → New repository secret** → name `SERPAPI_KEY`, value = your key.
 3. Add a product using the special flight link format:
    - Round trip: `flight:SIN-SYD/2026-08-24/2026-08-31`
    - One way: `flight:SIN-NRT/2026-11-02`
 
   (Tip: on the dashboard, the collapsible **✈️ Track a flight** builder under the add form constructs this link for you — From/To/dates/adults in, done. No template to memorize.)
+
+**Same trick for hotels 🏨:** `hotel:Fragrance Hotel - Oasis/2026-12-11/2026-12-15/2` (name / check-in / check-out / adults) tracks the lowest nightly rate via Google Hotels — a clean escape from Trip.com's captcha walls. The dashboard has a matching collapsible **🏨 Track a hotel** builder.
    - 2 adults: append `/2` at the end
 4. Prices come back in SGD on the same 4am schedule, with the same Telegram alerts ("alert below 600" = ping me when the fare drops under S$600). The card's title links straight to Google Flights for booking.
 
-Each daily check uses 1 search per flight card (~30/month each) — about 8 flight routes fit comfortably in the free tier. Note: the tracked price is the lowest fare Google Flights shows for that route + dates (per adult); it follows the market, not one specific departure time.
+Each daily check uses 1 search per flight or hotel card (~30/month each) — about 8 travel cards fit comfortably in the free tier. Note: the tracked price is the lowest fare Google Flights shows for that route + dates (per adult); it follows the market, not one specific departure time.
 
 ## Notes
 

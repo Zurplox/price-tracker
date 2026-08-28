@@ -227,6 +227,17 @@
       </div>
       <p class="hint">Builds the flight link for you — no template to memorize. Needs the SERPAPI_KEY secret; fares in SGD.</p>
     </details>
+    <details id="hotelBox" style="margin-top:12px">
+      <summary>🏨 Track a hotel <span style="font-weight:400;color:var(--secondary)">(via Google Hotels)</span></summary>
+      <div class="flightform">
+        <label style="flex:1 1 200px">Hotel name<input id="hoName" placeholder="Fragrance Hotel - Oasis" autocomplete="off"></label>
+        <label>Check-in<input id="hoIn" type="date"></label>
+        <label>Check-out<input id="hoOut" type="date"></label>
+        <label class="f-adults">Adults<input id="hoAdults" type="number" min="1" max="9" placeholder="2"></label>
+        <button class="primary" id="hotelBtn" type="button">🏨 Track hotel</button>
+      </div>
+      <p class="hint">Tracks the lowest nightly rate for that hotel on Google Hotels, in SGD. Same SERPAPI_KEY secret — a clean escape from Trip.com's captcha walls.</p>
+    </details>
   </div>
 
   <section id="grid"></section>
@@ -406,6 +417,10 @@ function nameFromUrl(url) {
     const m = url.match(/^flight:([A-Za-z]{3})-([A-Za-z]{3})\/(\d{4}-\d{2}-\d{2})(?:\/(\d{4}-\d{2}-\d{2}))?/);
     if (m) return m[1].toUpperCase() + " ⇄ " + m[2].toUpperCase() + " · " + m[3].slice(5).replace("-", "/") + (m[4] ? " → " + m[4].slice(5).replace("-", "/") : "");
   }
+  if (url.startsWith("hotel:")) {
+    const m = url.match(/^hotel:([^/]+)\/(\d{4}-\d{2}-\d{2})\/(\d{4}-\d{2}-\d{2})/);
+    if (m) return m[1].trim() + " · " + m[2].slice(5).replace("-", "/") + " → " + m[3].slice(5).replace("-", "/");
+  }
   try {
     const u = new URL(url);
     const skip = /^(detail|book|booking|products?|pdp|index|html?|return|checkout|upsell|flights?|hotels?|shop|buy)$/i;
@@ -427,7 +442,7 @@ function nameFromUrl(url) {
 async function addProduct() {
   const url = $("#inUrl").value.trim();
   const targetRaw = $("#inTarget").value.trim();
-  if (!/^(https?:\/\/.+\..+|flight:[A-Za-z]{3}-[A-Za-z]{3}\/\d{4}-\d{2}-\d{2})/.test(url)) { toast("That doesn't look like a link 🤔 — for flights use flight:SIN-SYD/2026-08-24/2026-08-31"); return; }
+  if (!/^(https?:\/\/.+\..+|flight:[A-Za-z]{3}-[A-Za-z]{3}\/\d{4}-\d{2}-\d{2}|hotel:[^/]+\/\d{4}-\d{2}-\d{2}\/\d{4}-\d{2}-\d{2})/.test(url)) { toast("That doesn't look like a link 🤔 — flights and hotels have their own builders below"); return; }
   const target = targetRaw ? parseFloat(targetRaw.replace(/[^\d.]/g, "")) : null;
   if (targetRaw && !isFinite(target)) { toast("Target price should be a number"); return; }
   if (demo || readonly) { toast("Connect GitHub first ⚙ — viewing works everywhere, actions need the token"); return; }
@@ -471,6 +486,8 @@ async function saveField(id, field, value) {
 /* ---------- rendering ---------- */
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function displayUrl(p) {
+  const h = p.url && p.url.match(/^hotel:([^/]+)\//);
+  if (h) return "https://www.google.com/travel/hotels?q=" + encodeURIComponent(h[1].trim());
   const m = p.url && p.url.match(/^flight:([A-Za-z]{3})-([A-Za-z]{3})\/(\d{4}-\d{2}-\d{2})(?:\/(\d{4}-\d{2}-\d{2}))?/);
   if (!m) return p.url;
   let q = "Flights from " + m[1].toUpperCase() + " to " + m[2].toUpperCase() + " on " + m[3];
@@ -479,7 +496,7 @@ function displayUrl(p) {
 }
 function money(v, url) {
   if (v == null) return "—";
-  const cur = url && url.startsWith("flight:") ? "S$" : (/\.(sg|com\.sg)(\/|$)/.test(url) ? "S$" : (/\.my(\/|$)/.test(url) ? "RM" : "$"));
+  const cur = url && (url.startsWith("flight:") || url.startsWith("hotel:")) ? "S$" : (/\.(sg|com\.sg)(\/|$)/.test(url) ? "S$" : (/\.my(\/|$)/.test(url) ? "RM" : "$"));
   return cur + Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function timeAgo(iso) {
@@ -562,6 +579,11 @@ function render() {
             <input type="checkbox" style="min-height:0;width:18px;height:18px" ${p.mode === "lowest" ? "checked" : ""}
               onchange="saveField('${p.id}','mode', this.checked ? 'lowest' : null)"> 💸 Lowest price on page
           </label>
+          <label style="flex-direction:row;align-items:center;gap:8px;margin-top:8px;font-weight:500">
+            <input type="checkbox" style="min-height:0;width:18px;height:18px" ${p.backup ? "checked" : ""}
+              onchange="saveField('${p.id}','backup', this.checked ? true : null)"> 🛍 Google Shopping backup
+            <span style="font-weight:400;color:var(--secondary)">(opt-in — only if every fetch fails; may be a different seller)</span>
+          </label>
         </details>
         <button class="danger" onclick="deleteProduct('${p.id}')">Delete</button>
       </div>
@@ -572,8 +594,9 @@ function render() {
 
 /* ---------- price scanning ---------- */
 function scanSection(p) {
-  if (demo || readonly || (p.url && p.url.startsWith("flight:"))) return "";
+  if (demo || readonly || (p.url && (p.url.startsWith("flight:") || p.url.startsWith("hotel:")))) return "";
   const s = scans[p.url];
+  const cmp = scans["compare:" + p.url];
   const watch = p.watch_label
     ? `<span class="watchchip">🎯 ${esc(p.watch_label.length > 42 ? p.watch_label.slice(0, 42) + "…" : p.watch_label)}
         <button title="Stop watching this option" onclick="saveField('${p.id}','watch_label',null)">✕</button></span>`
@@ -585,9 +608,32 @@ function scanSection(p) {
         <button class="primary" style="margin-top:8px" onclick="trackSelected('${p.id}')">Track selected price</button>
       </details>`
     : (s ? `<p class="hint">Last scan found nothing (scanned ${timeAgo(s.scanned_at)}) — the site likely walled it off that run. Press 🔍 again to retry just this page.</p>` : "");
+  const cmpList = cmp && cmp.candidates && cmp.candidates.length
+    ? `<details class="scanlist"><summary>🛍 ${cmp.candidates.length} store offers · compared ${timeAgo(cmp.scanned_at)}</summary>
+        ${cmp.candidates.map(c => `<label class="scanrow"><b>${money(c.price, p.url)}</b> <span class="sp">${esc(c.label)}</span></label>`).join("")}
+      </details>`
+    : (cmp ? `<p class="hint">Compare found no offers (${timeAgo(cmp.scanned_at)}) — try again later.</p>` : "");
   return `<div style="margin-top:12px">${watch}
     <button style="min-height:38px;font-size:14px" onclick="scanProduct('${p.id}')">🔍 Scan this page</button>
-    ${list}</div>`;
+    <button style="min-height:38px;font-size:14px" onclick="compareProduct('${p.id}')">🛍 Compare prices</button>
+    ${list}${cmpList}</div>`;
+}
+
+async function compareProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
+  if (window._busy) { toast("A run is already in progress ⏳"); return; }
+  try {
+    await gh(`/actions/workflows/scan.yml/dispatches`, {
+      method: "POST",
+      body: JSON.stringify({ ref: conf.branch, inputs: { compare_url: p.url, compare_name: p.name } }),
+    });
+    setBusy("🛍 Comparing prices across stores — offers appear in ~2 min…");
+    toast("🛍 Compare started ⏳");
+    clearTimeout(window._scanA); clearTimeout(window._scanB);
+    window._scanA = setTimeout(loadAll, 150000);
+    window._scanB = setTimeout(loadAll, 300000);
+  } catch { toast("Couldn't start the compare 😕 — try again"); }
 }
 
 async function scanProduct(id) {
@@ -659,42 +705,29 @@ async function refreshRunStatus() {
   try {
     const r = await gh("/actions/runs?per_page=6");
     const runs = r.workflow_runs || [];
-    const now = Date.now();
+    const cutoff = Date.now() - 20 * 60000;   // a "running" run older than 20 min is a zombie
     const active = [];
     for (const x of runs) {
-      if (!["in_progress", "queued", "waiting", "pending", "requested"].includes(x.status)) continue;
-      const started = new Date(x.run_started_at || x.created_at).getTime();
-      const ageMin = Math.max(0, Math.round((now - started) / 60000));
-      active.push({ id: x.id, ageMin, scan: /scan/i.test(x.name || "") });
-    }
-    // Normal runs: ~3–5 min (checks), up to ~40 min (mass scans over walled cards).
-    // Older = stuck → auto-cancel, retried every 3 min until GitHub honours it.
-    const stuck = active.filter(a => a.ageMin > (a.scan ? 45 : 15));
-    window._cancelAttempts = window._cancelAttempts || {};
-    for (const a of stuck) {
-      if (now - (window._cancelAttempts[a.id] || 0) > 180000) {
-        window._cancelAttempts[a.id] = now;
-        gh(`/actions/runs/${a.id}/cancel`, { method: "POST" }).catch(() => {});
+      const isActive = ["in_progress", "queued", "waiting", "pending", "requested"].includes(x.status);
+      if (!isActive) continue;
+      if (new Date(x.run_started_at || x.created_at) > cutoff) active.push(x);
+      else if (!(window._cancelled && window._cancelled.has(x.id))) {  // auto-kill zombies so they can't wedge the dashboard
+        (window._cancelled = window._cancelled || new Set()).add(x.id);
+        gh(`/actions/runs/${x.id}/cancel`, { method: "POST" }).catch(() => {});
       }
     }
-    const blocking = active.filter(a => !stuck.some(s => s.id === a.id));
-    const actionsUrl = "https://github.com/" + conf.owner + "/" + conf.repo + "/actions";
     let html = "";
-    if (blocking.length) {
-      const oldest = Math.max(...blocking.map(a => a.ageMin));
-      html += `<a class="runchip" style="text-decoration:none" target="_blank" href="${actionsUrl}">🔵 ${blocking.length > 1 ? blocking.length + " runs" : "A run"} in progress · ${oldest < 1 ? "just started" : oldest + "m in"} — updates when it finishes</a>`;
+    if (active.length) {
+      html += `<span class="runchip">🔵 ${active.length > 1 ? "Runs" : "A run"} in progress — updates when it finishes</span>`;
       for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = true;
       window._busyRemote = true;
-      window._busyRemoteSince = window._busyRemoteSince || now;
-    } else {
-      if (stuck.length) html += `<a class="runchip" style="text-decoration:none" target="_blank" href="${actionsUrl}">⏳ Cancelling a stuck run — buttons unlocked, go ahead</a>`;
-      if (window._busyRemote) {
-        window._busyRemote = false;
-        window._busyRemoteSince = null;
-        loadAll();   // runs cleared → pull fresh data
-        return;      // loadAll re-calls refreshRunStatus
-      }
+      window._busyRemoteSince = window._busyRemoteSince || Date.now();
+    } else if (window._busyRemote) {
+      window._busyRemote = false;
+      window._busyRemoteSince = null;
       for (const b of [$("#runBtn"), $("#scanAllBtn")]) b.disabled = false;
+      loadAll();   // a run just finished somewhere → pull fresh data
+      return;      // loadAll re-calls refreshRunStatus
     }
     const last = lastUpdatedText();
     if (last) html += `<span>${last}</span>`;
@@ -795,6 +828,26 @@ function addFlight() {
   addProduct();
 }
 $("#flightBtn").onclick = addFlight;
+
+/* ---------- hotel builder ---------- */
+function addHotel() {
+  const name = $("#hoName").value.trim();
+  const cin = $("#hoIn").value;
+  const cout = $("#hoOut").value;
+  const adults = $("#hoAdults").value.trim();
+  if (name.length < 3) { toast("Enter the hotel name 🏨"); return; }
+  if (/\//.test(name)) { toast("No slashes in the hotel name please"); return; }
+  if (!cin || !cout) { toast("Pick check-in and check-out dates 📅"); return; }
+  if (cout <= cin) { toast("Check-out must be after check-in 🤔"); return; }
+  if (adults && !/^[1-9]$/.test(adults)) { toast("Adults: 1–9"); return; }
+  let spec = "hotel:" + name + "/" + cin + "/" + cout;
+  if (adults && adults !== "2") spec += "/" + adults;
+  $("#inUrl").value = spec;
+  if (!$("#inName").value.trim())
+    $("#inName").value = name + " · " + cin.slice(5).replace("-", "/") + " → " + cout.slice(5).replace("-", "/");
+  addProduct();
+}
+$("#hotelBtn").onclick = addHotel;
 
 loadAll();
 </script>
