@@ -108,5 +108,58 @@
     "scanned_at": "2026-08-28T11:02:29+00:00",
     "via": "serpapi",
     "candidates": []
+  },
+  "market:https://www.lazada.sg/products/pdp-i3612056183-s23857700307.html?c=&channelLpJumpArgs=&clickTrackInfo=query%253Alogitech%252Bmaster%252Bmx%252B4%253Bnid%253A3612056183%253Bsrc%253ALazadaMainSrp%253Brn%253Afe50f2faca6b1dc5c9390f568a046b41%253Bregion%253Asg%253Bsku%253A3612056183_SGAMZ%253Bprice%253A160%253Bclient%253Adesktop%253Bsupplier_id%253A1192016338%253Bsession_id%253A%253Bbiz_source%253Ah5_hp%253Bslot%253A4%253Butlog_bucket_id%253A470687%253Basc_category_id%253A7849%253Bitem_id%253A3612056183%253Bsku_id%253A23857700307%253Bshop_id%253A1772936%253BtemplateInfo%253A-1_A3_C%2523107878_E%2523164593_J%2523&freeshipping=1&fs_ab=2&fuse_fs=&lang=en&location=Singapore&price=1.6E%202&priceCompare=skuId%3A23857700307%3Bsource%3Alazada-search-voucher%3Bsn%3Afe50f2faca6b1dc5c9390f568a046b41%3BoriginPrice%3A16000%3BdisplayPrice%3A16000%3BisGray%3Afalse%3BsinglePromotionId%3A91472380356586%3BsingleToolCode%3ApromPrice%3BvoucherPricePlugin%3A0%3Btimestamp%3A1787929312084&qSellingPoint=p--master%20mx%204___b--logitech&ratingscore=4.885714285714286&request_id=fe50f2faca6b1dc5c9390f568a046b41&review=35&sale=179&search=1&source=search&spm=a2o42.searchlist.list.4&stock=1": {
+    "scanned_at": "2026-08-28T15:07:18+00:00",
+    "link": {
+      "price": null,
+      "method": null,
+      "error": "the site blocked this run - press the market button again to retry"
+    },
+    "offers": [
+      {
+        "store": "Online Persian Store",
+        "title": "Logitech G402 Hyperion Fury FPS Gaming Mouse",
+        "price": 144.22,
+        "link": "https://www.google.com/search?ibp=oshop&q=Logitech MX4 mouse&prds=catalogid:17875674848854456001,productid:5346802290657595931,headlineOfferDocid:4081678225947757616,imageDocid:18109589697587893091,rds:PC_4304601529050629593|PROD_PC_4304601529050629593,gpcid:4304601529050629593,mid:576462892676962635,pvt:hg&hl=en&gl=sg&udm=28",
+        "same_store": false
+      },
+      {
+        "store": "Grooves-Inc.com",
+        "title": "Logitech Mx Master 4 for Business",
+        "price": 157.39,
+        "link": "https://www.google.com/search?ibp=oshop&q=Logitech MX4 mouse&prds=catalogid:9839999202883226531,productid:1401153053838296107,headlineOfferDocid:9179737561682827758,imageDocid:4170834980783184609,rds:PC_4253339863867778051|PROD_PC_4253339863867778051,gpcid:4253339863867778051,mid:576462563322968318,pvt:hg&hl=en&gl=sg&udm=28",
+        "same_store": false
+      },
+      {
+        "store": "challenger.sg",
+        "title": "Logitech MX Master 4 Mouse",
+        "price": 163.0,
+        "link": "https://www.google.com/search?ibp=oshop&q=Logitech MX4 mouse&prds=catalogid:1579041840336421209,productid:8852194411170039997,headlineOfferDocid:12069830224844376748,imageDocid:15190721568607648758,rds:PC_13185731189184962020|PROD_PC_13185731189184962020,gpcid:13185731189184962020,mid:576462886065191707,pvt:hg&hl=en&gl=sg&udm=28",
+        "same_store": false
+      },
+      {
+        "store": "Best Denki Singapore",
+        "title": "LOGITECH Apple 3PP Products 910-007578",
+        "price": 169.0,
+        "link": "https://www.google.com/search?ibp=oshop&q=Logitech MX4 mouse&prds=productid:7422830974884181327,headlineOfferDocid:7422830974884181327,imageDocid:12352468258093203546,rds:PC_3726465341777937282|PROD_PC_3726465341777937282,pvt:hg&hl=en&gl=sg&udm=28",
+        "same_store": false
+      },
+      {
+        "store": "Headphones.sg",
+        "title": "Logitech MX Master 4 Wireless Mouse for Mac (White/Silver)",
+        "price": 179.0,
+        "link": "https://www.google.com/search?ibp=oshop&q=Logitech MX4 mouse&prds=productid:5431137941973970821,headlineOfferDocid:5431137941973970821,imageDocid:10664069000150407944,rds:PC_3726465341777937282|PROD_PC_3726465341777937282,pvt:hg&hl=en&gl=sg&udm=28",
+        "same_store": false
+      },
+      {
+        "store": "Shopee",
+        "title": "Logitech MX Master 4 Wireless Mouse for Mac",
+        "price": 182.0,
+        "link": "https://www.google.com/search?ibp=oshop&q=Logitech MX4 mouse&prds=catalogid:17150707882921575738,productid:6258966275536048094,headlineOfferDocid:6038443115545752894,imageDocid:12350014746488287303,rds:PC_17901965634460600313|PROD_PC_17901965634460600313,gpcid:17901965634460600313,mid:576462912338477423,pvt:hg&hl=en&gl=sg&udm=28",
+        "same_store": false
+      }
+    ],
+    "via": "link + serpapi shopping"
   }
 }
