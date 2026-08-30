@@ -25,7 +25,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (page element) (browser)",
-      "last_price": 967.0,
+      "last_price": 967,
       "last_checked": "2026-08-30T10:26:08+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
@@ -58,7 +58,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225.0,
+      "last_price": 225,
       "last_checked": "2026-08-30T10:26:48+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
@@ -74,7 +74,7 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 191.0,
+      "last_price": 191,
       "last_checked": "2026-08-30T10:26:50+00:00",
       "_link_only": true,
       "fail_count": 0,
@@ -95,6 +95,19 @@
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
+    },
+    {
+      "id": "-1tuuivq",
+      "name": "KNO ⇄ DPS · 03/16 → 04/11",
+      "url": "flight:KNO-DPS/2027-03-16/2027-04-11",
+      "target": null,
+      "mode": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
