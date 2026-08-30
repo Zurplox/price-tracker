@@ -9,8 +9,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (page element) (browser)",
-      "last_price": 9.34,
-      "last_checked": "2026-08-30T14:04:03+00:00",
+      "last_price": 9.15,
+      "last_checked": "2026-08-30T22:38:47+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
       "_link_only": true
@@ -26,7 +26,7 @@
       "status": "tracking",
       "method": "auto (page element) (browser)",
       "last_price": 967.0,
-      "last_checked": "2026-08-30T14:04:13+00:00",
+      "last_checked": "2026-08-30T22:38:56+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
       "_link_only": true
@@ -42,7 +42,7 @@
       "status": "tracking",
       "method": "🎯 Kellogg's Granola - Dark Cho",
       "last_price": 10.5,
-      "last_checked": "2026-08-30T14:04:14+00:00",
+      "last_checked": "2026-08-30T22:38:57+00:00",
       "fail_count": 0,
       "_link_only": true,
       "watch_label": "Kellogg's Granola - Dark Chocolate 350g | Brand: Kellogg's",
@@ -59,7 +59,7 @@
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
       "last_price": 225.0,
-      "last_checked": "2026-08-30T14:05:04+00:00",
+      "last_checked": "2026-08-30T22:39:23+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
       "_link_only": true
@@ -75,7 +75,7 @@
       "status": "tracking",
       "method": "✈️ google flights",
       "last_price": 191.0,
-      "last_checked": "2026-08-30T14:05:06+00:00",
+      "last_checked": "2026-08-30T22:39:25+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -90,8 +90,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (page element) (browser)",
-      "last_price": 0.1,
-      "last_checked": "2026-08-30T14:05:17+00:00",
+      "last_price": 160.0,
+      "last_checked": "2026-08-30T22:39:33+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -107,7 +107,7 @@
       "status": "tracking",
       "method": "✈️ google flights",
       "last_price": 493.0,
-      "last_checked": "2026-08-30T14:05:22+00:00",
+      "last_checked": "2026-08-30T22:39:37+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
