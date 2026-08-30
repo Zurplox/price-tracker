@@ -175,6 +175,56 @@ def serpapi_flight_price(spec):
     return lowest_flight_price(r.json())
 
 
+def serpapi_flight_offers(url, limit=10):
+    """Per-airline fare breakdown for a flight: spec - returns a LIST of
+    {store, title, price, link, same_store} rows, one per airline (group),
+    cheapest first. 'store' carries the airline name(s) so the dashboard's
+    market panel can render flight rows unchanged.
+
+    DIAGNOSTIC ONLY. Tracking still records the single cheapest fare via
+    serpapi_flight_price; nothing here enters price history or graphs.
+    """
+    spec = parse_flight_spec(url)
+    if not spec or not SERPAPI_KEY:
+        if not SERPAPI_KEY:
+            print("  (no SERPAPI_KEY secret - cannot fetch airline fares)")
+        return []
+    params = {"engine": "google_flights", "api_key": SERPAPI_KEY,
+              "departure_id": spec["dep"], "arrival_id": spec["arr"],
+              "outbound_date": spec["out"], "type": spec["type"],
+              "adults": spec["adults"], "currency": "SGD", "hl": "en", "gl": "sg"}
+    if spec["ret"]:
+        params["return_date"] = spec["ret"]
+    r = requests.get("https://serpapi.com/search", params=params, timeout=60)
+    r.raise_for_status()
+    data = r.json()
+    link = flight_link(url)
+    best = {}
+    for group in ("best_flights", "other_flights"):
+        for opt in data.get(group, []) or []:
+            price = opt.get("price")
+            if not isinstance(price, (int, float)) or price <= 0:
+                continue
+            legs = opt.get("flights") or []
+            airlines = []
+            for leg in legs:
+                a = (leg.get("airline") or "").strip()
+                if a and a not in airlines:
+                    airlines.append(a)
+            store = " + ".join(airlines) if airlines else "Unknown airline"
+            stops = max(len(legs) - 1, 0)
+            mins = opt.get("total_duration")
+            bits = ["nonstop" if stops == 0 else str(stops) + " stop" + ("s" if stops > 1 else "")]
+            if isinstance(mins, (int, float)) and mins:
+                bits.append(str(int(mins) // 60) + "h " + str(int(mins) % 60).zfill(2) + "m")
+            row = {"store": store[:40], "title": " · ".join(bits)[:90],
+                   "price": float(price), "link": link, "same_store": False}
+            prev = best.get(store)
+            if prev is None or price < prev["price"]:
+                best[store] = row
+    return sorted(best.values(), key=lambda o: o["price"])[:limit]
+
+
 def serpapi_shopping_offers(name, url, limit=10):
     """Market snapshot via Google Shopping — returns a LIST of other sellers' offers,
     each with its own link so you can verify it yourself.

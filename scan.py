@@ -111,6 +111,34 @@ def market_one(product, url, name):
             "via": "link + serpapi shopping" if offers else "link only"}
 
 
+def flight_market(url):
+    """Per-airline fares for a flight: spec. The link row mirrors the tracked price
+    (the single cheapest Google Flights fare); offers are the lowest fare per airline.
+    Read-only: stored under a market: key that tracker.py never reads."""
+    offers = []
+    err = None
+    if tracker.SERPAPI_KEY:
+        try:
+            offers = tracker.serpapi_flight_offers(url, limit=10)
+            if not offers:
+                err = "no fares came back - press the button again to retry"
+        except Exception as e:
+            err = "the airline lookup failed - press the button again to retry"
+            print("  (serpapi flight lookup failed: " + str(e) + ")")
+    else:
+        err = "add the SERPAPI_KEY secret to see per-airline fares"
+        print("  (no SERPAPI_KEY secret)")
+    cheapest = offers[0]["price"] if offers else None
+    link = {"price": cheapest,
+            "method": "✈️ google flights" if cheapest is not None else None,
+            "error": None if cheapest is not None else err}
+    for o in offers[:8]:
+        print("    - " + str(o["price"]) + " " + o["store"] +
+              (" (" + o["title"] + ")" if o["title"] else ""))
+    return {"scanned_at": tracker.now_iso(), "link": link, "offers": offers,
+            "via": "google flights per-airline" if offers else "none"}
+
+
 def main():
     url = os.environ.get("SCAN_URL", "").strip()
     market_url = os.environ.get("MARKET_URL", "").strip()
@@ -118,8 +146,19 @@ def main():
     if market_url:
         # On-demand market check: link price + other sellers, stored read-only under a
         # "market:" key so it can never feed tracking history.
-        if market_url.startswith(("flight:", "hotel:")):
-            print("(flights and hotels are already API-priced - no market check needed)")
+        if market_url.startswith("hotel:"):
+            print("(hotels are already API-priced - no market check needed)")
+            return
+        if market_url.startswith("flight:"):
+            # Airline market check: the tracked price stays the single cheapest
+            # fare; this stores a read-only per-airline breakdown of the same search.
+            scans = tracker.load_json("scans.json", {})
+            print("✈️ Airline check for: " + market_url)
+            result = flight_market(market_url)
+            scans["market:" + market_url] = result
+            tracker.save_json("scans.json", scans)
+            print("Done - cheapest " + str(result["link"]["price"]) + " across " +
+                  str(len(result["offers"])) + " airline(s).")
             return
         name = os.environ.get("MARKET_NAME", "").strip()
         data = tracker.load_json("products.json", {"products": []})

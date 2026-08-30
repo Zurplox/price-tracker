@@ -597,7 +597,13 @@ function render() {
 
 /* ---------- price scanning ---------- */
 function scanSection(p) {
-  if (demo || readonly || (p.url && (p.url.startsWith("flight:") || p.url.startsWith("hotel:")))) return "";
+  if (demo || readonly) return "";
+  if (p.url && p.url.startsWith("hotel:")) return "";
+  if (p.url && p.url.startsWith("flight:")) {
+    return `<div style="margin-top:12px">
+      <button style="min-height:38px;font-size:14px" onclick="marketProduct('${p.id}')" title="Uses SerpApi — shows the lowest fare per airline, never changes the tracked price">✈️ Check airlines</button>
+      ${marketSection(p)}</div>`;
+  }
   const s = scans[p.url];
   const watch = p.watch_label
     ? `<span class="watchchip">🎯 ${esc(p.watch_label.length > 42 ? p.watch_label.slice(0, 42) + "…" : p.watch_label)}
@@ -621,6 +627,7 @@ function scanSection(p) {
    The rest are other sellers from SerpApi Google Shopping, each with its own Open link
    so you can verify it. Stored under a "market:" key that the tracker never reads. */
 function marketSection(p) {
+  const isFlight = p.url.startsWith("flight:");
   const mk = scans["market:" + p.url];
   if (!mk) return "";
   const lp = mk.link || {};
@@ -628,7 +635,7 @@ function marketSection(p) {
   const total = offers.length + 1;
   const rows = [`<div class="mkrow mkself">
       <b>${lp.price != null ? money(lp.price, p.url) : "—"}</b>
-      <span class="sp">🔗 your link${lp.method ? " · " + esc(lp.method) : ""}${lp.price == null ? " · " + esc(lp.error || "no price found") : ""}</span>
+      <span class="sp">${isFlight ? "✈️" : "🔗"} ${isFlight ? "cheapest (tracked)" : "your link"}${lp.method ? " · " + esc(lp.method) : ""}${lp.price == null ? " · " + esc(lp.error || "no price found") : ""}</span>
       <a class="mklink" href="${esc(displayUrl(p))}" target="_blank" rel="noopener">Open ↗</a>
     </div>`];
   for (const o of offers) {
@@ -639,9 +646,11 @@ function marketSection(p) {
     </div>`);
   }
   const note = offers.length
-    ? `Only the top row is tracked. The ${offers.length} below are other sellers — tap Open ↗ to check each one yourself.`
-    : `No other sellers found. If this stays empty, add the SERPAPI_KEY secret in repo Settings → Secrets → Actions.`;
-  return `<details class="scanlist" open><summary>📊 Market · ${total} price${total === 1 ? "" : "s"} · checked ${timeAgo(mk.scanned_at)}</summary>
+    ? (isFlight
+        ? `Only the cheapest fare is tracked and charted — graph and alerts stay on the lowest price. The ${offers.length} below are the lowest fare per airline for your exact route and dates.`
+        : `Only the top row is tracked. The ${offers.length} below are other sellers — tap Open ↗ to check each one yourself.`)
+    : `No ${isFlight ? "airline fares" : "other sellers"} found. If this stays empty, add the SERPAPI_KEY secret in repo Settings → Secrets → Actions.`;
+  return `<details class="scanlist" open><summary>${isFlight ? "✈️ Airlines" : "📊 Market"} · ${total} price${total === 1 ? "" : "s"} · checked ${timeAgo(mk.scanned_at)}</summary>
       ${rows.join("")}
       <p class="hint">${note}</p>
     </details>`;
@@ -650,8 +659,8 @@ function marketSection(p) {
 async function marketProduct(id) {
   const p = products.find(x => x.id === id);
   if (!conf.token) { toast("Connect GitHub first ⚙"); return; }
-  if (p.url.startsWith("flight:") || p.url.startsWith("hotel:")) {
-    toast("Flights & hotels are already API-priced ✈️"); return;
+  if (p.url.startsWith("hotel:")) {
+    toast("Hotels are already API-priced 🏨"); return;
   }
   if (window._busy) { toast("A run is already in progress ⏳"); return; }
   try {
@@ -659,8 +668,9 @@ async function marketProduct(id) {
       method: "POST",
       body: JSON.stringify({ ref: conf.branch, inputs: { market_url: p.url, market_name: p.name } }),
     });
-    setBusy("📊 Market check — your link's price plus other sellers in ~2–3 min…");
-    toast("📊 Market check started ⏳");
+    const flight = p.url.startsWith("flight:");
+    setBusy(flight ? "✈️ Airline check — lowest fare per airline in ~1–2 min…" : "📊 Market check — your link's price plus other sellers in ~2–3 min…");
+    toast(flight ? "✈️ Airline check started ⏳" : "📊 Market check started ⏳");
     clearTimeout(window._scanA); clearTimeout(window._scanB);
     window._scanA = setTimeout(loadAll, 150000);
     window._scanB = setTimeout(loadAll, 300000);
