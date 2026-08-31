@@ -1,7 +1,7 @@
 {
   "https://www.lazada.sg/products/pdp-i13794955176-s124794630451.html?c=&channelLpJumpArgs=&clickTrackInfo=query%253Ainsta360%252Bofficial%252Bstore%253Bnid%253A13794955176%253Bsrc%253ALazadaMainSrp%253Brn%253A419b05605cfb8b3d1963eefd4b08fd1f%253Bregion%253Asg%253Bsku%253A13794955176_SGAMZ%253Bprice%253A967%253Bclient%253Adesktop%253Bsupplier_id%253A1143075056%253Bsession_id%253A%253Bbiz_source%253Ah5_internal%253Bslot%253A0%253Butlog_bucket_id%253A470687%253Basc_category_id%253A5880%253Bitem_id%253A13794955176%253Bsku_id%253A124794630451%253Bshop_id%253A1260643%253BtemplateInfo%253A-1_A3_C%2523107878_E%2523164593_J%2523&freeshipping=1&fs_ab=2&fuse_fs=&lang=en&location=Singapore&price=967&priceCompare=skuId%3A124794630451%3Bsource%3Alazada-search-voucher%3Bsn%3A419b05605cfb8b3d1963eefd4b08fd1f%3BoriginPrice%3A96700%3BdisplayPrice%3A96700%3BisGray%3Afalse%3BsinglePromotionId%3A91472388429443%3BsingleToolCode%3ApromPrice%3BvoucherPricePlugin%3A0%3Btimestamp%3A1787751834075&qSellingPoint=b--insta360___p--official%20store&ratingscore=5.0&request_id=419b05605cfb8b3d1963eefd4b08fd1f&review=10&sale=42&search=1&source=search&spm=a2o42.searchlist.list.0&stock=1": {
-    "scanned_at": "2026-08-28T11:01:36+00:00",
-    "via": "plain fetch+browser",
+    "scanned_at": "2026-08-31T01:00:17+00:00",
+    "via": "plain fetch+scraperapi",
     "candidates": [
       {
         "label": "【New Launch】Insta360 X6 - 8K 360 Camera with 1/1.1'' Sensors Action Ca",
@@ -19,11 +19,11 @@
     "candidates": []
   },
   "https://www.lazada.sg/products/pdp-i301076868-s527078858.html": {
-    "scanned_at": "2026-08-28T11:01:28+00:00",
-    "via": "plain fetch+browser",
+    "scanned_at": "2026-08-31T00:59:32+00:00",
+    "via": "plain fetch+scraperapi",
     "candidates": [
       {
-        "label": "Ends in 04:58:32 66 in LazFlash [VALUE PACK] Magiclean Toilet Bleach -",
+        "label": "Ends in 15:00:29 19 in LazFlash [VALUE PACK] Magiclean Toilet Bleach -",
         "price": 9.15
       },
       {
@@ -35,12 +35,104 @@
         "price": 9.15
       },
       {
-        "label": "Ends in 04:58:32 66 in LazFlash [VALUE PACK] Magiclean Toilet Bleach -",
+        "label": "Ends in 15:00:29 19 in LazFlash [VALUE PACK] Magiclean Toilet Bleach -",
         "price": 9.43
       },
       {
         "label": "$ 9.15 -3%",
         "price": 9.43
+      },
+      {
+        "label": "Dasani Drinking Water (12 x 1.5L) - Case 12 × 1.5 L",
+        "price": 8.4
+      },
+      {
+        "label": "$10.80 -22%",
+        "price": 8.4
+      },
+      {
+        "label": "Dasani Drinking Water (12 x 1.5L) - Case 12 × 1.5 L $8.40",
+        "price": 10.8
+      },
+      {
+        "label": "$8.40 -22%",
+        "price": 10.8
+      },
+      {
+        "label": "$8.40 $10.80",
+        "price": 22.0
+      },
+      {
+        "label": "Pursoft Chocolate Rain Outdoor 3-Ply Facial Tissue - 4 Soft Pack 4 × 1",
+        "price": 3.65
+      },
+      {
+        "label": "$5.34 -32%",
+        "price": 3.65
+      },
+      {
+        "label": "Pursoft Chocolate Rain Outdoor 3-Ply Facial Tissue - 4 Soft Pack 4 × 1",
+        "price": 5.34
+      },
+      {
+        "label": "$3.65 -32%",
+        "price": 5.34
+      },
+      {
+        "label": "$3.65 $5.34",
+        "price": 32.0
+      },
+      {
+        "label": "RedMart 15 Eggs 15 X 60G 60 g 8D",
+        "price": 4.65
+      },
+      {
+        "label": "$5.10 -9%",
+        "price": 4.65
+      },
+      {
+        "label": "RedMart 15 Eggs 15 X 60G 60 g 8D $4.65",
+        "price": 5.1
+      },
+      {
+        "label": "$4.65 -9%",
+        "price": 5.1
+      },
+      {
+        "label": "$4.65 $5.10",
+        "price": 9.0
+      },
+      {
+        "label": "RedMart Luxuriously Soft 3Ply Toilet Tissue Paper - 10 Rolls 10 × 200 ",
+        "price": 5.19
+      },
+      {
+        "label": "$5.60 -7%",
+        "price": 5.19
+      },
+      {
+        "label": "RedMart Luxuriously Soft 3Ply Toilet Tissue Paper - 10 Rolls 10 × 200 ",
+        "price": 5.6
+      },
+      {
+        "label": "$5.19 -7%",
+        "price": 5.6
+      },
+      {
+        "label": "$5.19 $5.60",
+        "price": 7.0
+      },
+      {
+        "label": "Clorox Automatic Toilet Bowl Cleaner Tablets - Bleach And Blue 2 Per P",
+        "price": 8.65
+      },
+      {
+        "label": "Kirei Kirei Anti-Bacterial Foaming Hand Soap Refreshing Grape Refill 2",
+        "price": 2.34
+      },
+      {
+        "label": "Scott Multi Purpose Kitchen Towels - 6 Rolls 6 × 55 Per Pack",
+        "price": 5.35
       },
       {
         "label": "Scheduled (2-hour slots) -",
@@ -53,7 +145,7 @@
     ]
   },
   "https://www.fairprice.com.sg/product/kellogg-s-granola-dark-chocolate-350g-13223814": {
-    "scanned_at": "2026-08-28T11:01:44+00:00",
+    "scanned_at": "2026-08-31T01:00:24+00:00",
     "via": "plain fetch+browser",
     "candidates": [
       {
@@ -63,7 +155,7 @@
     ]
   },
   "https://www.davidjones.com/product/carvela-ravello-low-leather-heel-27913275": {
-    "scanned_at": "2026-08-28T11:02:29+00:00",
+    "scanned_at": "2026-08-31T01:00:58+00:00",
     "via": "plain fetch+browser+scraperapi",
     "candidates": [
       {
@@ -161,5 +253,85 @@
       }
     ],
     "via": "link + serpapi shopping"
+  },
+  "flight:SIN-SGN/2026-09-11/2026-09-15": {
+    "scanned_at": "2026-08-31T01:00:58+00:00",
+    "via": "serpapi",
+    "candidates": []
+  },
+  "https://www.lazada.sg/products/pdp-i3612056183-s23857700307.html?c=&channelLpJumpArgs=&clickTrackInfo=query%253Alogitech%252Bmaster%252Bmx%252B4%253Bnid%253A3612056183%253Bsrc%253ALazadaMainSrp%253Brn%253Afe50f2faca6b1dc5c9390f568a046b41%253Bregion%253Asg%253Bsku%253A3612056183_SGAMZ%253Bprice%253A160%253Bclient%253Adesktop%253Bsupplier_id%253A1192016338%253Bsession_id%253A%253Bbiz_source%253Ah5_hp%253Bslot%253A4%253Butlog_bucket_id%253A470687%253Basc_category_id%253A7849%253Bitem_id%253A3612056183%253Bsku_id%253A23857700307%253Bshop_id%253A1772936%253BtemplateInfo%253A-1_A3_C%2523107878_E%2523164593_J%2523&freeshipping=1&fs_ab=2&fuse_fs=&lang=en&location=Singapore&price=1.6E%202&priceCompare=skuId%3A23857700307%3Bsource%3Alazada-search-voucher%3Bsn%3Afe50f2faca6b1dc5c9390f568a046b41%3BoriginPrice%3A16000%3BdisplayPrice%3A16000%3BisGray%3Afalse%3BsinglePromotionId%3A91472380356586%3BsingleToolCode%3ApromPrice%3BvoucherPricePlugin%3A0%3Btimestamp%3A1787929312084&qSellingPoint=p--master%20mx%204___b--logitech&ratingscore=4.885714285714286&request_id=fe50f2faca6b1dc5c9390f568a046b41&review=35&sale=179&search=1&source=search&spm=a2o42.searchlist.list.4&stock=1": {
+    "scanned_at": "2026-08-31T01:01:33+00:00",
+    "via": "plain fetch+scraperapi",
+    "candidates": [
+      {
+        "label": "LOGITECH MX MASTER 4 WIRELESS MOUSE - GRAPHITE 910-007565 App 4.9 (35)",
+        "price": 160.0
+      },
+      {
+        "label": "$199.00 -20%",
+        "price": 160.0
+      },
+      {
+        "label": "$ $199.00 -20%",
+        "price": 160.0
+      },
+      {
+        "label": "Quantity: Buy Now Add to Cart",
+        "price": 160.0
+      },
+      {
+        "label": "UGREEN Ergonomic Wireless Mouse, High-Speed Scroll 1000 Rows , Bluetoo",
+        "price": 32.99
+      },
+      {
+        "label": "$ -6% $34.99",
+        "price": 32.99
+      },
+      {
+        "label": "$ 32.99 $34.99",
+        "price": 6.0
+      },
+      {
+        "label": "UGREEN Wireless Mouse, 6 Silent Buttons, Bluetooth 5.0 and 2.4G Wirele",
+        "price": 22.99
+      },
+      {
+        "label": "$ -21% $29.00",
+        "price": 22.99
+      },
+      {
+        "label": "$ 22.99 $29.00",
+        "price": 21.0
+      },
+      {
+        "label": "UGREEN USB Type C to USB C PD 60W/100W Charge Data Transfer Cable for ",
+        "price": 9.89
+      },
+      {
+        "label": "$ -18% $12.00",
+        "price": 9.89
+      },
+      {
+        "label": "$ 9.89 $12.00",
+        "price": 18.0
+      },
+      {
+        "label": "Rascals Pants Large Diaper Case - 52 PCS X 3 (156 PCS) 5.0(3148)",
+        "price": 65.11
+      },
+      {
+        "label": "$ -20% $81.39",
+        "price": 65.11
+      },
+      {
+        "label": "$ 65.11 $81.39",
+        "price": 20.0
+      }
+    ]
+  },
+  "flight:KNO-DPS/2027-03-16/2027-04-11": {
+    "scanned_at": "2026-08-31T01:01:33+00:00",
+    "via": "serpapi",
+    "candidates": []
   }
 }
