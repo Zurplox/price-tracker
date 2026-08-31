@@ -333,5 +333,44 @@
     "scanned_at": "2026-08-31T01:01:33+00:00",
     "via": "serpapi",
     "candidates": []
+  },
+  "market:flight:KNO-DPS/2027-03-16/2027-04-11": {
+    "scanned_at": "2026-08-31T11:29:53+00:00",
+    "link": {
+      "price": 493.0,
+      "method": "✈️ google flights",
+      "error": null
+    },
+    "offers": [
+      {
+        "store": "Lion",
+        "title": "1 stop · 11h 45m",
+        "price": 493.0,
+        "link": "https://www.google.com/travel/flights?q=Flights%20from%20KNO%20to%20DPS%20on%202027-03-16%20through%202027-04-11",
+        "same_store": false
+      },
+      {
+        "store": "Citilink Indonesia",
+        "title": "1 stop · 6h 55m",
+        "price": 626.0,
+        "link": "https://www.google.com/travel/flights?q=Flights%20from%20KNO%20to%20DPS%20on%202027-03-16%20through%202027-04-11",
+        "same_store": false
+      },
+      {
+        "store": "Garuda Indonesia",
+        "title": "1 stop · 7h 15m",
+        "price": 730.0,
+        "link": "https://www.google.com/travel/flights?q=Flights%20from%20KNO%20to%20DPS%20on%202027-03-16%20through%202027-04-11",
+        "same_store": false
+      },
+      {
+        "store": "Malaysia Airlines + Philippine Airlines",
+        "title": "2 stops · 13h 45m",
+        "price": 5136.0,
+        "link": "https://www.google.com/travel/flights?q=Flights%20from%20KNO%20to%20DPS%20on%202027-03-16%20through%202027-04-11",
+        "same_store": false
+      }
+    ],
+    "via": "google flights per-airline"
   }
 }
