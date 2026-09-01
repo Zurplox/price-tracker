@@ -372,5 +372,44 @@
       }
     ],
     "via": "google flights per-airline"
+  },
+  "market:flight:SIN-SGN/2026-09-11/2026-09-15": {
+    "scanned_at": "2026-09-01T23:15:30+00:00",
+    "link": {
+      "price": 172.0,
+      "method": "✈️ google flights",
+      "error": null
+    },
+    "offers": [
+      {
+        "store": "Vietjet",
+        "title": "nonstop · 2h 05m",
+        "price": 172.0,
+        "link": "https://www.google.com/travel/flights?q=Flights%20from%20SIN%20to%20SGN%20on%202026-09-11%20through%202026-09-15",
+        "same_store": false
+      },
+      {
+        "store": "Scoot",
+        "title": "nonstop · 2h 15m",
+        "price": 202.0,
+        "link": "https://www.google.com/travel/flights?q=Flights%20from%20SIN%20to%20SGN%20on%202026-09-11%20through%202026-09-15",
+        "same_store": false
+      },
+      {
+        "store": "Singapore Airlines",
+        "title": "nonstop · 2h 10m",
+        "price": 270.0,
+        "link": "https://www.google.com/travel/flights?q=Flights%20from%20SIN%20to%20SGN%20on%202026-09-11%20through%202026-09-15",
+        "same_store": false
+      },
+      {
+        "store": "Vietnam Airlines",
+        "title": "nonstop · 2h 15m",
+        "price": 282.0,
+        "link": "https://www.google.com/travel/flights?q=Flights%20from%20SIN%20to%20SGN%20on%202026-09-11%20through%202026-09-15",
+        "same_store": false
+      }
+    ],
+    "via": "google flights per-airline"
   }
 }
