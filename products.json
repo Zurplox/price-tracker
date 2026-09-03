@@ -8,13 +8,12 @@
       "selector": null,
       "paused": false,
       "status": "tracking",
-      "method": "auto (page element) (scraperapi)",
-      "last_price": 9.34,
-      "last_checked": "2026-09-03T12:16:28+00:00",
-      "fail_count": 2,
+      "method": "auto (page element)",
+      "last_price": 9.0,
+      "last_checked": "2026-09-03T22:29:25+00:00",
+      "fail_count": 0,
       "_tracked_key": "auto",
-      "_link_only": true,
-      "note": "last check failed — showing earlier price"
+      "_link_only": true
     },
     {
       "id": "wwwlazadasg-hgr3ub",
@@ -25,13 +24,12 @@
       "selector": null,
       "paused": false,
       "status": "tracking",
-      "method": "auto (page element) (browser)",
-      "last_price": 967,
-      "last_checked": "2026-09-03T12:17:31+00:00",
-      "fail_count": 3,
+      "method": "auto (structured data)",
+      "last_price": 967.0,
+      "last_checked": "2026-09-03T22:29:27+00:00",
+      "fail_count": 0,
       "_tracked_key": "auto",
-      "_link_only": true,
-      "note": "last check failed — showing earlier price"
+      "_link_only": true
     },
     {
       "id": "wwwfairpricecomsg-ytnmvc",
@@ -44,7 +42,7 @@
       "status": "tracking",
       "method": "🎯 Kellogg's Granola - Dark Cho",
       "last_price": 10.5,
-      "last_checked": "2026-09-03T12:17:32+00:00",
+      "last_checked": "2026-09-03T22:29:28+00:00",
       "fail_count": 0,
       "_link_only": true,
       "watch_label": "Kellogg's Granola - Dark Chocolate 350g | Brand: Kellogg's",
@@ -60,12 +58,11 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225,
-      "last_checked": "2026-09-03T12:18:32+00:00",
-      "fail_count": 2,
+      "last_price": 225.0,
+      "last_checked": "2026-09-03T22:29:57+00:00",
+      "fail_count": 0,
       "_tracked_key": "auto",
-      "_link_only": true,
-      "note": "last check failed — showing earlier price"
+      "_link_only": true
     },
     {
       "id": "-1ecn6ov",
@@ -78,7 +75,7 @@
       "status": "tracking",
       "method": "✈️ google flights",
       "last_price": 172.0,
-      "last_checked": "2026-09-03T12:18:32+00:00",
+      "last_checked": "2026-09-03T22:29:59+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -92,13 +89,12 @@
       "selector": null,
       "paused": false,
       "status": "tracking",
-      "method": "auto (page element) (browser)",
-      "last_price": 160,
-      "last_checked": "2026-09-03T12:19:34+00:00",
+      "method": "auto (structured data)",
+      "last_price": 160.0,
+      "last_checked": "2026-09-03T22:30:01+00:00",
       "_link_only": true,
-      "fail_count": 3,
-      "_tracked_key": "auto",
-      "note": "last check failed — showing earlier price"
+      "fail_count": 0,
+      "_tracked_key": "auto"
     },
     {
       "id": "-1tuuivq",
@@ -111,7 +107,7 @@
       "status": "tracking",
       "method": "✈️ google flights",
       "last_price": 532.0,
-      "last_checked": "2026-09-03T12:19:35+00:00",
+      "last_checked": "2026-09-03T22:30:07+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -124,13 +120,14 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "rate gone — watched option not found (rescan and re-pick)",
-      "method": null,
-      "last_price": null,
-      "last_checked": "2026-09-03T12:20:36+00:00",
+      "status": "tracking",
+      "method": "🎯 Black Shark | 55W Fast Charg",
+      "last_price": 66.55,
+      "last_checked": "2026-09-03T22:30:14+00:00",
       "_link_only": true,
-      "fail_count": 3,
-      "watch_label": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164"
+      "fail_count": 0,
+      "watch_label": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164",
+      "_tracked_key": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164"
     }
   ]
 }
