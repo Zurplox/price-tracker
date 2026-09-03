@@ -60,7 +60,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225.0,
+      "last_price": 225,
       "last_checked": "2026-09-03T11:53:40+00:00",
       "fail_count": 1,
       "_tracked_key": "auto",
@@ -77,7 +77,7 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 172.0,
+      "last_price": 172,
       "last_checked": "2026-09-03T11:53:45+00:00",
       "_link_only": true,
       "fail_count": 0,
@@ -110,7 +110,7 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 532.0,
+      "last_price": 532,
       "last_checked": "2026-09-03T11:55:00+00:00",
       "_link_only": true,
       "fail_count": 0,
@@ -129,7 +129,8 @@
       "last_price": null,
       "last_checked": "2026-09-03T11:56:03+00:00",
       "_link_only": true,
-      "fail_count": 2
+      "fail_count": 2,
+      "watch_label": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164"
     }
   ]
 }
