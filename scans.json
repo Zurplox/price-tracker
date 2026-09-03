@@ -411,5 +411,27 @@
       }
     ],
     "via": "google flights per-airline"
+  },
+  "https://s.lazada.sg/s.TZiLb?c=v&t=p-i3ts18z-sPkxyHs": {
+    "scanned_at": "2026-09-03T08:32:55+00:00",
+    "via": "plain fetch+browser+scraperapi+scraperapi retry",
+    "candidates": [
+      {
+        "label": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164",
+        "price": 16.3
+      },
+      {
+        "label": "$113.78 -86%",
+        "price": 16.3
+      },
+      {
+        "label": "Color Family: Gray orange [high-quality factory batteries will not dam",
+        "price": 16.3
+      },
+      {
+        "label": "Promotions:",
+        "price": 3.3
+      }
+    ]
   }
 }
