@@ -8,9 +8,9 @@
       "selector": null,
       "paused": false,
       "status": "tracking",
-      "method": "auto (page element) (browser)",
+      "method": "auto (page element) (scraperapi)",
       "last_price": 9.34,
-      "last_checked": "2026-09-02T22:31:28+00:00",
+      "last_checked": "2026-09-03T08:29:36+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
       "_link_only": true
@@ -26,10 +26,11 @@
       "status": "tracking",
       "method": "auto (page element) (browser)",
       "last_price": 967,
-      "last_checked": "2026-09-02T22:31:36+00:00",
-      "fail_count": 0,
+      "last_checked": "2026-09-03T08:30:38+00:00",
+      "fail_count": 1,
       "_tracked_key": "auto",
-      "_link_only": true
+      "_link_only": true,
+      "note": "last check failed — showing earlier price"
     },
     {
       "id": "wwwfairpricecomsg-ytnmvc",
@@ -42,7 +43,7 @@
       "status": "tracking",
       "method": "🎯 Kellogg's Granola - Dark Cho",
       "last_price": 10.5,
-      "last_checked": "2026-09-02T22:31:38+00:00",
+      "last_checked": "2026-09-03T08:30:39+00:00",
       "fail_count": 0,
       "_link_only": true,
       "watch_label": "Kellogg's Granola - Dark Chocolate 350g | Brand: Kellogg's",
@@ -58,8 +59,8 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225,
-      "last_checked": "2026-09-02T22:32:12+00:00",
+      "last_price": 225.0,
+      "last_checked": "2026-09-03T08:31:08+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
       "_link_only": true
@@ -74,8 +75,8 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 172,
-      "last_checked": "2026-09-02T22:32:14+00:00",
+      "last_price": 172.0,
+      "last_checked": "2026-09-03T08:31:12+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -91,10 +92,11 @@
       "status": "tracking",
       "method": "auto (page element) (browser)",
       "last_price": 160,
-      "last_checked": "2026-09-02T22:32:22+00:00",
+      "last_checked": "2026-09-03T08:32:14+00:00",
       "_link_only": true,
-      "fail_count": 0,
-      "_tracked_key": "auto"
+      "fail_count": 1,
+      "_tracked_key": "auto",
+      "note": "last check failed — showing earlier price"
     },
     {
       "id": "-1tuuivq",
@@ -106,8 +108,8 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 492,
-      "last_checked": "2026-09-02T22:32:27+00:00",
+      "last_price": 512.0,
+      "last_checked": "2026-09-03T08:32:19+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -120,10 +122,12 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "pending",
+      "status": "needs attention — couldn't find a price (try 🔍 Scan or a selector in Advanced)",
       "method": null,
       "last_price": null,
-      "last_checked": null
+      "last_checked": "2026-09-03T08:32:48+00:00",
+      "_link_only": true,
+      "fail_count": 1
     }
   ]
 }
