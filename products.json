@@ -26,7 +26,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (page element) (browser)",
-      "last_price": 967.0,
+      "last_price": 967,
       "last_checked": "2026-09-07T22:45:32+00:00",
       "fail_count": 2,
       "_tracked_key": "auto",
@@ -60,7 +60,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
-      "last_price": 225.0,
+      "last_price": 225,
       "last_checked": "2026-09-07T22:45:38+00:00",
       "fail_count": 5,
       "_tracked_key": "auto",
@@ -77,7 +77,7 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 172.0,
+      "last_price": 172,
       "last_checked": "2026-09-07T22:45:40+00:00",
       "_link_only": true,
       "fail_count": 0,
@@ -110,7 +110,7 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 532.0,
+      "last_price": 532,
       "last_checked": "2026-09-07T22:45:53+00:00",
       "_link_only": true,
       "fail_count": 0,
@@ -133,6 +133,19 @@
       "watch_label": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164",
       "_tracked_key": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164",
       "note": "last check failed — showing earlier price"
+    },
+    {
+      "id": "wwwdavidjonescom-20cftu-2",
+      "name": "Carvela Ravello Low Leather Heel 27913275",
+      "url": "https://www.davidjones.com/product/carvela-ravello-low-leather-heel-27913275",
+      "target": null,
+      "mode": null,
+      "selector": null,
+      "paused": false,
+      "status": "pending",
+      "method": null,
+      "last_price": null,
+      "last_checked": null
     }
   ]
 }
