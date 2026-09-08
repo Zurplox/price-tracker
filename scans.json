@@ -155,46 +155,9 @@
     ]
   },
   "https://www.davidjones.com/product/carvela-ravello-low-leather-heel-27913275": {
-    "scanned_at": "2026-08-31T01:00:58+00:00",
-    "via": "plain fetch+browser+scraperapi",
-    "candidates": [
-      {
-        "label": "Ravello Low Leather Heel",
-        "price": 225.0
-      },
-      {
-        "label": "Ravello Low Leather Heel - bone - 36 EU",
-        "price": 225.0
-      },
-      {
-        "label": "Ravello Low Leather Heel - bone - 37 EU",
-        "price": 225.0
-      },
-      {
-        "label": "Ravello Low Leather Heel - bone - 38 EU",
-        "price": 225.0
-      },
-      {
-        "label": "Ravello Low Leather Heel - bone - 39 EU",
-        "price": 225.0
-      },
-      {
-        "label": "Ravello Low Leather Heel - bone - 40 EU",
-        "price": 225.0
-      },
-      {
-        "label": "Ravello Low Leather Heel - bone - 41 EU",
-        "price": 225.0
-      },
-      {
-        "label": "Carvela Ravello Low Leather Heel",
-        "price": 225.0
-      },
-      {
-        "label": "Carvela Ravello Low Leather Heel Price",
-        "price": 225.0
-      }
-    ]
+    "scanned_at": "2026-09-08T10:59:22+00:00",
+    "via": "plain fetch+browser",
+    "candidates": []
   },
   "flight:SIN-KNO/2026-09-18/2026-09-21": {
     "scanned_at": "2026-08-28T11:02:29+00:00",
