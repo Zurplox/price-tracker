@@ -10,11 +10,10 @@
       "status": "tracking",
       "method": "auto (page element) (browser)",
       "last_price": 9.34,
-      "last_checked": "2026-09-08T05:21:57+00:00",
-      "fail_count": 3,
+      "last_checked": "2026-09-08T11:38:50+00:00",
+      "fail_count": 0,
       "_tracked_key": "auto",
-      "_link_only": true,
-      "note": "last check failed — showing earlier price"
+      "_link_only": true
     },
     {
       "id": "wwwlazadasg-hgr3ub",
@@ -26,12 +25,11 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (page element) (browser)",
-      "last_price": 967,
-      "last_checked": "2026-09-08T05:22:04+00:00",
-      "fail_count": 3,
+      "last_price": 967.0,
+      "last_checked": "2026-09-08T11:38:59+00:00",
+      "fail_count": 0,
       "_tracked_key": "auto",
-      "_link_only": true,
-      "note": "last check failed — showing earlier price"
+      "_link_only": true
     },
     {
       "id": "wwwfairpricecomsg-ytnmvc",
@@ -44,7 +42,7 @@
       "status": "tracking",
       "method": "🎯 Kellogg's Granola - Dark Cho",
       "last_price": 10.5,
-      "last_checked": "2026-09-08T05:22:05+00:00",
+      "last_checked": "2026-09-08T11:39:00+00:00",
       "fail_count": 0,
       "_link_only": true,
       "watch_label": "Kellogg's Granola - Dark Chocolate 350g | Brand: Kellogg's",
@@ -61,8 +59,8 @@
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
       "last_price": 225,
-      "last_checked": "2026-09-08T05:22:10+00:00",
-      "fail_count": 6,
+      "last_checked": "2026-09-08T11:39:05+00:00",
+      "fail_count": 7,
       "_tracked_key": "auto",
       "_link_only": true,
       "note": "last check failed — showing earlier price"
@@ -77,8 +75,8 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 175,
-      "last_checked": "2026-09-08T05:22:11+00:00",
+      "last_price": 172.0,
+      "last_checked": "2026-09-08T11:39:08+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -93,12 +91,11 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (page element) (browser)",
-      "last_price": 0.1,
-      "last_checked": "2026-09-08T05:22:18+00:00",
+      "last_price": 178.0,
+      "last_checked": "2026-09-08T11:39:18+00:00",
       "_link_only": true,
-      "fail_count": 3,
-      "_tracked_key": "auto",
-      "note": "last check failed — showing earlier price"
+      "fail_count": 0,
+      "_tracked_key": "auto"
     },
     {
       "id": "-1tuuivq",
@@ -110,8 +107,8 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 532,
-      "last_checked": "2026-09-08T05:22:28+00:00",
+      "last_price": 532.0,
+      "last_checked": "2026-09-08T11:39:27+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -127,9 +124,9 @@
       "status": "tracking",
       "method": "🎯 Black Shark | 55W Fast Charg",
       "last_price": 66.55,
-      "last_checked": "2026-09-08T05:22:35+00:00",
+      "last_checked": "2026-09-08T11:39:34+00:00",
       "_link_only": true,
-      "fail_count": 9,
+      "fail_count": 10,
       "watch_label": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164",
       "_tracked_key": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164",
       "note": "last check failed — showing earlier price"
@@ -142,12 +139,12 @@
       "mode": null,
       "selector": null,
       "paused": false,
-      "status": "needs attention — couldn't find a price (try 🔍 Scan or a selector in Advanced)",
+      "status": "rate gone — watched option not found (rescan and re-pick)",
       "method": null,
       "last_price": null,
-      "last_checked": "2026-09-08T05:22:40+00:00",
+      "last_checked": "2026-09-08T11:39:39+00:00",
       "_link_only": true,
-      "fail_count": 1,
+      "fail_count": 2,
       "watch_label": "Ravello Low Leather Heel"
     }
   ]
