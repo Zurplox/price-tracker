@@ -260,72 +260,68 @@
     "candidates": []
   },
   "https://www.lazada.sg/products/pdp-i3612056183-s23857700307.html?c=&channelLpJumpArgs=&clickTrackInfo=query%253Alogitech%252Bmaster%252Bmx%252B4%253Bnid%253A3612056183%253Bsrc%253ALazadaMainSrp%253Brn%253Afe50f2faca6b1dc5c9390f568a046b41%253Bregion%253Asg%253Bsku%253A3612056183_SGAMZ%253Bprice%253A160%253Bclient%253Adesktop%253Bsupplier_id%253A1192016338%253Bsession_id%253A%253Bbiz_source%253Ah5_hp%253Bslot%253A4%253Butlog_bucket_id%253A470687%253Basc_category_id%253A7849%253Bitem_id%253A3612056183%253Bsku_id%253A23857700307%253Bshop_id%253A1772936%253BtemplateInfo%253A-1_A3_C%2523107878_E%2523164593_J%2523&freeshipping=1&fs_ab=2&fuse_fs=&lang=en&location=Singapore&price=1.6E%202&priceCompare=skuId%3A23857700307%3Bsource%3Alazada-search-voucher%3Bsn%3Afe50f2faca6b1dc5c9390f568a046b41%3BoriginPrice%3A16000%3BdisplayPrice%3A16000%3BisGray%3Afalse%3BsinglePromotionId%3A91472380356586%3BsingleToolCode%3ApromPrice%3BvoucherPricePlugin%3A0%3Btimestamp%3A1787929312084&qSellingPoint=p--master%20mx%204___b--logitech&ratingscore=4.885714285714286&request_id=fe50f2faca6b1dc5c9390f568a046b41&review=35&sale=179&search=1&source=search&spm=a2o42.searchlist.list.4&stock=1": {
-    "scanned_at": "2026-08-31T01:01:33+00:00",
-    "via": "plain fetch+scraperapi",
+    "scanned_at": "2026-09-08T05:19:49+00:00",
+    "via": "plain fetch+browser",
     "candidates": [
       {
         "label": "LOGITECH MX MASTER 4 WIRELESS MOUSE - GRAPHITE 910-007565 App 4.9 (35)",
-        "price": 160.0
+        "price": 178.0
       },
       {
-        "label": "$199.00 -20%",
-        "price": 160.0
+        "label": "$199.00 -11%",
+        "price": 178.0
       },
       {
-        "label": "$ $199.00 -20%",
-        "price": 160.0
+        "label": "$ $199.00 -11%",
+        "price": 178.0
       },
       {
         "label": "Quantity: Buy Now Add to Cart",
-        "price": 160.0
+        "price": 178.0
       },
       {
-        "label": "UGREEN Ergonomic Wireless Mouse, High-Speed Scroll 1000 Rows , Bluetoo",
-        "price": 32.99
+        "label": "Attack Perfume Floral Liquid Detergent Refill Pack 1.4KG 4.9(572)",
+        "price": 4.94
       },
       {
-        "label": "$ -6% $34.99",
-        "price": 32.99
+        "label": "Attack Perfume Floral Liquid Detergent Refill Pack 1.4KG $ 4.9(572)",
+        "price": 4.94
       },
       {
-        "label": "$ 32.99 $34.99",
-        "price": 6.0
+        "label": "Essager PD 240W Super Fast Charging Type-C Cable Quick Charge PD 3.1 T",
+        "price": 7.39
       },
       {
-        "label": "UGREEN Wireless Mouse, 6 Silent Buttons, Bluetooth 5.0 and 2.4G Wirele",
-        "price": 22.99
+        "label": "$ -64% $20.58",
+        "price": 7.39
       },
       {
-        "label": "$ -21% $29.00",
-        "price": 22.99
+        "label": "$ 7.39 $20.58",
+        "price": 64.0
       },
       {
-        "label": "$ 22.99 $29.00",
-        "price": 21.0
+        "label": "[BEST SELLER] SKINTIFIC Cover All Perfect Cushion High Coverage Porele",
+        "price": 11.9
       },
       {
-        "label": "UGREEN USB Type C to USB C PD 60W/100W Charge Data Transfer Cable for ",
-        "price": 9.89
+        "label": "$ -52% $25.00",
+        "price": 11.9
       },
       {
-        "label": "$ -18% $12.00",
-        "price": 9.89
+        "label": "$ 11.90 $25.00",
+        "price": 52.0
       },
       {
-        "label": "$ 9.89 $12.00",
-        "price": 18.0
+        "label": "Bioderma Pigmentbio Sensitive Areas Targeted Brightening Care - 75ml 5",
+        "price": 19.6
       },
       {
-        "label": "Rascals Pants Large Diaper Case - 52 PCS X 3 (156 PCS) 5.0(3148)",
-        "price": 65.11
+        "label": "$ -46% $36.14",
+        "price": 19.6
       },
       {
-        "label": "$ -20% $81.39",
-        "price": 65.11
-      },
-      {
-        "label": "$ 65.11 $81.39",
-        "price": 20.0
+        "label": "$ 19.60 $36.14",
+        "price": 46.0
       }
     ]
   },
