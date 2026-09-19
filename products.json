@@ -9,7 +9,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (page element) (browser)",
-      "last_price": 9.0,
+      "last_price": 9,
       "last_checked": "2026-09-18T22:27:47+00:00",
       "fail_count": 1,
       "_tracked_key": "auto",
@@ -26,7 +26,7 @@
       "paused": false,
       "status": "tracking",
       "method": "auto (page element) (browser)",
-      "last_price": 967.0,
+      "last_price": 967,
       "last_checked": "2026-09-18T22:27:55+00:00",
       "fail_count": 1,
       "_tracked_key": "auto",
@@ -82,7 +82,8 @@
       "_link_only": true,
       "fail_count": 1,
       "_tracked_key": "auto",
-      "note": "last check failed — showing earlier price"
+      "note": "last check failed — showing earlier price",
+      "watch_label": "LOGITECH MX MASTER 4 WIRELESS MOUSE - GRAPHITE 910-007565 App 4.9 (35)"
     },
     {
       "id": "-1tuuivq",
@@ -94,7 +95,7 @@
       "paused": false,
       "status": "tracking",
       "method": "✈️ google flights",
-      "last_price": 530.0,
+      "last_price": 530,
       "last_checked": "2026-09-18T22:28:14+00:00",
       "_link_only": true,
       "fail_count": 0,
