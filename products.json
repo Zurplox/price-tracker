@@ -10,10 +10,11 @@
       "status": "tracking",
       "method": "auto (page element) (scraperapi)",
       "last_price": 9.0,
-      "last_checked": "2026-09-25T23:14:46+00:00",
-      "fail_count": 0,
+      "last_checked": "2026-09-26T01:47:11+00:00",
+      "fail_count": 1,
       "_tracked_key": "auto",
-      "_link_only": true
+      "_link_only": true,
+      "note": "last check failed — showing earlier price"
     },
     {
       "id": "wwwlazadasg-hgr3ub",
@@ -24,13 +25,12 @@
       "selector": null,
       "paused": false,
       "status": "tracking",
-      "method": "auto (page element) (browser)",
-      "last_price": 967,
-      "last_checked": "2026-09-25T23:15:50+00:00",
-      "fail_count": 9,
+      "method": "auto (page element) (scraperapi)",
+      "last_price": 967.0,
+      "last_checked": "2026-09-26T01:48:05+00:00",
+      "fail_count": 0,
       "_tracked_key": "auto",
-      "_link_only": true,
-      "note": "last check failed — showing earlier price"
+      "_link_only": true
     },
     {
       "id": "wwwfairpricecomsg-ytnmvc",
@@ -43,7 +43,7 @@
       "status": "tracking",
       "method": "🎯 Kellogg's Granola - Dark Cho",
       "last_price": 10.5,
-      "last_checked": "2026-09-25T23:15:51+00:00",
+      "last_checked": "2026-09-26T01:48:06+00:00",
       "fail_count": 0,
       "_link_only": true,
       "watch_label": "Kellogg's Granola - Dark Chocolate 350g | Brand: Kellogg's",
@@ -60,7 +60,7 @@
       "status": "tracking",
       "method": "auto (structured data) (scraperapi)",
       "last_price": 225.0,
-      "last_checked": "2026-09-25T23:16:26+00:00",
+      "last_checked": "2026-09-26T01:48:36+00:00",
       "fail_count": 0,
       "_tracked_key": "auto",
       "_link_only": true
@@ -76,9 +76,9 @@
       "status": "tracking",
       "method": "auto (page element) (browser)",
       "last_price": 0.1,
-      "last_checked": "2026-09-25T23:17:29+00:00",
+      "last_checked": "2026-09-26T01:49:38+00:00",
       "_link_only": true,
-      "fail_count": 9,
+      "fail_count": 10,
       "_tracked_key": "auto",
       "note": "last check failed — showing earlier price",
       "watch_label": "LOGITECH MX MASTER 4 WIRELESS MOUSE - GRAPHITE 910-007565 App 4.9 (35)"
@@ -94,7 +94,7 @@
       "status": "tracking",
       "method": "✈️ google flights",
       "last_price": 534.0,
-      "last_checked": "2026-09-25T23:17:33+00:00",
+      "last_checked": "2026-09-26T01:49:47+00:00",
       "_link_only": true,
       "fail_count": 0,
       "_tracked_key": "auto"
@@ -110,9 +110,9 @@
       "status": "tracking",
       "method": "🎯 Black Shark | 55W Fast Charg",
       "last_price": 66.53,
-      "last_checked": "2026-09-25T23:18:18+00:00",
+      "last_checked": "2026-09-26T01:50:21+00:00",
       "_link_only": true,
-      "fail_count": 12,
+      "fail_count": 13,
       "watch_label": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164",
       "_tracked_key": "Black Shark | 55W Fast Charging Portable Charger 20000mAh App 4.9 (164",
       "note": "last check failed — showing earlier price"
